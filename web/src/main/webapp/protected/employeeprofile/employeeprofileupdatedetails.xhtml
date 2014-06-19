@@ -1,0 +1,192 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<p:panelGrid id="displayEmployee" layout="block" columns="1" cellpadding="4" style="margin:0 auto;">
+	<h:form id="employeeForm">	
+	 <p:tabView id="employeeUpdateTabView" activeIndex="0">
+		<p:tab id="EmployeeDetailTab" title="Basic Details">
+		<p:messages autoUpdate="true" />
+		 <p:fragment autoUpdate="true"> 
+			<p:panelGrid id="EmployeeDetail" columns="2" cellpadding="4" style="margin:0 auto;">
+				<f:facet name="header"><h3>Basic Details</h3></f:facet>
+				<p:panelGrid id="EmployeeDetailLeft" columns="2" cellpadding="4" style="margin:0 auto;">
+					<h:outputText value="Name"  class="req" />
+					<h:inputText value="#{employeeProfileMgmtBean.selectedEmployee.name}" required="true" requiredMessage="Please Enter Name" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}"/>
+					<h:outputText value="Employee Number"  class="req"/>
+					<h:inputText value="#{employeeProfileMgmtBean.selectedEmployee.employeeNumber}" required="true" requiredMessage="Please Enter Employee Number" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}" />
+					<h:outputText value="Position"  class="req"/>
+					<h:inputText value="#{employeeProfileMgmtBean.selectedEmployee.position}" required="true" requiredMessage="Please Enter Position" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}" />
+					<h:outputText value="IC Number" />
+					<h:inputText value="#{employeeProfileMgmtBean.selectedEmployee.idNumber}" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}" />
+					<h:outputText value="Passport Number" />
+					<h:inputText value="#{employeeProfileMgmtBean.selectedEmployee.passportNumber}" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}" />
+					<h:outputText value="Gender" />
+					<p:selectOneMenu value="#{employeeProfileMgmtBean.selectedEmployee.gender}" effect="fade" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}">
+						<f:selectItem itemLabel="Select one" itemValue=""/>
+						<f:selectItem itemLabel="Male" itemValue="M" />
+						<f:selectItem itemLabel="Female" itemValue="F" />
+					</p:selectOneMenu>
+					<h:outputText value="Religion" />
+					<p:selectOneMenu value="#{employeeProfileMgmtBean.selectedEmployee.religion}" effect="fade" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}">
+						<f:selectItem itemLabel="Select one" itemValue=""/>
+						<f:selectItem itemLabel="Islam" itemValue="Islam" />
+						<f:selectItem itemLabel="Buddhism" itemValue="Buddhism" />
+						<f:selectItem itemLabel="Christian" itemValue="Christian" />
+						<f:selectItem itemLabel="Hindduism" itemValue="Hindduism" />
+						<f:selectItem itemLabel="Catholic" itemValue="Catholic" />
+						<f:selectItem itemLabel="Others" itemValue="Others" />
+					</p:selectOneMenu>
+					<h:outputText value="Marital Status" />
+					<p:selectOneMenu value="#{employeeProfileMgmtBean.selectedEmployee.maritalStatus}" effect="fade" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}">
+						<f:selectItem itemLabel="Select one" itemValue=""/>
+						<f:selectItem itemLabel="Single" itemValue="Single" />
+						<f:selectItem itemLabel="Married" itemValue="Married" />
+						<f:selectItem itemLabel="Divorced" itemValue="Divorced" />
+						<f:selectItem itemLabel="Widowed" itemValue="Widowed" />
+					</p:selectOneMenu>
+					<h:outputText value="Nationality" />
+					<h:inputText value="#{employeeProfileMgmtBean.selectedEmployee.nationality}" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}" />
+				</p:panelGrid>
+				<p:panelGrid id="EmployeeDetailRight" columns="2" cellpadding="4" style="margin:0 auto;">
+					<h:outputText value="Grade"  class="req" />
+					<p:selectOneMenu value="#{employeeProfileMgmtBean.selectedEmployeeGrade}" effect="fade" required="true" requiredMessage="Please select Grade" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{employeeGradeListBean.employeeGradeList}" var="employeeGrade0" itemLabel="#{employeeGrade0.description}" itemValue="#{employeeGrade0.id}" />
+					</p:selectOneMenu>
+					<h:outputText value="Employee Type"  class="req" />
+					<p:selectOneMenu value="#{employeeProfileMgmtBean.selectedEmployeeType}" effect="fade" required="true" requiredMessage="Please select Employee Type" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{employeeTypeListBean.employeeTypeList}" var="employeeType0" itemLabel="#{employeeType0.description}" itemValue="#{employeeType0.id}" />
+					</p:selectOneMenu>
+					<h:outputText value="Department" />
+					<p:selectOneMenu value="#{employeeProfileMgmtBean.selectedDepartment}" effect="fade" required="true" requiredMessage="Please select Department" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{departmentListBean.departmentList}" var="department0" itemLabel="#{department0.description}" itemValue="#{department0.id}" />
+					</p:selectOneMenu>
+					<h:outputText value="Email Address(Work)" />
+					<h:inputText value="#{employeeProfileMgmtBean.selectedEmployee.workEmailAddress}" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}" />
+					<h:outputText value="Email Address(Personal)" />
+					<h:inputText valEmployeeAddressue="#{employeeProfileMgmtBean.selectedEmployee.personalEmailAddress}" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}" />
+					<h:outputText value="Phone Number(Work)" />
+					<h:inputText value="#{employeeProfileMgmtBean.selectedEmployee.officePhone}" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}" />
+					<h:outputText value="Phone Number(Personal)" />
+					<h:inputText value="#{employeeProfileMgmtBean.selectedEmployee.personalPhone}" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}" />
+					<h:outputText value="Join Date" />
+					<p:calendar pattern="dd/MM/yyyy" value="#{employeeProfileMgmtBean.selectedEmployee.joinDate}" id="employeeJoinDateCal" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}" />
+					<h:outputText value="Resignation Date" />
+					<p:calendar pattern="dd/MM/yyyy" value="#{employeeProfileMgmtBean.selectedEmployee.resignationDate}" id="employeeResignationDateCal" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}" />
+				</p:panelGrid>
+			<f:facet name="footer">
+					<p:commandButton value="Cancel" oncomplete="PF('employeeDialog').hide()" />
+					<p:commandButton value="Update" update=":employeeTableForm:employeeTable" actionListener="#{employeeProfileMgmtBean.doUpdateEmployee()}" validateClient="true" oncomplete="if(!args.validationFailed)  PF('employeeDialog').hide()" rendered="#{authenticationBean.hasAccess('EditEmployee')}"/>
+			</f:facet>
+		</p:panelGrid>
+	</p:fragment>
+</p:tab>
+			
+<p:tab id="EmployeeAddressTab" title="Addresses">
+		<p:messages autoUpdate="true" />
+		<p:fragment autoUpdate="true">
+			<p:panelGrid id="EmployeeAddress" columns="1" cellpadding="4" style="">
+				<f:facet name="header"><h3>Addresses</h3></f:facet>		
+           				<p:dataTable id="addressTable" var="address0" value="#{employeeProfileMgmtBean.addressDataModel}" rowKey="#{address0.id}"
+							                 selection="#{employeeProfileMgmtBean.selectedAddress}" selectionMode="single" emptyMessage="No data found with given criteria" >
+							  <p:ajax event="rowSelect" listener="#{employeeProfileMgmtBean.onAddressRowSelect}" update=":employeeForm:employeeUpdateTabView:EmployeeAddress" />  
+							          <p:column id="typeHeader"  headerText="Address Type" ><h:outputText value="#{address0.addressType}" /></p:column>
+							          <p:column id="line1Header" headerText="Line 1"><h:outputText value="#{address0.line1}" /> </p:column>
+							          <p:column id="cityHeader" headerText="City"><h:outputText value="#{address0.city}" /></p:column>
+							          <p:column id="stateHeader" headerText="State"><h:outputText value="#{address0.state}" /></p:column>
+							          <p:column id="countryHeader" headerText="Country"><h:outputText value="#{address0.country}" /></p:column>
+							          <p:column id="lastModifiedByHeader" headerText="Last Modified By"><h:outputText value="#{address0.lastModifiedBy}" /></p:column>
+							          <p:column id="lastModifiedHeader" headerText="Last Modified Time"><h:outputText value="#{address0.lastModifiedTime}" ><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /></h:outputText></p:column>
+					    </p:dataTable>
+							        
+						<p:commandButton value="Add Address" update=":employeeForm:employeeUpdateTabView:EmployeeAddress" title="Add Address" actionListener="#{employeeProfileMgmtBean.setAddressOperation(true, 'Create')}" rendered="#{(employeeProfileMgmtBean.isRenderAddress() == false) and (authenticationBean.hasAccess('EditEmployee'))}"/>
+				<h:form>
+					<p:scrollPanel id="AddressDetail" style="width:500px;height:300px" rendered="#{employeeProfileMgmtBean.isRenderAddress()}">
+						<h3>#{employeeProfileMgmtBean.addressOperation} Address</h3>
+							<p:panelGrid columns="2" cellpadding="4" style="">
+								<h:outputText value="Address Type" />
+								<p:selectOneMenu value="#{employeeProfileMgmtBean.selectedAddressType}" effect="fade" required="true" requiredMessage="Please select Address Type" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}">
+										<f:selectItem itemLabel="Permanent" itemValue="Permanent" />
+										<f:selectItem itemLabel="Correspondance" itemValue="Correspondance" />
+										<f:selectItem itemLabel="Work" itemValue="Work" />
+										<f:selectItem itemLabel="Other" itemValue="Other" />
+								</p:selectOneMenu>
+							   	<h:outputText value="Line 1"  class="req" />
+								<h:inputText value="#{employeeProfileMgmtBean.selectedAddress.line1}" required="true" requiredMessage="Please enter Line 1" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}"/>
+								<h:outputText value="Line 2" />
+								<h:inputText value="#{employeeProfileMgmtBean.selectedAddress.line2}" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}"/>
+								<h:outputText value="Line 3" />
+								<h:inputText value="#{employeeProfileMgmtBean.selectedAddress.line3}" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}"/>
+						   		<h:outputText value="Post Code" />
+								<h:inputText value="#{employeeProfileMgmtBean.selectedAddress.postcode}" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}"/>
+						   		<h:outputText value="City" />
+								<h:inputText value="#{employeeProfileMgmtBean.selectedAddress.city}" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}"/>
+								<h:outputText value="State" />
+								<h:inputText value="#{employeeProfileMgmtBean.selectedAddress.state}" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}"/>
+								<h:outputText value="Country"  class="req" />
+								<h:inputText value="#{employeeProfileMgmtBean.selectedAddress.country}" required="true" requiredMessage="Please enter Country" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}"/>
+								<f:facet name="footer">
+									<p:commandButton value="Cancel" update=":employeeForm:employeeUpdateTabView:EmployeeAddress" actionListener="#{employeeProfileMgmtBean.setAddressOperation(false, 'Create')}" process="@form" immediate="true"/>
+									<p:commandButton type="reset" value="Reset" rendered="#{employeeProfileMgmtBean.addressOperation == 'Create'}"></p:commandButton>
+									<p:commandButton value="Save" update=":employeeForm:employeeUpdateTabView:EmployeeAddress" actionListener="#{employeeProfileMgmtBean.addAddressToEmployee()}" process="@form" validateClient="true" rendered="#{employeeProfileMgmtBean.addressOperation == 'Create'}"/>
+									<p:commandButton value="Delete" update=":employeeForm:employeeUpdateTabView:EmployeeAddress" actionListener="#{employeeProfileMgmtBean.deleteAddressToEmployee()}" process="@form" validateClient="true" rendered="#{(employeeProfileMgmtBean.addressOperation == 'Update') and (authenticationBean.hasAccess('EditEmployee'))}"/>
+									<p:commandButton value="Update" update=":employeeForm:employeeUpdateTabView:EmployeeAddress" actionListener="#{employeeProfileMgmtBean.updateAddressToEmployee()}" process="@form" validateClient="true" rendered="#{(employeeProfileMgmtBean.addressOperation == 'Update') and (authenticationBean.hasAccess('EditEmployee'))}"/>
+								</f:facet>	
+							</p:panelGrid>	
+						</p:scrollPanel>		
+				</h:form>
+				<f:facet name="footer">
+					<p:commandButton value="Cancel" oncomplete="PF('employeeDialog').hide()" />
+					<p:commandButton value="Update" update=":employeeTableForm:employeeTable" actionListener="#{employeeProfileMgmtBean.doUpdateEmployee()}" validateClient="true" oncomplete="PF('employeeDialog').hide()" rendered="#{authenticationBean.hasAccess('EditEmployee')}"/>
+				</f:facet>	
+			</p:panelGrid>
+		</p:fragment>
+	</p:tab>
+	
+	<p:tab id="EmployeeLoginTab" title="Login Details">
+		<p:messages autoUpdate="true" />
+		<p:fragment autoUpdate="true"> 
+			<p:panelGrid id="EmployeeLogin" columns="1" cellpadding="4" style="margin:0 auto;">
+				<f:facet name="header"><h3>Login Details</h3></f:facet>
+				<p:panelGrid id="EmployeeLoginColumn" columns="2" cellpadding="4" style="margin:0 auto;">
+				<h:outputText value="Username" />
+				<h:inputText value="#{employeeProfileMgmtBean.users.username}" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}" required="true" requiredMessage="Please enter Username!"/>
+				<h:outputText value="Password" />
+				<p:password id="pwd1" value="#{employeeProfileMgmtBean.users.password}" match="pwd2" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}" required="true" requiredMessage="Please enter Password!" label="Password "/>
+				<h:outputText value="Confirmed Password" />
+				<p:password id="pwd2" value="#{employeeProfileMgmtBean.users.password}" disabled="#{authenticationBean.hasAccess('EditEmployee') == false}" required="true" requiredMessage="Please enter Confirm Password!"/>
+				<h:outputText value="Last Modified By" />
+				<h:outputText value="#{employeeProfileMgmtBean.users.lastModifiedBy}"/>
+				<h:outputText value="Last Modified Time" />
+				<h:outputText value="#{employeeProfileMgmtBean.users.lastModifiedTime}" ><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /></h:outputText> 
+			</p:panelGrid>
+			<f:facet name="footer">
+					<p:commandButton value="Cancel" oncomplete="PF('employeeDialog').hide()" />
+					<p:commandButton value="Update" update=":employeeTableForm:employeeTable" actionListener="#{employeeProfileMgmtBean.doUpdateEmployee()}" validateClient="true" oncomplete="if(!args.validationFailed)  PF('employeeDialog').hide()" rendered="#{authenticationBean.hasAccess('EditEmployee')}"/>
+			</f:facet>	
+			</p:panelGrid>
+			</p:fragment>
+			</p:tab>
+			
+			<p:tab id="EmployeeAdminTab" title="Admin" rendered="#{authenticationBean.hasAccess('DeleteEmployee')}">
+				<p:panelGrid id="EmployeeAdmin" columns="1" cellpadding="4" style="margin:0 auto;">
+					<f:facet name="header"><h3>Admin</h3></f:facet>
+					<p:panelGrid id="EmployeeAdminColumn" columns="1" cellpadding="4" style="margin:0 auto;">
+						<h:outputText value="Do you want to delete this employee?"></h:outputText>
+						<p:commandButton id="deleteButton" update=":deleteCD" oncomplete="PF('cd').show()" title="Delete Employee" value="Delete"/>
+					</p:panelGrid>
+				</p:panelGrid>
+			</p:tab>
+</p:tabView>
+</h:form>
+</p:panelGrid>
+</h:body>
+</html>

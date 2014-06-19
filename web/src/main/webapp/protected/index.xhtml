@@ -1,0 +1,53 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:head>
+</h:head>                        
+
+<h:body>
+	<ui:composition template="/templates/mainlayout.xhtml">
+
+		<ui:define name="title">Beans Leave Application</ui:define>
+	<ui:define name="content">
+<!-- 	<h1>Welcome!  <h:outputText value="#{authenticationBean.users.username}" style="text-transform: capitalize;" /></h1> -->
+	
+	<h:form id="employeeEntitlementForm" rendered="#{authenticationBean.hasAccess('ViewMyProfile')}">
+	
+	
+	 <p:dataTable id="employeeEntitlementTable" widgetVar="employeeEntitlement" var="employeeEntitlement0" value="#{yearlyEntitlementMgmtBean.employeeYearlyEntitlementDataModel}" rowKey="#{employeeEntitlement0.id}">
+   
+                           
+          <p:column id="descHeader">
+            <f:facet name="header"> Leave Type </f:facet>
+            <h:outputText value="#{employeeEntitlement0.leaveType.name}" />
+          </p:column>
+        
+        <p:column id="entitlementHeader">
+            <f:facet name="header"> Entitlement </f:facet>
+            <h:outputText value="#{employeeEntitlement0.entitlement}" />
+          </p:column>
+          
+           <p:column id="currentLeaveHeader">
+            <f:facet name="header">Current Balance</f:facet>
+            <h:outputText value="#{employeeEntitlement0.currentLeaveBalance}" />
+          </p:column>
+          
+           <p:column id="yearlyLeaveHeader">
+            <f:facet name="header">Yearly Balance</f:facet>
+            <h:outputText value="#{employeeEntitlement0.yearlyLeaveBalance}" />
+          </p:column>
+        </p:dataTable>
+         
+         
+      </h:form>      
+      <p:growl id="growl" showDetail="true" life="1000"/> 
+  </ui:define>
+	
+</ui:composition>	
+</h:body>
+</html>

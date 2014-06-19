@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+    
+<h:head>
+    <title>Beans Group HRM</title>
+    <h:outputStylesheet name="css/loginlayout.css" />
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'/>
+    <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/resources/images/favicon.ico"/>   
+</h:head>
+
+<h:body>
+<div id="wrapper">
+    <div id="container">
+    <div id="registerHeader">
+       <p:graphicImage name="logo.png" library="images"/>
+       <h1>HRM APPLICATION</h1> 
+    </div>
+            
+    <div id="registerContainer">
+        <h:form id="registerForm" prependId="false">  
+            <p:panelGrid id="panel" columns="3"> 
+                <f:facet name="header">
+                    Employee Registration
+                </f:facet>
+                <h:outputText value="Full Name" class="req"/>
+				<p:focus for="fullname">	<h:inputText id="fullname"
+						value="#{employeeRegistrationMgmtBean.fullname}" required="true" requiredMessage="Full Name Required" />
+                </p:focus>
+                <p:message for="fullname" display="text"></p:message> 
+                <h:outputText value="Username" class="req" />
+					<h:inputText id="username"
+						value="#{employeeRegistrationMgmtBean.username}" required="true" requiredMessage="Username Required" /> 
+				<p:message for="username" display="text"></p:message>
+				<h:outputText value="Password" class="req" />
+				<p:password id="pwd1" value="#{employeeRegistrationMgmtBean.password}" match="pwd2" required="true" requiredMessage="Password Required"/>
+				<p:message for="pwd1" display="text"></p:message>
+				<h:outputText value="Confirm Password" class="req" />
+				<p:password id="pwd2" value="#{employeeRegistrationMgmtBean.password}" required="true" requiredMessage="Confirm Password Required"/>
+				<p:message for="pwd2" display="text"></p:message>                  
+                
+					<h:outputText value="Gender" class="req" />
+					<p:selectOneMenu id="gender" required="true" requiredMessage="Gender Required"
+						value="#{employeeRegistrationMgmtBean.gender}"
+						effect="fade">
+						<f:selectItem itemLabel="Select one" itemValue=""/>
+						<f:selectItem itemLabel="Male" itemValue="M" />
+						<f:selectItem itemLabel="Female" itemValue="F" />
+					</p:selectOneMenu>
+					<p:message for="gender" display="text"></p:message>
+					<h:outputText value="Email Address (Personal)" class="req" />
+					<h:inputText id="personalEmailAddress"
+						value="#{employeeRegistrationMgmtBean.personalEmailAddress}" validatorMessage="Invalid Email Format">
+						
+						<f:validateRegex
+							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+					</h:inputText>
+					<p:message for="personalEmailAddress" display="text"></p:message>
+					
+					<h:outputText value="Phone Number (Personal)" />
+					<h:inputText id="personalPhoneNumber"
+						value="#{employeeRegistrationMgmtBean.personalPhoneNumber}" />
+					<h:outputText value=""/>
+					
+					<h:outputText value="IC Number" />
+					<h:inputText id="idNumber"
+						value="#{employeeRegistrationMgmtBean.idNumber}" />
+					<h:outputText value=""/>
+					<h:outputText value="Passport Number" />
+					<h:inputText id="passportNumber"
+						value="#{employeeRegistrationMgmtBean.passportNumber}" />
+					<h:outputText value=""/>
+          			<h:outputText value="Captcha" class="req"/><p:captcha id="captcha" label="Captcha" theme="white"/>
+          			<p:message for="captcha" display="text"></p:message>
+                <f:facet name="footer">
+                    <p:commandButton id="backButton" value="Back" ajax="false" immediate="true"  action="/login.jsf" />
+                    <p:commandButton id="registerButton" value="Register" ajax="false" validateClient="true"  action="#{employeeRegistrationMgmtBean.doRegister}" />
+                </f:facet>              
+            </p:panelGrid>  
+                  
+        </h:form>   
+    </div>
+    </div>
+    <div id="footer">
+    © 2014 Beans Group All Rights Reserved 
+    </div>
+   </div>
+</h:body>
+</html>

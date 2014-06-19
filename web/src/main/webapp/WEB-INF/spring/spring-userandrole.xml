@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<import resource="spring-ds.xml"/>
+
+    
+	  <bean id="role" class="com.beans.common.security.role.model.Role"/>
+	 <bean id="roleService" class="com.beans.common.security.role.service.RoleServiceImpl">
+	 </bean>
+	  <bean id="users" class="com.beans.common.security.users.model.Users" />
+	<bean id="usersService" class="com.beans.common.security.users.service.UsersServiceImpl">
+		<property name="roleService" >
+			<ref bean="roleService"/>
+		</property>
+		<property name="userToAccessRightsService" >
+			<ref bean="userToAccessRightsService"/>
+		</property>
+	</bean>
+	
+		<bean  id="userAuthenticationService" class="com.beans.common.security.users.service.UserAuthenticationServiceImpl"> 
+    	<property name="userService" >
+			<ref bean="usersService"/>
+		</property>
+    </bean>
+	
+	<bean id="userToAccessRightsService" class="com.beans.common.security.usertoaccessrights.service.UserToAccessRightsServiceImpl">
+	
+	</bean>
+		 <bean id="accessRights" class="com.beans.common.security.accessrights.model.AccessRights"/>
+    <bean id="accessRightsService" class="com.beans.common.security.accessrights.service.AccessRightsServiceImpl">
+    </bean>  	 
+	
+	
+</beans>

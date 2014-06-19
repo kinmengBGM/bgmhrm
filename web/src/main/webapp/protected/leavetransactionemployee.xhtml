@@ -1,0 +1,112 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head>
+</h:head>
+
+
+<f:metadata>
+	<f:event type="preRenderView"
+		listener="#{authenticationBean.hasPageAccess('LeaveTransactionAdmin')}" />
+</f:metadata>
+
+
+<h:body>
+	<ui:composition template="/templates/mainlayout.xhtml">
+		<ui:define name="title"> Leave Transaction List for Admin</ui:define>
+		<ui:define name="content">
+			<h1>Admin Leave Transaction List</h1>
+			<h:form id="leaveTransactionTableForm">
+				<p:panel header="Search" toggleable="true">
+					<p:panelGrid id="SearchEmployee" columns="2" cellpadding="4">
+
+						<h:outputText value="Name" />
+						<h:inputText value="#{leaveTransactionMgmtBean.name}">
+						</h:inputText>
+
+						<h:outputText value="Leave Type" />
+						<h:inputText value="#{leaveTransactionMgmtBean.searchLeaveType}">
+						</h:inputText>
+
+						<h:outputText value="From :" />
+						<p:calendar value="#{leaveTransactionMgmtBean.date1}"
+							pattern="dd/MM/yyyy HH:mm" id="start1" shownOn="button" />
+
+
+						<h:outputText value="Status" />
+						<h:inputText value="#{leaveTransactionMgmtBean.status}">
+						</h:inputText>
+
+
+						<f:facet name="footer">
+							<p:commandButton value="Search"
+								update=":leaveTransactionTableForm:leaveTransactionTable"
+								actionListener="#{leaveTransactionMgmtBean.doSearchLeaveTransaction}"
+								ajax="false"></p:commandButton>
+							<p:commandButton type="reset" value="Reset"></p:commandButton>
+						</f:facet>
+					</p:panelGrid>
+				</p:panel>
+
+				<p:dataTable id="leaveTransactionTable"
+					widgetVar="yearlyEntitlementTableVar" var="leaveTransaction0"
+					value="#{leaveTransactionMgmtBean.leaveTransactionDataModel}"
+					rowKey="#{leaveTransaction0.id}"
+					selectionMode="single" paginator="true" rows="10" scrollable="true">
+					
+					<p:column id="employeeHeader" sortBy="employeeName">
+						<f:facet name="header"> Employee Name </f:facet>
+						<h:outputText value="#{leaveTransaction0.employee.name}" />
+					</p:column>
+					<p:column id="leaveTypeHeader" sortBy="leaveType">
+						<f:facet name="header"> Leave Type </f:facet>
+						<h:outputText value="#{leaveTransaction0.leaveType.name}" />
+					</p:column>
+					<p:column id="startTimeHeader" sortBy="startTime">
+						<f:facet name="header"> Start Date </f:facet>
+						<h:outputText value="#{leaveTransaction0.startDateTime}">
+							<f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" />
+						</h:outputText>
+					</p:column>
+					<p:column id="endTimeHeader" sortBy="endTime">
+						<f:facet name="header"> End Date  </f:facet>
+						<h:outputText value="#{leaveTransaction0.endDateTime}">
+							<f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" />
+						</h:outputText>
+					</p:column>
+					<p:column id="reasonHeader" sortBy="reason">
+						<f:facet name="header"> Reason  </f:facet>
+						<h:outputText value="#{leaveTransaction0.reason}" />
+					</p:column>
+					<p:column id="statusHeader" sortBy="status">
+						<f:facet name="header"> Status  </f:facet>
+						<h:outputText value="#{leaveTransaction0.status}" />
+					</p:column>
+					<p:column id="noOfDaysHeader" sortBy="noOfDays">
+						<f:facet name="header"> Days </f:facet>
+						<h:outputText value="#{leaveTransaction0.numberOfDays}" />
+					</p:column>
+					<p:column id="noOfHoursHeader" sortBy="noOfHours">
+						<f:facet name="header"> Hours  </f:facet>
+						<h:outputText value="#{leaveTransaction0.numberOfHours}" />
+					</p:column>
+					<p:column id="lastModifiedByHeader" sortBy="lastModifiedBy">
+						<f:facet name="header"> Last Modified By </f:facet>
+						<h:outputText value="#{leaveTransaction0.lastModifiedBy}" />
+					</p:column>
+					<p:column id="lastModifiedHeader" sortBy="lastModifiedTime">
+						<f:facet name="header"> Last Modified Time</f:facet>
+						<h:outputText value="#{leaveTransaction0.lastModifiedTime}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

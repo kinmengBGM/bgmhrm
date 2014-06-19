@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Monthly Leave Report Email</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body >
+
+<table align="center" border="1" cellpadding="0" cellspacing="0" width="600">
+ <tr>
+  <td align="center" style="padding: 0px 0 0px 0;">
+ <img src="http://www.beans.com.my/templates/theme513/images/logo.png" alt="Monthly Leave Report Email" width="205" height="76" style="display: block;" />
+</td>
+ </tr>
+ <tr>
+  <td >
+   <h3>Greetings,</h3>
+   <form >
+   		Hi ##employeeName##,
+		Following is the monthly leave report.<br/><br/>
+		<table align="center" border="1" cellpadding="0" cellspacing="0" width="600">
+			<tr>
+				<td> Leave Type</td><td>Entitlement</td><td>Current Leave Balance</td><td>Yearly Leave Balance</td>
+			</tr>
+			 ##entitlementData## 
+		</table>
+		<br/><br/><br/>
+		<b><u>Unpaid Leaves report</u></b>
+		<table align="center" border="1" cellpadding="0" cellspacing="0" width="600">
+			<tr>
+				<td>Start Date</td><td> End Date</td><td>Number of Days</td>
+			</tr>
+			  ##unpaidLeavesData## 
+		</table>
+		<br/>
+		Total Unpaid Leaves Taken :<b> ##totalUnpaidLeaves## </b>Days
+		<br/><br/><br/>
+		<b><u>Time-in-Lieu report</u></b>
+		<b>Under Development</b>
+		
+		<br/>Please do not reply this email as it was a computer generated mail sent by Beans HRM system.<br/><br/>
+		
+		Best Regards,<br/>
+		Beans Group
+	</form>
+  </td>
+ </tr>
+ <tr>
+  <td width="75%" height= "50" >
+ &reg; Beans Group Sdn Bhd 2014<br/>
+ 
+</td>
+ </tr>
+</table>
+</body>
+</html>

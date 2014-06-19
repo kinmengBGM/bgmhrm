@@ -1,0 +1,169 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head>
+</h:head>
+
+
+<f:metadata>
+    	<f:event type="preRenderView" listener="#{authenticationBean.hasPageAccess('LeaveTransactionAdmin')}" />
+</f:metadata>
+
+
+<h:body>
+	<ui:composition template="/templates/mainlayout.xhtml">
+		<ui:define name="title"> Leave Transaction List for Admin</ui:define>
+		<ui:define name="content">
+			<h1>Admin Leave Transaction List</h1>
+			<h:form id="leaveTransactionTableForm">
+				<p:panel header="Search" toggleable="true">
+					<p:panelGrid id="SearchEmployee" columns="2" cellpadding="4">
+					
+						<h:outputText value="Name" />
+						<h:inputText value="#{leaveTransactionMgmtBean.name}">
+						</h:inputText>
+
+						<h:outputText value="Leave Type" />
+						<h:inputText value="#{leaveTransactionMgmtBean.searchLeaveType}">
+						</h:inputText>
+                    
+                     <h:outputText value="From :" />
+					<p:calendar value="#{leaveTransactionMgmtBean.date1}" pattern="dd/MM/yyyy HH:mm" id="start1" shownOn="button"/>
+					
+				
+               <h:outputText value="Status" />
+               <h:inputText value="#{leaveTransactionMgmtBean.status}" >
+               </h:inputText>
+               
+
+						<f:facet name="footer">
+							<p:commandButton value="Search" update=":leaveTransactionTableForm:leaveTransactionTable" actionListener="#{leaveTransactionMgmtBean.doSearchLeaveTransaction}" ajax="false"></p:commandButton>
+							<p:commandButton type="reset" value="Reset"></p:commandButton>
+						</f:facet>
+					</p:panelGrid>
+				</p:panel>
+
+				<p:dataTable id="leaveTransactionTable" widgetVar="yearlyEntitlementTableVar" var="leaveTransaction0" value="#{leaveTransactionMgmtBean.leaveTransactionDataModel}" rowKey="#{leaveTransaction0.id}"
+														selection="#{leaveTransactionMgmtBean.selectedLeaveTransaction}" selectionMode="single" paginator="true" rows="10" scrollable="true">
+					<p:ajax event="rowSelect" listener="#{leaveTransactionMgmtBean.onRowSelect}" update=":leaveTransactionDetailForm:display, :growl" oncomplete="PF('leaveTransactionDialog').show()" />
+					<p:column id="employeeHeader" sortBy="employeeName"><f:facet name="header"> Employee Name </f:facet><h:outputText value="#{leaveTransaction0.employee.name}" /></p:column>
+					<p:column id="leaveTypeHeader" sortBy="leaveType"><f:facet name="header"> Leave Type </f:facet><h:outputText value="#{leaveTransaction0.leaveType.name}" /></p:column>
+					<p:column id="startTimeHeader" sortBy="startTime"><f:facet name="header"> Start Date </f:facet><h:outputText value="#{leaveTransaction0.startDateTime}"><f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" /></h:outputText></p:column>
+					<p:column id="endTimeHeader" sortBy="endTime"><f:facet name="header"> End Date  </f:facet><h:outputText value="#{leaveTransaction0.endDateTime}"><f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" /></h:outputText></p:column>
+					<p:column id="reasonHeader" sortBy="reason"><f:facet name="header"> Reason  </f:facet><h:outputText value="#{leaveTransaction0.reason}" /></p:column>
+					<p:column id="statusHeader" sortBy="status"><f:facet name="header"> Status  </f:facet><h:outputText value="#{leaveTransaction0.status}" /></p:column>
+					<p:column id="noOfDaysHeader" sortBy="noOfDays"><f:facet name="header"> Days </f:facet><h:outputText value="#{leaveTransaction0.numberOfDays}" /></p:column>
+					<p:column id="noOfHoursHeader" sortBy="noOfHours"><f:facet name="header"> Hours  </f:facet><h:outputText value="#{leaveTransaction0.numberOfHours}" /></p:column>
+					<p:column id="lastModifiedByHeader"  sortBy="lastModifiedBy" ><f:facet name="header"> Last Modified By </f:facet><h:outputText value="#{leaveTransaction0.lastModifiedBy}" /></p:column>
+	          		<p:column id="lastModifiedHeader"  sortBy="lastModifiedTime" ><f:facet name="header"> Last Modified Time</f:facet> <h:outputText value="#{leaveTransaction0.lastModifiedTime}" ><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /></h:outputText> </p:column>
+				</p:dataTable>
+				<p:commandButton value="New Leave Transaction " oncomplete="PF('newLeaveTransactionDialog').show()" icon="ui-icon-star" title="Creates new" />
+			</h:form>
+			<p:growl id="growl" showDetail="true" life="1000" />
+		</ui:define>
+
+		<ui:define name="dialog">
+			<p:dialog header="Leave Transaction Admin" styleClass="dlgCSS" widgetVar="leaveTransactionDialog" resizable="false" id="leaveTypeDlg" modal="true">
+				<h:form id="leaveTransactionDetailForm">
+				<p:messages autoUpdate="true"/>
+					<p:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+						<h:outputText value="EmployeeName :" />
+
+						<p:selectOneMenu
+							value="#{leaveTransactionMgmtBean.selectedLeaveTransaction.employee.name}">
+
+							<f:selectItem itemLabel="select LeaveType" itemValue="" />
+							<f:selectItems value="#{leaveTransactionMgmtBean.employeeList}"
+								var="leavetype" itemLabel="#{leaveType.name}"
+								itemValue="#{name}" />
+
+                        <p:ajax event="change" update="leaveTypesList" value="#{leaveTransactionMgmtBean.selectedChangeList}" /> 
+						</p:selectOneMenu>
+						
+						<h:outputText  value="leaveType :" />
+						<p:selectOneMenu id="leaveTypesList"
+							value="#{leaveTransactionMgmtBean.selectedLeaveTransaction.leaveType.name}">
+
+							<f:selectItem itemLabel="select One" itemValue="" />
+							<f:selectItems value="#{leaveTransactionMgmtBean.leaveTypeList}" var="leaveType" itemLabel="#{leaveType.name}" itemValue="#{name}"></f:selectItems>
+						</p:selectOneMenu>
+						<h:outputText value="StartTime : " />
+						<p:calendar value="#{leaveTransactionMgmtBean.selectedLeaveTransaction.startDateTime}" pattern="dd/MM/yyyy hh:mm:ss" id="start1" shownOn="button" required="true" requiredMessage="please select Start Time!" label="Start Time "/>
+						<h:outputText value="EndTime :" />
+						<p:calendar value="#{leaveTransactionMgmtBean.selectedLeaveTransaction.endDateTime}" pattern="dd/MM/yyyy hh:mm:ss" id="start2" shownOn="button" required="true" requiredMessage="please select End Time!" label="End Time "/>
+						<h:outputText value="Days :"></h:outputText>
+						<h:inputText value="#{leaveTransactionMgmtBean.selectedLeaveTransaction.numberOfDays}" required="true" requiredMessage="please select Days!" label="Days "/>
+						<h:outputText value="Hours :"></h:outputText>
+						<h:inputText value="#{leaveTransactionMgmtBean.selectedLeaveTransaction.numberOfHours}" required="true" requiredMessage="please select Hours!" label="Hours "/>
+                        <h:outputText value="Reason :"></h:outputText>						
+					    <h:inputText
+							value="#{leaveTransactionMgmtBean.selectedLeaveTransaction.reason}">
+						</h:inputText>
+	                   <h:outputText value="Status :"></h:outputText>
+						<h:inputText
+							value="#{leaveTransactionMgmtBean.selectedLeaveTransaction.status}">
+						</h:inputText>
+							
+							
+						<f:facet name="footer">
+							<p:commandButton value="Update" update=":leaveTransactionTableForm:leaveTransactionTable" oncomplete="if(!args.validationFailed) PF('leaveTransactionDialog').hide()" action="#{leaveTransactionMgmtBean.doUpdateLeaveTransaction}" validateClient="true" />
+							<p:commandButton value="Delete" onclick="PF('cd').show()" oncomplete="PF('leaveTransactionDialog').hide()" />
+						</f:facet>
+					</p:panelGrid>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog header="Create New Leave Transaction  " styleClass="dlgCSS" widgetVar="newLeaveTransactionDialog" resizable="false" id="newLeaveTypeDlg" modal="true">
+				<h:form id="newLeaveTypeForm">
+				<p:messages autoUpdate="true"/>
+					<p:panelGrid id="displayNewLeaveType" columns="2" cellpadding="4" style="margin:0 auto;">
+
+						<h:outputText value="Employee Name :"></h:outputText>
+						<p:selectOneMenu value="#{leaveTransactionMgmtBean.employeename}" required="true" requiredMessage="please select Employee Name!" label="Employee Name ">
+							<f:selectItem itemLabel="select Name" itemValue="" />
+							<f:selectItems value="#{leaveTransactionMgmtBean.employeeList}" var="employee" itemLabel="#{employee.name}" itemValue="#{name}" />
+								  <p:ajax event="change" update="leaveTypes" listener="#{leaveTransactionMgmtBean.correspondingList}" />
+						</p:selectOneMenu>
+						<h:outputText value="Leave Type :"></h:outputText>
+						<p:selectOneMenu id ="leaveTypes" value="#{leaveTransactionMgmtBean.leaveType}" required="true" requiredMessage="please select Leave Type!" label="Leave Type ">
+							<f:selectItem itemLabel="select LeaveType" itemValue="" />
+
+							<f:selectItems value="#{leaveTransactionMgmtBean.leaveList}"
+								var="leavetype" itemLabel="#{leaveType.name}"
+								itemValue="#{name}" />
+
+						</p:selectOneMenu>
+						<h:outputText value="Start Time :" ></h:outputText>
+						<p:calendar value="#{leaveTransactionMgmtBean.newLeaveTransaction.startDateTime}" pattern="dd/MM/yyyy HH:mm" id="start3" shownOn="button" required="true" requiredMessage="please select Start Time!" label="Start Time "/>
+						<h:outputText value="End Time :" ></h:outputText>
+						<p:calendar value="#{leaveTransactionMgmtBean.newLeaveTransaction.endDateTime}" pattern="dd/MM/yyyy HH:mm" id="start4" shownOn="button" required="true" requiredMessage="please select End Time!" label="End Time "/>
+                        <h:outputText value="Reason :"></h:outputText>						
+					    <h:inputText value="#{leaveTransactionMgmtBean.newLeaveTransaction.reason}" required="true" requiredMessage="please select Reason!" label="Reason "/>
+						<h:outputText value="Status :"></h:outputText>						
+					    <h:inputText value="#{leaveTransactionMgmtBean.newLeaveTransaction.status}" required="true" requiredMessage="please select Status!" label="Status "/>
+						<h:outputText value="Days :"></h:outputText>
+						<h:inputText value="#{leaveTransactionMgmtBean.newLeaveTransaction.numberOfDays}" required="true" requiredMessage="please select Days!" label="Days "/>
+						<h:outputText value="Hours :"></h:outputText>
+						<h:inputText value="#{leaveTransactionMgmtBean.newLeaveTransaction.numberOfHours}" required="true" requiredMessage="please select Hours!" label="Hours "/>
+						<f:facet name="footer">
+							<p:commandButton value="Submit"  actionListener="#{leaveTransactionMgmtBean.doCreateLeaveTransaction}" update=":leaveTransactionTableForm:leaveTransactionTable" oncomplete="if(!args.validationFailed) PF('newLeaveTransactionDialog').hide()" />
+							<p:commandButton value="Reset" oncomplete="PF('newLeaveTransactionDialog').hide()" update=":leaveTransactionTableForm:leaveTransactionTable" />
+						</f:facet>
+					</p:panelGrid>
+				</h:form>
+			</p:dialog>
+
+			<p:confirmDialog message="Are you sure?" header="Deleting Leave Transaction" severity="alert" widgetVar="cd">
+				<h:form>
+					<p:commandButton value="Yes" actionListener="#{leaveTransactionMgmtBean.doDeletedLeaveTransaction}" update=":leaveTransactionTableForm:leaveTransactionTable" oncomplete="PF('cd').hide();" />
+					<p:commandButton value="No" onclick="PF('cd').hide();PF('leaveTransactionDialog').show();" type="button" />
+				</h:form>
+			</p:confirmDialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

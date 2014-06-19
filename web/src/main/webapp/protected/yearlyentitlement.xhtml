@@ -1,0 +1,143 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/templates/mainlayout.xhtml">
+		<ui:define name="title">Yearly Entitlement Maintenance</ui:define>
+		<ui:define name="content">
+        <h1>Yearly Entitlement Maintenance</h1>
+		<h:form id="yearlyEntitlementTable">
+		 <p:panel header="Search" toggleable="true">
+			<p:panelGrid id="SearchEmployee" columns="2" cellpadding="4">
+				<h:outputText value="Name" />
+					<h:inputText value="#{yearlyEntitlementMgmtBean.searchEmployeeName}">
+					</h:inputText>
+				
+				<h:outputText value="Leave Type" />
+					<h:inputText value="#{yearlyEntitlementMgmtBean.searchLeaveType}">
+					</h:inputText>
+					
+
+				<f:facet name="footer">				
+					<p:commandButton value="Search" update=":yearlyEntitlementTable:yearlyEntitlementTable" actionListener="#{yearlyEntitlementMgmtBean.search}" ajax="false"></p:commandButton>
+					<p:commandButton type="reset" value="Reset" ></p:commandButton>
+				</f:facet>
+			</p:panelGrid>
+		</p:panel> 
+
+		
+				 <p:dataTable id="yearlyEntitlementTable" widgetVar="yearlyEntitlementTableVar"
+					var="yearlyEntitlement0"
+					value="#{yearlyEntitlementMgmtBean.yearlyEntitlementDataModel}"
+					rowKey="#{yearlyEntitlement0.id}"
+					selection="#{yearlyEntitlementMgmtBean.selectedYearlyEntitlement}"
+					selectionMode="single"
+					 paginator="true" rows="10" scrollable="true" >
+					<p:ajax event="rowSelect"
+						listener="#{yearlyEntitlementMgmtBean.onRowSelect}"
+						update=":yearlyEntitlementDetailForm:display, :growl"
+						oncomplete="PF('yearlyEntitlementDialog').show()" />
+
+
+					<p:column id="employeeHeader" sortBy="employeeName">
+						<f:facet name="header"> Employee Name </f:facet>
+						<h:outputText value="#{yearlyEntitlement0.employee.name}" />
+					</p:column>
+					<p:column id="leaveTypeHeader" sortBy="leaveType">
+						<f:facet name="header"> Leave Type </f:facet>
+						<h:outputText value="#{yearlyEntitlement0.leaveType.name}" />
+					</p:column>
+					<p:column id="nameHeader" sortBy="entitlement">
+						<f:facet name="header"> Entitlement </f:facet>
+						<h:outputText value="#{yearlyEntitlement0.entitlement}" />
+					</p:column>
+					<p:column id="descHeader" sortBy="yearlyBalance">
+						<f:facet name="header"> Leave Balance </f:facet>
+						<h:outputText value="#{yearlyEntitlement0.yearlyLeaveBalance}" />
+					</p:column>
+
+
+				</p:dataTable>
+
+				<p:commandButton value="New Yearly Entitlement"
+					oncomplete="PF('newYearlyEntitlementDialog').show()" icon="ui-icon-star"
+					title="Creates new"/>
+
+			</h:form>
+
+			<p:growl id="growl" showDetail="true" life="1000" />
+		</ui:define>
+
+		<ui:define name="dialog">
+			<p:dialog header="Yearly Entitlement Deatail" styleClass="dlgCSS" 
+				widgetVar="yearlyEntitlementDialog" resizable="false" id="leaveTypeDlg"
+				modal="true">
+				<h:form id="yearlyEntitlementDetailForm">
+
+					<p:panelGrid id="display" columns="2" cellpadding="4"
+						style="margin:0 auto;">
+
+                        <h:outputText 
+                        value="EmployeeName :" />  
+                        <h:inputText value="#{yearlyEntitlementMgmtBean.selectedYearlyEntitlement.employee.name}"  readonly="true"/>
+                       
+                        <h:outputText 
+                        value="leaveType :"/> 
+                        <h:inputText value="#{yearlyEntitlementMgmtBean.selectedYearlyEntitlement.leaveType.name}" readonly="true"/>
+
+						<h:outputText value="Entitlement : "></h:outputText>
+						<h:inputText value="#{yearlyEntitlementMgmtBean.selectedYearlyEntitlement.entitlement}" required="true" requiredMessage="please enter entitlement!" label="Entitlement"/>
+						<h:outputText value="AvailableBalance :"></h:outputText>
+						<h:inputText value="#{yearlyEntitlementMgmtBean.selectedYearlyEntitlement.yearlyLeaveBalance}" required="true" requiredMessage="please enter Available Balance!" label="Available Balance"/>
+						 <f:facet name="footer"> 
+						 	<p:commandButton value="Update" update=":yearlyEntitlementTable:yearlyEntitlementTable" oncomplete="if(!args.validationFailed) PF('yearlyEntitlementDialog').hide()" action="#{yearlyEntitlementMgmtBean.doUpdateYearlyEntitlement}" validateClient="true" />
+							<p:commandButton value="Delete" onclick="PF('cd').show()" oncomplete="PF('yearlyEntitlementDialog').hide()" />
+						</f:facet>
+					</p:panelGrid>
+			</h:form>
+	</p:dialog>
+
+	<p:dialog header="Create New Yearly Entitlement " styleClass="dlgCSS" widgetVar="newYearlyEntitlementDialog" resizable="false" id="newLeaveTypeDlg" modal="true">
+		<h:form id="newLeaveTypeForm">
+		<p:messages autoUpdate="true"/>
+			<p:panelGrid id="displayNewLeaveType" columns="2" cellpadding="4" style="margin:0 auto;">
+					<h:outputText value="Employee Name :"></h:outputText>
+					<p:selectOneMenu value="#{yearlyEntitlementMgmtBean.employeeName}" required="true" requiredMessage="please enter Employee Name!" label="Employee Name">
+							<f:selectItem itemLabel="select Name" itemValue="" />
+							<f:selectItems value="#{yearlyEntitlementMgmtBean.employeeList}" var="employee" itemLabel="#{employee.name}" itemValue="#{name}" />
+								 <p:ajax  event ="change" update="leaveTypes" listener = "#{yearlyEntitlementMgmtBean.correspondingList}" /> 
+					</p:selectOneMenu>
+					<h:outputText value="Leave Type :"></h:outputText>
+					<p:selectOneMenu id="leaveTypes" value="#{yearlyEntitlementMgmtBean.leaveTypeName}" required="true" requiredMessage="please enter Employee Type!" label="Employee Type">
+							<f:selectItem itemLabel="select LeaveType" itemValue="" />
+							<f:selectItems value="#{yearlyEntitlementMgmtBean.leaveType}" var="leavetype" itemLabel="#{leaveType.name}" itemValue="#{name}" />
+					</p:selectOneMenu> 
+					<h:outputText value="Entitlement :"></h:outputText>
+					<h:inputText id="entitlement" value="#{yearlyEntitlementMgmtBean.yearlyEntitlement.entitlement}" required="true" requiredMessage="please enter entitlement!" label="Entitlement"/>
+					<h:outputText value="Leave Balance :"></h:outputText>
+					<h:inputText id="availableBalance" value="#{yearlyEntitlementMgmtBean.yearlyEntitlement.yearlyLeaveBalance}" required="true" requiredMessage="please enter Available Balance!" label="Available Balance"/>
+						<f:facet name="footer">  
+                        	<p:commandButton value="Submit" actionListener="#{yearlyEntitlementMgmtBean.doCreateYearlyEntitlement}" update=":yearlyEntitlementTable:yearlyEntitlementTable" oncomplete="if(!args.validationFailed) PF('newYearlyEntitlementDialog').hide()"  />		
+							<p:commandButton value="Reset" type="reset" oncomplete="PF('newYearlyEntitlementDialog').hide()" update=":yearlyEntitlementTable:yearlyEntitlementTable" />
+						</f:facet>
+			</p:panelGrid>
+		</h:form>
+	 </p:dialog>
+
+	 <p:confirmDialog message="Are you sure?" header="Deleting Yearly Entitlement" severity="alert" widgetVar="cd">
+		<h:form>
+			<p:commandButton value="Yes" actionListener="#{yearlyEntitlementMgmtBean.doDeleteYearlyEntitlement}" update=":yearlyEntitlementTable:yearlyEntitlementTable" oncomplete="PF('cd').hide();" />
+			<p:commandButton value="No" onclick="PF('cd').hide();PF('yearlyEntitlementDialog').show();" type="button" />
+		</h:form>
+	 </p:confirmDialog>
+	</ui:define>
+ </ui:composition>
+</h:body>
+</html>

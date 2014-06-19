@@ -1,0 +1,17 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<ui:composition>
+
+
+	<h:panelGrid columns="1" cellpadding="0">
+	  <h:link outcome="/protected/index">
+	  	<p:graphicImage name="logo.png" library="images"></p:graphicImage>
+	  </h:link>
+	</h:panelGrid>
+    <h3 id="welcome">Welcome, <h:outputText value="#{authenticationBean.users.username}" style="text-transform: capitalize;" />!</h3>
+</ui:composition>
+</html>

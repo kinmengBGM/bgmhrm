@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- emailconfig.xml -->
+<config>
+    <mail>
+        <smtp>
+            <host>smtp.gmail.com</host>
+            <port>465</port>
+            <ssl>true</ssl>
+            <auth>true</auth>
+            <sender>
+            	<username>jenkinsbeans@gmail.com</username>
+            	<address>jenkinsbeans@gmail.com</address>
+        		<password>1700819819</password>
+        	</sender>    	
+        </smtp>
+    </mail>
+</config>

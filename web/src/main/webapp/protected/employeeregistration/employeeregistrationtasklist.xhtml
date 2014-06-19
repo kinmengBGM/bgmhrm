@@ -1,0 +1,196 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions" >
+	
+	
+<h:head>
+
+</h:head>
+	
+	 
+	<h:body>
+<ui:composition template="/templates/mainlayout.xhtml">
+
+<ui:define name="title">Employee Registration Approval</ui:define>
+
+<ui:define name="content">
+        <h1>Employee Registration Approval</h1>
+		<h:form id="employeeRegistrationTableForm">
+		
+		
+        <p:dataTable id="employeeRegistrationTable" widgetVar="employeeRegistrationTable" var="registeredEmployee0" value="#{employeeRegistrationApprovalMgmtBean.registeredEmployeeDataModel}" rowKey="#{registeredEmployee0.taskId}"
+                 selection="#{employeeRegistrationApprovalMgmtBean.selectedRegisteredEmployee}" selectionMode="single" >
+          <p:ajax event="rowSelect" listener="#{employeeRegistrationApprovalMgmtBean.onRowSelect}" update=":empRegDetailForm:display" oncomplete="PF('empRegDialog').show()" />  
+         <p:column id="dateHeader" sortBy="registrationDate">
+            <f:facet name="header"> Registration Date </f:facet>
+            <h:outputText value="#{registeredEmployee0.registrationDate}" >
+            	<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />  
+            </h:outputText>
+          </p:column>
+          <p:column id="nameHeader"  sortBy="fullname" >
+            <f:facet name="header"> Employee Name </f:facet>
+            <h:outputText value="#{registeredEmployee0.fullname}" />
+          </p:column>
+        
+        	<p:column id="genderHeader" >
+            <f:facet name="header"> Gender </f:facet>
+            <h:outputText value="#{registeredEmployee0.gender}" />
+          </p:column>
+          
+          <p:column id="personalEmailAddressHeader" >
+            <f:facet name="header"> Email Address(Personal) </f:facet>
+            <h:outputText value="#{registeredEmployee0.personalEmailAddress}" />
+          </p:column>
+        </p:dataTable>
+        
+        </h:form> 
+  </ui:define>  
+  
+  <ui:define name="dialog">
+      <p:dialog header="Approve Employee Registration" styleClass="empRegCSS" widgetVar="empRegDialog" resizable="false" id="empRegDlg" modal ="true">
+               <h:form id="empRegDetailForm">
+    			<p:messages autoUpdate="true" />
+                <p:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+ 					<f:facet name="header"><h3>Employee HRM Registration Approval</h3></f:facet>
+				<p:panelGrid id="EmployeeReqDetailLeft" columns="2" cellpadding="4"
+					style="margin:0 auto;">
+					<h:outputText value="Name" class="req" />
+					<h:inputText value="#{employeeRegistrationApprovalMgmtBean.selectedRegisteredEmployee.fullname}"
+						required="true" requiredMessage="Please enter Name"/>
+
+					<h:outputText value="Employee Number" class="req" />
+					<h:inputText
+						value="#{employeeRegistrationApprovalMgmtBean.selectedRegisteredEmployee.employeeNumber}"
+						required="true" requiredMessage="Please enter Employee Number" />
+
+					<h:outputText value="Position" class="req" />
+					<h:inputText
+						value="#{employeeRegistrationApprovalMgmtBean.selectedRegisteredEmployee.position}"
+						required="true" requiredMessage="Please enter Position" />
+
+					
+
+					<h:outputText value="Email Address(Work)" class="req" />
+					<h:inputText
+						value="#{employeeRegistrationApprovalMgmtBean.selectedRegisteredEmployee.workEmailAddress}" required="true" requiredMessage="Please enter Email Address(Work)"  />
+
+
+					<h:outputText value="Email Address(Personal)" class="req" />
+					<h:inputText
+						value="#{employeeRegistrationApprovalMgmtBean.selectedRegisteredEmployee.personalEmailAddress}" required="true" requiredMessage="Please enter Email Address(Personal)"/>
+
+					<h:outputText value="Phone Number(Work)" />
+					<h:inputText
+						value="#{employeeRegistrationApprovalMgmtBean.selectedRegisteredEmployee.workPhoneNumber}" />
+
+					<h:outputText value="Phone Number(Personal)" />
+					<h:inputText
+						value="#{employeeRegistrationApprovalMgmtBean.selectedRegisteredEmployee.personalPhoneNumber}" />
+					
+					<h:outputText value="Join Date" class="req" />
+					<p:calendar pattern="dd/MM/yyyy"
+						value="#{employeeRegistrationApprovalMgmtBean.selectedRegisteredEmployee.joinDate}"
+						id="newEmployeeJoinDateCal" required="true" requiredMessage="Please enter Join Date"/>
+					
+					</p:panelGrid>
+					
+					<p:panelGrid id="EmployeeReqDetailRight" columns="2" cellpadding="4"
+					style="margin:0 auto;">
+					
+					<h:outputText value="IC Number" />
+					<h:inputText
+						value="#{employeeRegistrationApprovalMgmtBean.selectedRegisteredEmployee.idNumber}" />
+
+					<h:outputText value="Passport Number" />
+					<h:inputText
+						value="#{employeeRegistrationApprovalMgmtBean.selectedRegisteredEmployee.passportNumber}" />
+						
+					<h:outputText value="Gender" class="req"/>
+					<p:selectOneMenu
+						value="#{employeeRegistrationApprovalMgmtBean.selectedRegisteredEmployee.gender}"
+						effect="fade" required="true" requiredMessage="Please select Gender">
+						<f:selectItem itemLabel="Select one" itemValue=""/>
+						<f:selectItem itemLabel="Male" itemValue="M" />
+						<f:selectItem itemLabel="Female" itemValue="F" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Grade" class="req" />
+					<p:selectOneMenu
+						value="#{employeeRegistrationApprovalMgmtBean.selectedEmployeeGrade}"
+						effect="fade" required="true"
+						requiredMessage="Please select Grade">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{employeeGradeListBean.employeeGradeList}"
+							var="employeeGrade0" itemLabel="#{employeeGrade0.description}"
+							itemValue="#{employeeGrade0.id}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Employee Type" class="req" />
+					<p:selectOneMenu
+						value="#{employeeRegistrationApprovalMgmtBean.selectedEmployeeType}"
+						effect="fade" required="true"
+						requiredMessage="Please select Employee Type">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{employeeTypeListBean.employeeTypeList}"
+							var="employeeType0" itemLabel="#{employeeType0.description}"
+							itemValue="#{employeeType0.id}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Department" class="req" />
+					<p:selectOneMenu
+						value="#{employeeRegistrationApprovalMgmtBean.selectedDepartment}"
+						effect="fade" required="true"
+						requiredMessage="Please select Department">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{departmentListBean.departmentList}"
+							var="department0" itemLabel="#{department0.description}"
+							itemValue="#{department0.id}" />
+					</p:selectOneMenu>
+					
+					
+					
+							
+					</p:panelGrid>
+					
+						
+                    <f:facet name="footer">
+                            <p:commandButton value="Approve" update=":employeeRegistrationTableForm:employeeRegistrationTable" oncomplete="if(!args.validationFailed) empRegDialog.hide()" actionListener="#{employeeRegistrationApprovalMgmtBean.doApproveEmployeeRegistration()}" validateClient="true"/>
+                            <p:commandButton value="Reject" immediate="true" oncomplete="empRegDialog.hide();cd.show()"/>
+                            <p:commandButton value="Cancel" oncomplete="PF('empRegDialog').hide()" immediate="true"/>
+                    </f:facet>
+                </p:panelGrid>
+             </h:form>
+          </p:dialog>          
+          
+          <p:dialog header="Reject Registration" 
+          	severity="alert" widgetVar="cd">	
+			<h:form>
+			<p:messages autoUpdate="true" />
+			<p:panelGrid id="RejectReason" columns="2" cellpadding="4" style="margin:0 auto;">
+			<h:outputText value="Reason" class="req" />
+					<p:inputTextarea id="reason" rows="5" cols="24" counter="counter" maxlength="100"
+    					counterTemplate="{0} characters remaining." autoResize="false" value="#{employeeRegistrationApprovalMgmtBean.selectedRegisteredEmployee.reason}" required="true" requiredMessage="Please enter Reason"/> 
+					<h:outputText value="" />
+					<h:outputText id="counter" /> 
+					
+			 <f:facet name="footer">
+			<p:commandButton value="Reject" update=":employeeRegistrationTableForm:employeeRegistrationTable" oncomplete="if(!args.validationFailed) cd.hide()" actionListener="#{employeeRegistrationApprovalMgmtBean.doRejectEmployeeRegistration()}" validateClient="true"/>
+			<p:commandButton value="Cancel" immediate="true" onclick="PF('cd').hide();PF('empRegDialog').show();" type="button" />
+			</f:facet>
+			</p:panelGrid>
+			</h:form>
+			</p:dialog>
+			
+			
+</ui:define>
+
+
+
+	
+</ui:composition>
+</h:body>
+</html>

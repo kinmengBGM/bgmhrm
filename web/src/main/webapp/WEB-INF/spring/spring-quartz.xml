@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+	<import resource="spring-ds.xml"/>
+	
+	<!-- <bean id="monthlyAddedLeaveJob" class="com.beans.leaveapp.quartzjobs.MonthlyAddedLeaveJob"></bean>
+	<bean id="yearlyAddedLeaveJob" class="com.beans.leaveapp.quartzjobs.YearlyAddedLeaveJob"></bean>
+	<bean id="yearlyRefreshedLeavesJob" class="com.beans.leaveapp.quartzjobs.YearlyRefreshedLeavesJob"></bean> 
+	
+	
+	<bean name="MonthlyAddedLeaveJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+			<property name="jobClass" value="com.beans.leaveapp.quartzjobs.MonthlyAddedLeaveJob"></property>	
+	</bean>
+	
+	<bean name="YearlyAddedLeaveJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+			<property name="jobClass" value="com.beans.leaveapp.quartzjobs.YearlyAddedLeaveJob"></property>
+	</bean> 
+	
+	<bean name="YearlyRefreshedLeavesJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+			<property name="jobClass" value="com.beans.leaveapp.quartzjobs.YearlyRefreshedLeavesJob"></property>
+	</bean>
+	
+	<bean id="cronTriggerMonthlyAddedLeaveJob" class="org.springframework.scheduling.quartz.CronTriggerBean">
+			<property name="jobDetail" ref="MonthlyAddedLeaveJob"></property>
+			<property name="cronExpression" value="0 0 1 1 * ?"></property>	
+	</bean>
+	
+	<bean id="cronTriggerYearlyAddedLeaveJob" class="org.springframework.scheduling.quartz.CronTriggerBean">
+			<property name="jobDetail" ref="YearlyAddedLeaveJob"></property>
+			<property name="cronExpression" value="0 0 1 * * ?"></property>
+	</bean> 
+	
+	<bean id="cronTriggerYearlyRefreshedLeavesJob" class="org.springframework.scheduling.quartz.CronTriggerBean">
+			<property name="jobDetail" ref="YearlyRefreshedLeavesJob"></property>
+			<property name="cronExpression" value="0 0 1 * 1 ?"></property>
+	</bean>
+	
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+			<property name="triggers">
+				<list>
+					<ref bean="cronTriggerMonthlyAddedLeaveJob" />
+					<ref bean="cronTriggerYearlyAddedLeaveJob"/>
+					<ref bean="cronTriggerYearlyRefreshedLeavesJob"/>
+				</list>			
+			</property>
+	</bean> -->
+	
+	<bean id="applicationContextProvider" class="com.beans.leaveapp.jbpm6.util.ApplicationContextProvider"></bean>
+	
+</beans>	

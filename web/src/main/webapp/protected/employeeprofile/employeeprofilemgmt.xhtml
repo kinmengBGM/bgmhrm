@@ -1,0 +1,79 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions" >
+	<f:metadata>
+    	<f:event type="preRenderView" listener="#{authenticationBean.hasPageAccess('ViewEmployees')}" />
+    </f:metadata>
+<h:body>
+<ui:composition template="/templates/mainlayout.xhtml">
+<ui:define name="title">Employee List</ui:define>
+<ui:define name="content">
+        <h1>Employee List </h1>
+		<h:form id="employeeTableForm">
+		<p:panel header="Search" toggleable="true">
+			<p:panelGrid id="SearchEmployee" columns="2" cellpadding="4">
+				<h:outputText value="Name" />
+				<h:inputText value="#{employeeProfileMgmtBean.searchName}"></h:inputText>
+				<h:outputText value="Employee Number" />
+				<h:inputText value="#{employeeProfileMgmtBean.searchEmployeeNumber}"></h:inputText>
+				<f:facet name="footer">				
+					<p:commandButton value="Search" update="employeeTable" actionListener="#{employeeProfileMgmtBean.searchEmployee()}"></p:commandButton>
+					<p:commandButton type="reset" value="Reset"></p:commandButton>
+				</f:facet>
+			</p:panelGrid>
+		</p:panel>
+        <p:dataTable id="employeeTable" var="employee0" value="#{employeeProfileMgmtBean.employeeDataModel}" widgetVar="employeeSearch" rowKey="#{employee0.id}"
+                 selection="#{employeeProfileMgmtBean.selectedEmployee}" paginator="true" rows="10" scrollable="true" selectionMode="single"  emptyMessage="No data found with given criteria" >
+          <p:ajax event="rowSelect" listener="#{employeeProfileMgmtBean.onRowSelect}" update=":displayEmployee" oncomplete="PF('employeeDialog').show()" />  
+          <p:column id="nameHeader" sortBy="name">
+         	 <f:facet name="header"> Name </f:facet>
+             <h:outputText value="#{employee0.name}" />
+          </p:column>
+          <p:column id="employeeNumberHeader" sortBy="employeeNumber">
+          	<f:facet name="header"> Employee Number </f:facet>
+            <h:outputText value="#{employee0.employeeNumber}" />
+          </p:column>
+          <p:column id="employeeJoinDateHeader" sortBy="joinDate">
+          	<f:facet name="header"> Join Date </f:facet>
+           	<h:outputText value="#{employee0.joinDate}"><f:convertDateTime pattern="dd/MM/yyyy"/></h:outputText>
+          </p:column>
+          <p:column id="positionHeader" headerText="Position">
+            <h:outputText value="#{employee0.position}" />
+          </p:column>
+          <p:column id="lastModifiedByHeader" sortBy="lastModifiedBy"> 
+          	 <f:facet name="header"> Last Modified By</f:facet>
+	        <h:outputText value="#{employee0.lastModifiedBy}" />
+	      </p:column>
+	      <p:column id="lastModifiedHeader" sortBy="lastModifiedTime">
+	        <f:facet name="header"> Last Modified Time</f:facet>
+	        <h:outputText value="#{employee0.lastModifiedTime}" >  <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /></h:outputText>
+	      </p:column>
+        </p:dataTable>
+      </h:form> 
+	  <h:form id="newEmployeeBtnForm">
+        <p:commandButton value="New Employee" update=":displayNewEmployee" actionListener="#{employeeProfileMgmtBean.initEmployeeCreation()}" oncomplete="PF('newEmployeeDialog').show()" title="Creates new employee" rendered="#{authenticationBean.hasAccess('AddEmployee')}"/>
+      </h:form>
+  </ui:define>  
+  <ui:define name="dialog">
+       <p:dialog header="Employee Detail" widgetVar="employeeDialog" resizable="false" id="employeeDlg" modal="true">
+          <ui:include src="employeeprofileupdatedetails.xhtml" />       
+          </p:dialog>
+      <p:dialog header="Create New Employee" widgetVar="newEmployeeDialog" resizable="false" id="newEmployeeDlg" closable="false" modal="true">
+          <ui:include src="employeeprofiledetails.xhtml" />          
+          </p:dialog>
+	<p:confirmDialog id="deleteCD" message="Are you sure you want to delete #{employeeProfileMgmtBean.employeeName}?" header="Deleting employee" 
+          	severity="alert" widgetVar="cd">	
+			<h:form>
+			<p:commandButton value="Yes" actionListener="#{employeeProfileMgmtBean.doDeleteEmployee()}" update=":employeeTableForm:employeeTable" oncomplete="PF('cd').hide();PF('employeeDialog').hide();"/>
+			<p:commandButton value="No" onclick="PF('cd').hide();" type="button" />
+			</h:form>
+			</p:confirmDialog>	
+</ui:define>
+</ui:composition>
+</h:body>
+</html>
+

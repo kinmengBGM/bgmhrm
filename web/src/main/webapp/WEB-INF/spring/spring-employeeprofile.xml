@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<import resource="spring-ds.xml"/>
+
+	
+	<bean id="address" class="com.beans.leaveapp.address.model.Address" />
+
+	  <bean id="employee" class="com.beans.leaveapp.employee.model.Employee" /> 
+	
+	<bean id="addressService" class="com.beans.leaveapp.address.service.AddressServiceImpl"/>
+	
+	 <bean id="employeeService" class="com.beans.leaveapp.employee.service.EmployeeServiceImpl" >
+	 	<property name="departmentService" >
+			<ref bean="departmentService"/>
+		</property>
+		
+		<property name="employeeGradeService" >
+			<ref bean="employeeGradeService"/>
+		</property>
+		
+		<property name="employeeTypeService" >
+			<ref bean="employeeTypeService"/>
+		</property>
+		
+		<property name="addressService" >
+			<ref bean="addressService"/>
+		</property>
+		
+		<property name="usersService" >
+			<ref bean="usersService"/>
+		</property>
+		
+		<property name="auditTrail">
+			<ref bean="auditTrail"/>
+		</property>
+	 </bean>   
+	
+	
+</beans>

@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+  <bpmn2:itemDefinition id="ItemDefinition_2" structureRef="java.lang.String"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_3" structureRef="com.beans.leaveapp.employee.model.Employee"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_5" structureRef="com.beans.leaveapp.department.model.Department"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_7" structureRef="com.beans.leaveapp.employeegrade.model.EmployeeGrade"/>
+  <bpmn2:itemDefinition id="_approvalLevelModel" structureRef="com.beans.leaveapp.applyleave.model.ApprovalLevelModel"/>
+  <bpmn2:itemDefinition id="ItemDefinition_1" structureRef="Integer"/>
+  <bpmn2:itemDefinition id="ItemDefinition_3" structureRef="Boolean"/>
+  <bpmn2:itemDefinition id="ItemDefinition_4" structureRef="com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_9" structureRef="com.beans.leaveapp.leavetransaction.model.LeaveTransaction"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_650" structureRef="com.beans.leaveapp.leaveapplicationcomment.model.LeaveApplicationComment"/>
+  <bpmn2:itemDefinition id="ItemDefinition_5" structureRef="java.util.List"/>
+  <bpmn2:itemDefinition id="ItemDefinition_6" structureRef="java.lang.Boolean"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_1180" structureRef="java.lang.Integer"/>
+  <bpmn2:process id="com.beans.leaveapp.bpmn.applyleave" tns:version="1" tns:packageName="defaultPackage" tns:adHoc="false" name="Leave Application Process" isExecutable="true" processType="Private">
+    <bpmn2:extensionElements>
+      <tns:import name="com.beans.leaveapp.applyleave.model.ApprovalLevelModel"/>
+      <tns:import name="com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement"/>
+      <tns:import name="com.beans.leaveapp.leavetransaction.model.LeaveTransaction"/>
+      <tns:import name="com.beans.leaveapp.leaveapplicationcomment.model.LeaveApplicationComment"/>
+      <tns:import name="java.util.List"/>
+      <tns:import name="com.beans.leaveapp.employee.model.Employee"/>
+      <tns:import name="java.lang.Boolean"/>
+      <tns:import name="java.lang.String"/>
+      <tns:import name="java.lang.Integer"/>
+    </bpmn2:extensionElements>
+    <bpmn2:property id="role" itemSubjectRef="ItemDefinition_2"/>
+    <bpmn2:property id="employee" itemSubjectRef="_ItemDefinition_3"/>
+    <bpmn2:property id="approvalLevelModel" itemSubjectRef="_approvalLevelModel"/>
+    <bpmn2:property id="isTeamLeadApproved" itemSubjectRef="ItemDefinition_3"/>
+    <bpmn2:property id="isOperDirApproved" itemSubjectRef="ItemDefinition_3"/>
+    <bpmn2:property id="leaveTransaction" itemSubjectRef="_ItemDefinition_9"/>
+    <bpmn2:property id="leaveApplicationCommentList" itemSubjectRef="ItemDefinition_5"/>
+    <bpmn2:property id="teamLeadName" itemSubjectRef="ItemDefinition_2"/>
+    <bpmn2:property id="oprDirName" itemSubjectRef="ItemDefinition_2"/>
+    <bpmn2:property id="leaveTransactionId" itemSubjectRef="_ItemDefinition_1180"/>
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="Requires Team Lead's Approval?" gatewayDirection="Diverging">
+      <bpmn2:incoming>SequenceFlow_23</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_3" tns:priority="1" name="Yes" sourceRef="ExclusiveGateway_1" targetRef="UserTask_2">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_111" language="http://www.java.com/java">return approvalLevelModel.getApprover() == &quot;ROLE_TEAMLEAD&quot;;</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_4" tns:priority="1" name="No" sourceRef="ExclusiveGateway_1" targetRef="InclusiveGateway_2">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_112" language="http://www.java.com/java">return approvalLevelModel.getApprover() == &quot;ROLE_OPERDIR&quot;;</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:userTask id="UserTask_2" name="Team Lead Approval">
+      <bpmn2:extensionElements>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <tns:script>System.out.println(&quot;===============Exit leaveTransactionId is :&quot;+leaveTransactionId);</tns:script>
+        </tns:onExit-script>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_InputOutputSpecification_4">
+        <bpmn2:dataInput id="_DataInput_16" itemSubjectRef="ItemDefinition_2" name="TaskName"/>
+        <bpmn2:dataInput id="_DataInput_17" itemSubjectRef="ItemDefinition_1" name="Priority"/>
+        <bpmn2:dataInput id="_DataInput_18" itemSubjectRef="ItemDefinition_2" name="Comment"/>
+        <bpmn2:dataInput id="_DataInput_19" itemSubjectRef="ItemDefinition_2" name="GroupId"/>
+        <bpmn2:dataInput id="_DataInput_20" itemSubjectRef="ItemDefinition_3" name="Skippable"/>
+        <bpmn2:dataInput id="_DataInput_21" itemSubjectRef="ItemDefinition_2" name="Content"/>
+        <bpmn2:dataInput id="_DataInput_22" itemSubjectRef="ItemDefinition_2" name="Locale"/>
+        <bpmn2:dataInput id="DataInput_14" itemSubjectRef="_ItemDefinition_9" name="leaveTransaction"/>
+        <bpmn2:dataInput id="DataInput_4" itemSubjectRef="ItemDefinition_3" name="isOperDirApproved"/>
+        <bpmn2:dataInput id="DataInput_18" itemSubjectRef="ItemDefinition_3" name="isTeamLeadApproved"/>
+        <bpmn2:dataInput id="DataInput_29" itemSubjectRef="ItemDefinition_2" name="teamLeadName"/>
+        <bpmn2:dataOutput id="DataOutput_1" itemSubjectRef="ItemDefinition_3" name="isTeamLeadApproved"/>
+        <bpmn2:dataOutput id="DataOutput_9" itemSubjectRef="_ItemDefinition_9" name="leaveTransaction"/>
+        <bpmn2:dataOutput id="DataOutput_3" itemSubjectRef="ItemDefinition_3" name="isOperDirApproved"/>
+        <bpmn2:dataOutput id="DataOutput_12" itemSubjectRef="ItemDefinition_2" name="teamLeadName"/>
+        <bpmn2:inputSet id="_InputSet_6">
+          <bpmn2:dataInputRefs>DataInput_14</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_4</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_18</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_29</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:inputSet id="_InputSet_7" name="New Input Set">
+          <bpmn2:dataInputRefs>_DataInput_16</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_DataInput_17</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_DataInput_18</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_DataInput_19</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_DataInput_20</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_DataInput_21</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_DataInput_22</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_OutputSet_6">
+          <bpmn2:dataOutputRefs>DataOutput_1</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_9</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_3</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_12</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+        <bpmn2:outputSet id="_OutputSet_7" name="Output Set"/>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_DataInputAssociation_16">
+        <bpmn2:targetRef>_DataInput_16</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_25">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_50">TeamLead Approval</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_49">_DataInput_16</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_DataInputAssociation_17">
+        <bpmn2:targetRef>_DataInput_17</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_DataInputAssociation_18">
+        <bpmn2:targetRef>_DataInput_18</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_DataInputAssociation_19">
+        <bpmn2:targetRef>_DataInput_19</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_23">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_46">ROLE_TEAMLEAD</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_45">_DataInput_19</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_DataInputAssociation_20">
+        <bpmn2:targetRef>_DataInput_20</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_18">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_36">false</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_35">_DataInput_20</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_DataInputAssociation_21">
+        <bpmn2:targetRef>_DataInput_21</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_DataInputAssociation_22">
+        <bpmn2:targetRef>_DataInput_22</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_14">
+        <bpmn2:sourceRef>leaveTransaction</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_14</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_18">
+        <bpmn2:sourceRef>isOperDirApproved</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_4</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_19">
+        <bpmn2:sourceRef>isTeamLeadApproved</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_18</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_30">
+        <bpmn2:sourceRef>teamLeadName</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_29</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
+        <bpmn2:sourceRef>DataOutput_1</bpmn2:sourceRef>
+        <bpmn2:targetRef>isTeamLeadApproved</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_9">
+        <bpmn2:sourceRef>DataOutput_9</bpmn2:sourceRef>
+        <bpmn2:targetRef>leaveTransaction</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_3">
+        <bpmn2:sourceRef>DataOutput_3</bpmn2:sourceRef>
+        <bpmn2:targetRef>isOperDirApproved</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_12">
+        <bpmn2:sourceRef>DataOutput_12</bpmn2:sourceRef>
+        <bpmn2:targetRef>teamLeadName</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_11" tns:priority="1" name="" sourceRef="UserTask_2" targetRef="ExclusiveGateway_3"/>
+    <bpmn2:inclusiveGateway id="InclusiveGateway_2" name="" gatewayDirection="Converging">
+      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_19</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
+    </bpmn2:inclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_14" tns:priority="1" name="" sourceRef="InclusiveGateway_2" targetRef="UserTask_3"/>
+    <bpmn2:startEvent id="_1" name="Start Process">
+      <bpmn2:outgoing>_1-_jbpm-unique-10</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="_1-_jbpm-unique-10" tns:priority="1" name="" sourceRef="_1" targetRef="UserTask_1"/>
+    <bpmn2:scriptTask id="ScriptTask_2" name="Init Approval Level Model" scriptFormat="http://www.java.com/java">
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
+      <bpmn2:script>kcontext.getKnowledgeRuntime().insert(approvalLevelModel);</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_5" tns:priority="1" name="" sourceRef="ScriptTask_2" targetRef="BusinessRuleTask_1"/>
+    <bpmn2:businessRuleTask id="BusinessRuleTask_1" tns:ruleFlowGroup="leaveapprovalrequirement" name="Check Approval Level Requirement">
+      <bpmn2:extensionElements>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <tns:script>ApprovalLevelModel model = (ApprovalLevelModel) kcontext.getVariable(&quot;approvalLevelModel&quot;);
+System.out.println(&quot;Model Approver is: &quot; + model.getApprover());
+</tns:script>
+        </tns:onExit-script>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <tns:script></tns:script>
+        </tns:onEntry-script>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <tns:script></tns:script>
+        </tns:onEntry-script>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_22</bpmn2:outgoing>
+    </bpmn2:businessRuleTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_22" tns:priority="1" name="" sourceRef="BusinessRuleTask_1" targetRef="ScriptTask_5"/>
+    <bpmn2:scriptTask id="ScriptTask_5" name="Email to Leave requester and Lead/Director" scriptFormat="http://www.java.com/java">
+      <bpmn2:incoming>SequenceFlow_22</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_23</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Sending mail to Leave requester and Lead/Director&quot;);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,role,isTeamLeadApproved,isOperDirApproved,teamLeadName,oprDirName,1);
+System.out.println(&quot;=========== leaveTransactionId : &quot;+leaveTransactionId);</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_23" tns:priority="1" name="" sourceRef="ScriptTask_5" targetRef="ExclusiveGateway_1"/>
+    <bpmn2:scriptTask id="ScriptTask_1" name="Email HR and Leave Requester" scriptFormat="http://www.java.com/java">
+      <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Write API for sending mail to HR as well as Leave requester as approved&quot;);
+String teamLead =  (String)kcontext.getVariable(&quot;teamLeadName&quot;);
+System.out.println(&quot;Leave is approved ? : &quot; +isTeamLeadApproved+&quot;and &quot;+isOperDirApproved);
+System.out.println(&quot;Team Lead and Opr Dir names  ? : &quot; + teamLeadName+&quot; and &quot;+oprDirName+&quot; from context teamLead :&quot;+teamLead);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,role,isTeamLeadApproved,isOperDirApproved,teamLeadName,oprDirName,4);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveBalanceAfterApproval(leaveTransaction,isOperDirApproved);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatus(leaveTransaction,leaveTransactionId,isTeamLeadApproved, isOperDirApproved,4);</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_8" tns:priority="1" name="" sourceRef="ScriptTask_1" targetRef="EndEvent_1"/>
+    <bpmn2:endEvent id="EndEvent_1" name="End Process">
+      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_3" name="Is Team Lead Approved?" gatewayDirection="Diverging">
+      <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_18</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_15" tns:priority="1" name="No" sourceRef="ExclusiveGateway_3" targetRef="ScriptTask_4">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_15" language="http://www.java.com/java">return !isTeamLeadApproved;</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_18" tns:priority="1" name="Yes" sourceRef="ExclusiveGateway_3" targetRef="ScriptTask_6">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_16" language="http://www.java.com/java">return isTeamLeadApproved;</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:scriptTask id="ScriptTask_6" name="Send Email to Operational Director" scriptFormat="http://www.java.com/java">
+      <bpmn2:incoming>SequenceFlow_18</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_19</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Send Email to Operational Director&quot;);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,role,true,false,teamLeadName,oprDirName,2);</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_19" tns:priority="1" name="" sourceRef="ScriptTask_6" targetRef="InclusiveGateway_2"/>
+    <bpmn2:userTask id="UserTask_3" name="Operation Director Approval">
+      <bpmn2:extensionElements>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <tns:script>System.out.println(&quot;Successfully started OP Dir task...&quot;);</tns:script>
+        </tns:onEntry-script>
+      </bpmn2:extensionElements>
+      <bpmn2:extensionElements>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <tns:script>System.out.println(&quot;Successfully Exiting OP Dir task...&quot;);
+</tns:script>
+        </tns:onExit-script>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_InputOutputSpecification_5">
+        <bpmn2:dataInput id="DataInput_48" itemSubjectRef="ItemDefinition_2" name="oprDirName"/>
+        <bpmn2:dataInput id="DataInput_73" itemSubjectRef="ItemDefinition_3" name="isOperDirApproved"/>
+        <bpmn2:dataInput id="DataInput_53" itemSubjectRef="_ItemDefinition_9" name="leaveTransaction"/>
+        <bpmn2:dataInput id="DataInput_54" itemSubjectRef="_approvalLevelModel" name="approvalLevelModel"/>
+        <bpmn2:dataInput id="DataInput_72" itemSubjectRef="ItemDefinition_6" name="isTeamLeadApproved"/>
+        <bpmn2:dataInput id="DataInput_115" name="TaskName"/>
+        <bpmn2:dataInput id="DataInput_118" name="GroupId"/>
+        <bpmn2:dataOutput id="DataOutput_2" itemSubjectRef="ItemDefinition_3" name="isOperDirApproved"/>
+        <bpmn2:dataOutput id="DataOutput_11" itemSubjectRef="_ItemDefinition_9" name="leaveTransaction"/>
+        <bpmn2:dataOutput id="DataOutput_14" itemSubjectRef="ItemDefinition_2" name="oprDirName"/>
+        <bpmn2:dataOutput id="DataOutput_2_1" itemSubjectRef="_approvalLevelModel" name="approvalLevelModel"/>
+        <bpmn2:dataOutput id="DataOutput_4" itemSubjectRef="ItemDefinition_3" name="isTeamLeadApproved"/>
+        <bpmn2:dataOutput id="DataOutput_16" itemSubjectRef="_ItemDefinition_1180" name="leaveTransactionId"/>
+        <bpmn2:inputSet id="_InputSet_8">
+          <bpmn2:dataInputRefs>DataInput_48</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_73</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_53</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_54</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_72</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_115</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_118</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:inputSet id="_InputSet_9" name="New Input Set"/>
+        <bpmn2:outputSet id="_OutputSet_8">
+          <bpmn2:dataOutputRefs>DataOutput_2</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_11</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_14</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_2_1</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_4</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_16</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+        <bpmn2:outputSet id="_OutputSet_9" name="Output Set"/>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_49">
+        <bpmn2:sourceRef>oprDirName</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_48</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_74">
+        <bpmn2:sourceRef>isOperDirApproved</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_73</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_53">
+        <bpmn2:sourceRef>leaveTransaction</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_53</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_54">
+        <bpmn2:sourceRef>approvalLevelModel</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_54</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_72">
+        <bpmn2:sourceRef>isTeamLeadApproved</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_72</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_115">
+        <bpmn2:targetRef>DataInput_115</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_131">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_262">Operation Director Approval</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_261">DataInput_115</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_118">
+        <bpmn2:targetRef>DataInput_118</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_134">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_268">ROLE_OPERDIR</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_267">DataInput_118</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_2">
+        <bpmn2:sourceRef>DataOutput_2</bpmn2:sourceRef>
+        <bpmn2:targetRef>isOperDirApproved</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_11">
+        <bpmn2:sourceRef>DataOutput_11</bpmn2:sourceRef>
+        <bpmn2:targetRef>leaveTransaction</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_14">
+        <bpmn2:sourceRef>DataOutput_14</bpmn2:sourceRef>
+        <bpmn2:targetRef>oprDirName</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_2_1">
+        <bpmn2:sourceRef>DataOutput_2_1</bpmn2:sourceRef>
+        <bpmn2:targetRef>approvalLevelModel</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_4">
+        <bpmn2:sourceRef>DataOutput_4</bpmn2:sourceRef>
+        <bpmn2:targetRef>isTeamLeadApproved</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_16">
+        <bpmn2:sourceRef>DataOutput_16</bpmn2:sourceRef>
+        <bpmn2:targetRef>leaveTransactionId</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_17" tns:priority="1" name="" sourceRef="UserTask_3" targetRef="ScriptTask_1"/>
+    <bpmn2:userTask id="UserTask_1" name="Submit Leave">
+      <bpmn2:extensionElements>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <tns:script>System.out.println(&quot;After Exiting Submit Task : &quot;+leaveTransactionId);</tns:script>
+        </tns:onExit-script>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>_1-_jbpm-unique-10</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_InputOutputSpecification_3">
+        <bpmn2:dataInput id="DataInput_3" itemSubjectRef="_ItemDefinition_3" name="employee"/>
+        <bpmn2:dataInput id="DataInput_5" itemSubjectRef="_approvalLevelModel" name="approvalLevelModel"/>
+        <bpmn2:dataInput id="DataInput_6" itemSubjectRef="ItemDefinition_3" name="isTeamLeadApproved"/>
+        <bpmn2:dataInput id="DataInput_7" itemSubjectRef="ItemDefinition_3" name="isOperDirApproved"/>
+        <bpmn2:dataInput id="DataInput_1" itemSubjectRef="_ItemDefinition_9" name="leaveTransaction"/>
+        <bpmn2:dataInput id="DataInput_8" itemSubjectRef="_approvalLevelModel" name="role"/>
+        <bpmn2:dataInput id="DataInput_49" name="TaskName"/>
+        <bpmn2:dataInput id="DataInput_59" name="GroupId"/>
+        <bpmn2:dataInput id="DataInput_94" itemSubjectRef="ItemDefinition_2" name="teamLeadName"/>
+        <bpmn2:dataInput id="DataInput_25" itemSubjectRef="_ItemDefinition_1180" name="leaveTransactionId"/>
+        <bpmn2:dataOutput id="DataOutput_5" itemSubjectRef="_ItemDefinition_3" name="employee"/>
+        <bpmn2:dataOutput id="DataOutput_6" itemSubjectRef="_ItemDefinition_9" name="leaveTransaction"/>
+        <bpmn2:dataOutput id="DataOutput_7" itemSubjectRef="ItemDefinition_3" name="isTeamLeadApproved"/>
+        <bpmn2:dataOutput id="DataOutput_8" itemSubjectRef="ItemDefinition_5" name="leaveApplicationCommentList"/>
+        <bpmn2:dataOutput id="DataOutput_10" itemSubjectRef="ItemDefinition_2" name="role"/>
+        <bpmn2:dataOutput id="DataOutput_7_1" itemSubjectRef="ItemDefinition_2" name="teamLeadName"/>
+        <bpmn2:dataOutput id="DataOutput_13" itemSubjectRef="_ItemDefinition_1180" name="leaveTransactionId"/>
+        <bpmn2:inputSet id="_InputSet_4">
+          <bpmn2:dataInputRefs>DataInput_3</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_5</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_6</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_7</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_8</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_49</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_59</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_94</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_25</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:inputSet id="_InputSet_5" name="New Input Set"/>
+        <bpmn2:outputSet id="_OutputSet_4">
+          <bpmn2:dataOutputRefs>DataOutput_5</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_6</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_7</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_8</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_10</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_7_1</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_13</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+        <bpmn2:outputSet id="_OutputSet_5" name="Output Set"/>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_3">
+        <bpmn2:sourceRef>employee</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_3</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_5">
+        <bpmn2:sourceRef>approvalLevelModel</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_5</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_6">
+        <bpmn2:sourceRef>isTeamLeadApproved</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_6</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_7">
+        <bpmn2:sourceRef>isOperDirApproved</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_7</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_1">
+        <bpmn2:sourceRef>leaveTransaction</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_1</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_8">
+        <bpmn2:sourceRef>role</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_8</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_8_1">
+        <bpmn2:targetRef>DataInput_8</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_19">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_38">Submit Leave</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_37">DataInput_8</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_50">
+        <bpmn2:targetRef>DataInput_49</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_56">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_119">Leave Request by Employee</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_118">DataInput_49</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_60">
+        <bpmn2:targetRef>DataInput_59</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_74">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_155">ROLE_EMPLOYEE</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_154">DataInput_59</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_94">
+        <bpmn2:sourceRef>teamLeadName</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_94</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_25">
+        <bpmn2:sourceRef>leaveTransactionId</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_25</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_5">
+        <bpmn2:sourceRef>DataOutput_5</bpmn2:sourceRef>
+        <bpmn2:targetRef>employee</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_6">
+        <bpmn2:sourceRef>DataOutput_6</bpmn2:sourceRef>
+        <bpmn2:targetRef>leaveTransaction</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_7">
+        <bpmn2:sourceRef>DataOutput_7</bpmn2:sourceRef>
+        <bpmn2:targetRef>isTeamLeadApproved</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_8">
+        <bpmn2:sourceRef>DataOutput_8</bpmn2:sourceRef>
+        <bpmn2:targetRef>leaveApplicationCommentList</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_10">
+        <bpmn2:sourceRef>DataOutput_10</bpmn2:sourceRef>
+        <bpmn2:targetRef>role</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_7_1">
+        <bpmn2:sourceRef>DataOutput_7_1</bpmn2:sourceRef>
+        <bpmn2:targetRef>teamLeadName</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_13">
+        <bpmn2:sourceRef>DataOutput_13</bpmn2:sourceRef>
+        <bpmn2:targetRef>leaveTransactionId</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_1" tns:priority="1" name="" sourceRef="UserTask_1" targetRef="ScriptTask_2"/>
+    <bpmn2:endEvent id="EndEvent_3" name="End Process">
+      <bpmn2:documentation id="Documentation_65">End Process</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:scriptTask id="ScriptTask_4" name="Rejected Email to Leave Requester and HR" scriptFormat="http://www.java.com/java">
+      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_16</bpmn2:outgoing>
+      <bpmn2:script>System.out.println(&quot;Rejected Email to Leave Requester and HR&quot;);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,role,false,false,teamLeadName,oprDirName,3);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatus(leaveTransaction,leaveTransactionId,false, false,3);</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_16" tns:priority="1" name="" sourceRef="ScriptTask_4" targetRef="EndEvent_3"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="com.beans.leaveapp.bpmn.applyleave">
+      <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="_1">
+        <dc:Bounds height="48.0" width="48.0" x="0.0" y="199.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_1" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="533.0" y="200.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_3" bpmnElement="ExclusiveGateway_3" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="740.0" y="402.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_UserTask_2" bpmnElement="UserTask_2">
+        <dc:Bounds height="50.0" width="110.0" x="503.0" y="401.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_InclusiveGateway_2" bpmnElement="InclusiveGateway_2">
+        <dc:Bounds height="50.0" width="50.0" x="740.0" y="200.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_1">
+        <dc:Bounds height="36.0" width="36.0" x="1072.0" y="408.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2">
+        <dc:Bounds height="48.0" width="124.0" x="102.0" y="402.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_BusinessRuleTask_1" bpmnElement="BusinessRuleTask_1">
+        <dc:Bounds height="49.0" width="119.0" x="312.0" y="401.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_5" bpmnElement="ScriptTask_5">
+        <dc:Bounds height="59.0" width="134.0" x="305.0" y="194.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1">
+        <dc:Bounds height="53.0" width="129.0" x="883.0" y="400.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_6" bpmnElement="ScriptTask_6">
+        <dc:Bounds height="50.0" width="110.0" x="710.0" y="302.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_UserTask_3" bpmnElement="UserTask_3">
+        <dc:Bounds height="58.0" width="127.0" x="884.0" y="196.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_UserTask_1" bpmnElement="UserTask_1">
+        <dc:Bounds height="57.0" width="134.0" x="98.0" y="197.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_EndEvent_3" bpmnElement="EndEvent_3">
+        <dc:Bounds height="36.0" width="36.0" x="952.0" y="548.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_4">
+        <dc:Bounds height="50.0" width="151.0" x="690.0" y="542.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="_1-_jbpm-unique-10" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_UserTask_1">
+        <di:waypoint xsi:type="dc:Point" x="48.0" y="223.0"/>
+        <di:waypoint xsi:type="dc:Point" x="70.0" y="223.0"/>
+        <di:waypoint xsi:type="dc:Point" x="70.0" y="225.0"/>
+        <di:waypoint xsi:type="dc:Point" x="98.0" y="225.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_UserTask_1" targetElement="BPMNShape_ScriptTask_2">
+        <di:waypoint xsi:type="dc:Point" x="165.0" y="254.0"/>
+        <di:waypoint xsi:type="dc:Point" x="165.0" y="382.0"/>
+        <di:waypoint xsi:type="dc:Point" x="164.0" y="382.0"/>
+        <di:waypoint xsi:type="dc:Point" x="164.0" y="402.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_UserTask_2">
+        <di:waypoint xsi:type="dc:Point" x="558.0" y="251.0"/>
+        <di:waypoint xsi:type="dc:Point" x="558.0" y="318.0"/>
+        <di:waypoint xsi:type="dc:Point" x="558.0" y="318.0"/>
+        <di:waypoint xsi:type="dc:Point" x="558.0" y="401.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_InclusiveGateway_2">
+        <di:waypoint xsi:type="dc:Point" x="584.0" y="225.0"/>
+        <di:waypoint xsi:type="dc:Point" x="720.0" y="225.0"/>
+        <di:waypoint xsi:type="dc:Point" x="720.0" y="225.0"/>
+        <di:waypoint xsi:type="dc:Point" x="740.0" y="225.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_11" sourceElement="BPMNShape_UserTask_2" targetElement="BPMNShape_ExclusiveGateway_3">
+        <di:waypoint xsi:type="dc:Point" x="613.0" y="426.0"/>
+        <di:waypoint xsi:type="dc:Point" x="670.0" y="426.0"/>
+        <di:waypoint xsi:type="dc:Point" x="670.0" y="427.0"/>
+        <di:waypoint xsi:type="dc:Point" x="740.0" y="427.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_14" sourceElement="BPMNShape_InclusiveGateway_2" targetElement="BPMNShape_UserTask_3">
+        <di:waypoint xsi:type="dc:Point" x="791.0" y="225.0"/>
+        <di:waypoint xsi:type="dc:Point" x="832.0" y="225.0"/>
+        <di:waypoint xsi:type="dc:Point" x="832.0" y="225.0"/>
+        <di:waypoint xsi:type="dc:Point" x="884.0" y="225.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_BusinessRuleTask_1">
+        <di:waypoint xsi:type="dc:Point" x="226.0" y="426.0"/>
+        <di:waypoint xsi:type="dc:Point" x="292.0" y="426.0"/>
+        <di:waypoint xsi:type="dc:Point" x="292.0" y="425.0"/>
+        <di:waypoint xsi:type="dc:Point" x="312.0" y="425.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_EndEvent_1">
+        <di:waypoint xsi:type="dc:Point" x="1012.0" y="426.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1039.0" y="426.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1039.0" y="426.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1072.0" y="426.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_23" bpmnElement="SequenceFlow_22" sourceElement="BPMNShape_BusinessRuleTask_1" targetElement="BPMNShape_ScriptTask_5">
+        <di:waypoint xsi:type="dc:Point" x="371.0" y="401.0"/>
+        <di:waypoint xsi:type="dc:Point" x="371.0" y="273.0"/>
+        <di:waypoint xsi:type="dc:Point" x="372.0" y="273.0"/>
+        <di:waypoint xsi:type="dc:Point" x="372.0" y="253.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_24" bpmnElement="SequenceFlow_23" sourceElement="BPMNShape_ScriptTask_5" targetElement="BPMNShape_ExclusiveGateway_1">
+        <di:waypoint xsi:type="dc:Point" x="439.0" y="223.0"/>
+        <di:waypoint xsi:type="dc:Point" x="513.0" y="223.0"/>
+        <di:waypoint xsi:type="dc:Point" x="513.0" y="225.0"/>
+        <di:waypoint xsi:type="dc:Point" x="533.0" y="225.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_16" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_ExclusiveGateway_3" targetElement="BPMNShape_ScriptTask_4">
+        <di:waypoint xsi:type="dc:Point" x="765.0" y="453.0"/>
+        <di:waypoint xsi:type="dc:Point" x="765.0" y="493.0"/>
+        <di:waypoint xsi:type="dc:Point" x="765.0" y="493.0"/>
+        <di:waypoint xsi:type="dc:Point" x="765.0" y="542.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_17" bpmnElement="SequenceFlow_16" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_EndEvent_3">
+        <di:waypoint xsi:type="dc:Point" x="841.0" y="567.0"/>
+        <di:waypoint xsi:type="dc:Point" x="890.0" y="567.0"/>
+        <di:waypoint xsi:type="dc:Point" x="890.0" y="566.0"/>
+        <di:waypoint xsi:type="dc:Point" x="952.0" y="566.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_18" bpmnElement="SequenceFlow_17" sourceElement="BPMNShape_UserTask_3" targetElement="BPMNShape_ScriptTask_1">
+        <di:waypoint xsi:type="dc:Point" x="947.0" y="254.0"/>
+        <di:waypoint xsi:type="dc:Point" x="947.0" y="380.0"/>
+        <di:waypoint xsi:type="dc:Point" x="947.0" y="380.0"/>
+        <di:waypoint xsi:type="dc:Point" x="947.0" y="400.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_19" bpmnElement="SequenceFlow_18" sourceElement="BPMNShape_ExclusiveGateway_3" targetElement="BPMNShape_ScriptTask_6">
+        <di:waypoint xsi:type="dc:Point" x="765.0" y="402.0"/>
+        <di:waypoint xsi:type="dc:Point" x="765.0" y="357.0"/>
+        <di:waypoint xsi:type="dc:Point" x="765.0" y="357.0"/>
+        <di:waypoint xsi:type="dc:Point" x="765.0" y="352.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_20" bpmnElement="SequenceFlow_19" sourceElement="BPMNShape_ScriptTask_6" targetElement="BPMNShape_InclusiveGateway_2">
+        <di:waypoint xsi:type="dc:Point" x="765.0" y="302.0"/>
+        <di:waypoint xsi:type="dc:Point" x="765.0" y="257.0"/>
+        <di:waypoint xsi:type="dc:Point" x="765.0" y="257.0"/>
+        <di:waypoint xsi:type="dc:Point" x="765.0" y="251.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

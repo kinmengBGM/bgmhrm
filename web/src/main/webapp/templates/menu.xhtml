@@ -1,0 +1,65 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+
+	<h:form>
+
+		<p:growl id="messages" />
+
+		<!-- Need to add authorization based on role here -->
+		<p:menubar>
+			<p:menuitem value="Home" url="/protected/index.jsf" />
+			<p:submenu label="Data Management" rendered="#{authenticationBean.hasAccess('AdminFunctions')}">
+				<p:submenu label="Employee">
+					<p:menuitem value="Employee Grade" url="/protected/employeeGrade.jsf"/>
+					<p:menuitem value="Employee Type" url="/protected/employeeType.jsf"/>
+					<p:menuitem value="Department" url="/protected/department.jsf"/>
+				</p:submenu>
+				<p:submenu label="Leave">
+					<p:menuitem value="Leave Type" url="/protected/leavetypemgmt.jsf" />
+					<p:menuitem value="Yearly Entitlement" url="/protected/yearlyentitlement.jsf"/>
+				</p:submenu>
+			</p:submenu>
+			<p:submenu label="Access Control" rendered="#{authenticationBean.hasAccess('AdminFunctions')}">
+				<p:menuitem value="Roles" url="/protected/role.jsf"/>
+				<p:menuitem value="Access Rights" url="/protected/accessRights.jsf"/>
+				<p:submenu label="Mapping">
+					<p:menuitem value="User Role Mapping" url="/protected/usertorolemapping.jsf"/>
+					<p:menuitem value="Role To Access Rights" url="/protected/roletoaccessrightsmapping.jsf"/>
+					<p:menuitem value="User To Access Rights" url="/protected/usertoaccessrightsmapping.jsf"/>
+				</p:submenu>
+			</p:submenu>
+			<p:submenu label="Leave Transaction" rendered="#{authenticationBean.hasAccess('LeaveTransactionAdmin') or authenticationBean.hasAccess('EmployeeLeaveHistory')}">
+				 <p:menuitem value="Admin" url="/protected/leavetransactionadmin.jsf"  rendered="#{authenticationBean.hasAccess('LeaveTransactionAdmin')}"/>
+				  <p:menuitem value="Employee" url="/protected/leavetransactionemployee.jsf" rendered="#{authenticationBean.hasAccess('EmployeeLeaveHistory')}"/>
+			</p:submenu>
+			<p:menuitem value="System Audit Trail" url="/protected/systemAuditTrail.jsf" rendered="#{authenticationBean.hasAccess('SystemAuditTrail')}"/>
+			<p:menuitem value="My Profile" url="/protected/employeeprofile/myprofile.jsf" rendered="#{authenticationBean.hasAccess('ViewMyProfile')}"/>
+			<p:submenu label="Employee" rendered="#{authenticationBean.hasAccess('ViewEmployees') or authenticationBean.hasAccess('ApproveEmployeeRegistration') or authenticationBean.hasAccess('ApproveLeave')}">
+				<p:menuitem value="Employee List" url="/protected/employeeprofile/employeeprofilemgmt.jsf" rendered="#{authenticationBean.hasAccess('ViewEmployees')}"/>
+				<p:menuitem value="Registration Approval" url="/protected/employeeregistration/employeeregistrationtasklist.jsf" rendered="#{authenticationBean.hasAccess('ApproveEmployeeRegistration')}"/>
+				<p:menuitem value="Leave Approval" url="/protected/applyleave/approveleavetasklist.jsf" rendered="#{authenticationBean.hasAccess('ApproveLeave')}"/>
+			</p:submenu>
+			
+			
+			<p:menuitem value="Apply Leave" url="/protected/applyleave/employeeleaveform.jsf" rendered="#{authenticationBean.hasAccess('ApplyLeave')}"/>			
+			
+			<p:menuitem value="Change Password" url="/protected/userchangepassword.jsf"/>
+			<p:menuitem value="Logout" action="${authenticationBean.doLogout}"></p:menuitem>
+		</p:menubar>
+
+
+	</h:form>
+
+</h:body>
+
+</html>
+
+
+

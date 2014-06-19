@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd version="5.0.5" timestamp="2014-06-13T15:19:02.421">
+<file name="/home/kinmeng/git/bgm-hrm/leaveapp/applyleaveflow/src/main/java/com/beans/leaveapp/applyleave/service/LeaveApplicationSendingMailServiceImpl.java">
+<violation beginline="59" endline="59" begincolumn="26" endcolumn="118" rule="UselessParentheses" ruleset="Unnecessary" package="com.beans.leaveapp.applyleave.service" class="LeaveApplicationSendingMailServiceImpl" method="sendEmailNotificationToLeaveApplicant" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unnecessary.html#UselessParentheses" priority="4">
+Useless parentheses.
+</violation>
+<violation beginline="59" endline="59" begincolumn="125" endcolumn="189" rule="UselessParentheses" ruleset="Unnecessary" package="com.beans.leaveapp.applyleave.service" class="LeaveApplicationSendingMailServiceImpl" method="sendEmailNotificationToLeaveApplicant" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unnecessary.html#UselessParentheses" priority="4">
+Useless parentheses.
+</violation>
+<violation beginline="68" endline="68" begincolumn="51" endcolumn="133" rule="UselessParentheses" ruleset="Unnecessary" package="com.beans.leaveapp.applyleave.service" class="LeaveApplicationSendingMailServiceImpl" method="sendEmailNotificationToLeaveApplicant" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unnecessary.html#UselessParentheses" priority="4">
+Useless parentheses.
+</violation>
+</file>
+<file name="/home/kinmeng/git/bgm-hrm/leaveapp/applyleaveflow/src/main/java/com/beans/leaveapp/applyleave/service/LeaveApplicationService.java">
+<violation beginline="13" endline="13" begincolumn="16" endcolumn="170" rule="UnusedModifier" ruleset="Unused Code" package="com.beans.leaveapp.applyleave.service" class="LeaveApplicationService" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unusedcode.html#UnusedModifier" priority="3">
+Avoid modifiers which are implied by the context
+</violation>
+<violation beginline="14" endline="14" begincolumn="16" endcolumn="83" rule="UnusedModifier" ruleset="Unused Code" package="com.beans.leaveapp.applyleave.service" class="LeaveApplicationService" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unusedcode.html#UnusedModifier" priority="3">
+Avoid modifiers which are implied by the context
+</violation>
+<violation beginline="15" endline="15" begincolumn="16" endcolumn="115" rule="UnusedModifier" ruleset="Unused Code" package="com.beans.leaveapp.applyleave.service" class="LeaveApplicationService" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unusedcode.html#UnusedModifier" priority="3">
+Avoid modifiers which are implied by the context
+</violation>
+<violation beginline="16" endline="16" begincolumn="16" endcolumn="113" rule="UnusedModifier" ruleset="Unused Code" package="com.beans.leaveapp.applyleave.service" class="LeaveApplicationService" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unusedcode.html#UnusedModifier" priority="3">
+Avoid modifiers which are implied by the context
+</violation>
+</file>
+<file name="/home/kinmeng/git/bgm-hrm/leaveapp/applyleaveflow/src/main/java/com/beans/leaveapp/applyleave/service/LeaveApplicationServiceImpl.java">
+<violation beginline="52" endline="52" begincolumn="56" endcolumn="73" rule="BooleanInstantiation" ruleset="Basic" package="com.beans.leaveapp.applyleave.service" class="LeaveApplicationServiceImpl" method="submitLeave" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/basic.html#BooleanInstantiation" priority="2">
+Avoid instantiating Boolean objects; reference Boolean.TRUE or Boolean.FALSE or call Boolean.valueOf() instead.
+</violation>
+<violation beginline="53" endline="53" begincolumn="55" endcolumn="72" rule="BooleanInstantiation" ruleset="Basic" package="com.beans.leaveapp.applyleave.service" class="LeaveApplicationServiceImpl" method="submitLeave" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/basic.html#BooleanInstantiation" priority="2">
+Avoid instantiating Boolean objects; reference Boolean.TRUE or Boolean.FALSE or call Boolean.valueOf() instead.
+</violation>
+<violation beginline="201" endline="201" begincolumn="72" endcolumn="88" rule="BooleanInstantiation" ruleset="Basic" package="com.beans.leaveapp.applyleave.service" class="LeaveApplicationServiceImpl" method="approveLeaveOfEmployee" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/basic.html#BooleanInstantiation" priority="2">
+Avoid instantiating Boolean objects; reference Boolean.TRUE or Boolean.FALSE or call Boolean.valueOf() instead.
+</violation>
+<violation beginline="205" endline="205" begincolumn="71" endcolumn="87" rule="BooleanInstantiation" ruleset="Basic" package="com.beans.leaveapp.applyleave.service" class="LeaveApplicationServiceImpl" method="approveLeaveOfEmployee" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/basic.html#BooleanInstantiation" priority="2">
+Avoid instantiating Boolean objects; reference Boolean.TRUE or Boolean.FALSE or call Boolean.valueOf() instead.
+</violation>
+<violation beginline="211" endline="211" begincolumn="63" endcolumn="79" rule="BooleanInstantiation" ruleset="Basic" package="com.beans.leaveapp.applyleave.service" class="LeaveApplicationServiceImpl" method="approveLeaveOfEmployee" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/basic.html#BooleanInstantiation" priority="2">
+Avoid instantiating Boolean objects; reference Boolean.TRUE or Boolean.FALSE or call Boolean.valueOf() instead.
+</violation>
+<violation beginline="246" endline="246" begincolumn="55" endcolumn="72" rule="BooleanInstantiation" ruleset="Basic" package="com.beans.leaveapp.applyleave.service" class="LeaveApplicationServiceImpl" method="getContentMapFromSelectedLeaveRequest" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/basic.html#BooleanInstantiation" priority="2">
+Avoid instantiating Boolean objects; reference Boolean.TRUE or Boolean.FALSE or call Boolean.valueOf() instead.
+</violation>
+<violation beginline="260" endline="260" begincolumn="61" endcolumn="78" rule="BooleanInstantiation" ruleset="Basic" package="com.beans.leaveapp.applyleave.service" class="LeaveApplicationServiceImpl" method="rejectLeaveOfEmployee" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/basic.html#BooleanInstantiation" priority="2">
+Avoid instantiating Boolean objects; reference Boolean.TRUE or Boolean.FALSE or call Boolean.valueOf() instead.
+</violation>
+<violation beginline="264" endline="264" begincolumn="60" endcolumn="77" rule="BooleanInstantiation" ruleset="Basic" package="com.beans.leaveapp.applyleave.service" class="LeaveApplicationServiceImpl" method="rejectLeaveOfEmployee" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/basic.html#BooleanInstantiation" priority="2">
+Avoid instantiating Boolean objects; reference Boolean.TRUE or Boolean.FALSE or call Boolean.valueOf() instead.
+</violation>
+</file>
+<file name="/home/kinmeng/git/bgm-hrm/leaveapp/applyleaveflow/src/main/java/com/beans/leaveapp/employee/service/EmployeeRegistrationService.java">
+<violation beginline="9" endline="9" begincolumn="16" endcolumn="77" rule="UnusedModifier" ruleset="Unused Code" package="com.beans.leaveapp.employee.service" class="EmployeeRegistrationService" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unusedcode.html#UnusedModifier" priority="3">
+Avoid modifiers which are implied by the context
+</violation>
+<violation beginline="10" endline="10" begincolumn="16" endcolumn="86" rule="UnusedModifier" ruleset="Unused Code" package="com.beans.leaveapp.employee.service" class="EmployeeRegistrationService" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unusedcode.html#UnusedModifier" priority="3">
+Avoid modifiers which are implied by the context
+</violation>
+<violation beginline="11" endline="11" begincolumn="16" endcolumn="95" rule="UnusedModifier" ruleset="Unused Code" package="com.beans.leaveapp.employee.service" class="EmployeeRegistrationService" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unusedcode.html#UnusedModifier" priority="3">
+Avoid modifiers which are implied by the context
+</violation>
+<violation beginline="12" endline="12" begincolumn="16" endcolumn="94" rule="UnusedModifier" ruleset="Unused Code" package="com.beans.leaveapp.employee.service" class="EmployeeRegistrationService" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unusedcode.html#UnusedModifier" priority="3">
+Avoid modifiers which are implied by the context
+</violation>
+</file>
+<file name="/home/kinmeng/git/bgm-hrm/leaveapp/applyleaveflow/src/main/java/com/beans/leaveapp/employee/service/EmployeeRegistrationServiceImpl.java">
+<violation beginline="103" endline="103" begincolumn="45" endcolumn="61" rule="BooleanInstantiation" ruleset="Basic" package="com.beans.leaveapp.employee.service" class="EmployeeRegistrationServiceImpl" method="approveRegistration" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/basic.html#BooleanInstantiation" priority="2">
+Avoid instantiating Boolean objects; reference Boolean.TRUE or Boolean.FALSE or call Boolean.valueOf() instead.
+</violation>
+<violation beginline="113" endline="113" begincolumn="45" endcolumn="62" rule="BooleanInstantiation" ruleset="Basic" package="com.beans.leaveapp.employee.service" class="EmployeeRegistrationServiceImpl" method="rejectRegistration" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/basic.html#BooleanInstantiation" priority="2">
+Avoid instantiating Boolean objects; reference Boolean.TRUE or Boolean.FALSE or call Boolean.valueOf() instead.
+</violation>
+</file>
+<file name="/home/kinmeng/git/bgm-hrm/leaveapp/applyleaveflow/src/main/java/com/beans/leaveapp/employee/service/EmployeeRegistrationWorker.java">
+<violation beginline="3" endline="3" begincolumn="1" endcolumn="22" rule="UnusedImports" ruleset="Import Statements" package="com.beans.leaveapp.employee.service" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/imports.html#UnusedImports" priority="4">
+Avoid unused imports such as 'java.util.Date'
+</violation>
+<violation beginline="34" endline="34" begincolumn="46" endcolumn="59" rule="UnnecessaryFullyQualifiedName" ruleset="Import Statements" package="com.beans.leaveapp.employee.service" class="EmployeeRegistrationWorker" method="registerEmployee" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/imports.html#UnnecessaryFullyQualifiedName" priority="4">
+Unnecessary use of fully qualified name 'java.util.Date' due to existing import 'java.util.Date'
+</violation>
+<violation beginline="40" endline="40" begincolumn="42" endcolumn="55" rule="UnnecessaryFullyQualifiedName" ruleset="Import Statements" package="com.beans.leaveapp.employee.service" class="EmployeeRegistrationWorker" method="registerEmployee" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/imports.html#UnnecessaryFullyQualifiedName" priority="4">
+Unnecessary use of fully qualified name 'java.util.Date' due to existing import 'java.util.Date'
+</violation>
+</file>
+<file name="/home/kinmeng/git/bgm-hrm/leaveapp/applyleaveflow/src/main/java/com/beans/leaveapp/jbpm6/util/JBPM6Runtime.java">
+<violation beginline="28" endline="28" begincolumn="1" endcolumn="61" rule="UnusedImports" ruleset="Import Statements" package="com.beans.leaveapp.jbpm6.util" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/imports.html#UnusedImports" priority="4">
+Avoid unused imports such as 'org.kie.internal.runtime.manager.context.EmptyContext'
+</violation>
+<violation beginline="52" endline="52" begincolumn="31" endcolumn="43" rule="UnusedLocalVariable" ruleset="Unused Code" package="com.beans.leaveapp.jbpm6.util" class="JBPM6Runtime" variable="runtimeEngine" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unusedcode.html#UnusedLocalVariable" priority="3">
+Avoid unused local variables such as 'runtimeEngine'.
+</violation>
+</file>
+<file name="/home/kinmeng/git/bgm-hrm/leaveapp/applyleaveflow/src/main/java/com/beans/leaveapp/jbpm6/util/RoleBasedUserGroupCallback.java">
+<violation beginline="13" endline="13" begincolumn="1" endcolumn="32" rule="UnusedImports" ruleset="Import Statements" package="com.beans.leaveapp.jbpm6.util" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/imports.html#UnusedImports" priority="4">
+Avoid unused imports such as 'com.google.inject.Inject'
+</violation>
+<violation beginline="26" endline="26" begincolumn="30" endcolumn="33" rule="UnusedLocalVariable" ruleset="Unused Code" package="com.beans.leaveapp.jbpm6.util" class="RoleBasedUserGroupCallback" method="existsGroup" variable="role" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unusedcode.html#UnusedLocalVariable" priority="3">
+Avoid unused local variables such as 'role'.
+</violation>
+<violation beginline="42" endline="42" begincolumn="31" endcolumn="35" rule="UnusedLocalVariable" ruleset="Unused Code" package="com.beans.leaveapp.jbpm6.util" class="RoleBasedUserGroupCallback" method="existsUser" variable="users" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unusedcode.html#UnusedLocalVariable" priority="3">
+Avoid unused local variables such as 'users'.
+</violation>
+</file>
+<file name="/home/kinmeng/git/bgm-hrm/leaveapp/applyleaveflow/src/main/java/com/beans/leaveapp/registeredemployeeemail/service/RegisteredEmployeeEmailService.java">
+<violation beginline="9" endline="9" begincolumn="16" endcolumn="76" rule="UnusedModifier" ruleset="Unused Code" package="com.beans.leaveapp.registeredemployeeemail.service" class="RegisteredEmployeeEmailService" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unusedcode.html#UnusedModifier" priority="3">
+Avoid modifiers which are implied by the context
+</violation>
+<violation beginline="10" endline="10" begincolumn="16" endcolumn="77" rule="UnusedModifier" ruleset="Unused Code" package="com.beans.leaveapp.registeredemployeeemail.service" class="RegisteredEmployeeEmailService" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/unusedcode.html#UnusedModifier" priority="3">
+Avoid modifiers which are implied by the context
+</violation>
+</file>
+<file name="/home/kinmeng/git/bgm-hrm/leaveapp/applyleaveflow/src/main/java/com/beans/leaveapp/registeredemployeeemail/service/RegisteredEmployeeEmailServiceImpl.java">
+<violation beginline="4" endline="4" begincolumn="1" endcolumn="26" rule="UnusedImports" ruleset="Import Statements" package="com.beans.leaveapp.registeredemployeeemail.service" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/imports.html#UnusedImports" priority="4">
+Avoid unused imports such as 'java.io.FileReader'
+</violation>
+<violation beginline="8" endline="8" begincolumn="1" endcolumn="20" rule="UnusedImports" ruleset="Import Statements" package="com.beans.leaveapp.registeredemployeeemail.service" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/imports.html#UnusedImports" priority="4">
+Avoid unused imports such as 'java.net.URL'
+</violation>
+<violation beginline="9" endline="9" begincolumn="1" endcolumn="22" rule="UnusedImports" ruleset="Import Statements" package="com.beans.leaveapp.registeredemployeeemail.service" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/imports.html#UnusedImports" priority="4">
+Avoid unused imports such as 'java.util.Date'
+</violation>
+<violation beginline="13" endline="13" begincolumn="1" endcolumn="46" rule="UnusedImports" ruleset="Import Statements" package="com.beans.leaveapp.registeredemployeeemail.service" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/imports.html#UnusedImports" priority="4">
+Avoid unused imports such as 'org.apache.commons.mail.ImageHtmlEmail'
+</violation>
+<violation beginline="14" endline="14" begincolumn="1" endcolumn="38" rule="UnusedImports" ruleset="Import Statements" package="com.beans.leaveapp.registeredemployeeemail.service" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.0.5/rules/java/imports.html#UnusedImports" priority="4">
+Avoid unused imports such as 'org.apache.log4j.chainsaw.Main'
+</violation>
+</file>
+</pmd>

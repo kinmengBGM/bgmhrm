@@ -1,0 +1,106 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions" >
+	<f:metadata>
+    	<f:event type="preRenderView" listener="#{authenticationBean.hasPageAccess('AdminFunctions')}" />
+    </f:metadata>
+<h:body>
+<ui:composition template="/templates/mainlayout.xhtml">
+
+<ui:define name="title">User Role Mapping</ui:define>
+  
+           <ui:define name="content">
+		<h:form id="userToRoleTableForm"> 
+	 
+	 	
+        <p:dataTable id="userToRoleTable" var="userToRoleType0" value="#{userToRoleMgmtBean.userToRoleDataModel}" widgetVar="userToRoleSearch" rowKey="#{userToRoleType0.userId}"
+                 selection="#{userToRoleMgmtBean.selectedUserToRole}" selectionMode="single" filteredValue="#{userToRoleMgmtBean.searchUserToRole}"  emptyMessage="No data found with given criteria" >
+        
+         <p:ajax event="rowSelect" listener="#{userToRoleMgmtBean.onRowSelect}" update=":userToRoleDetailForm:display, :growl" oncomplete="PF('userToRoleDialog').show()" />
+          
+                    
+	 	
+        <f:facet name="header">  
+            <h:outputText  value="Search by User Role :"></h:outputText>
+          
+                       <h:inputText id="globalFilter"  onkeyup="userToRoleSearch.filter()" />
+                         
+        </f:facet>           
+        
+          <p:column id="userIdHeader"  headerText="UserId" >
+            <h:outputText value="#{leaveType0.name}" />
+          </p:column>
+          <p:column id="userRoleHeader" headerText="User Role">        
+            <h:outputText value="#{userToRole0.userRole}" />
+          </p:column>        
+        
+        </p:dataTable>
+        
+        <p:commandButton value="New User Role" oncomplete="PF('newUserToRoleDialog').show()" icon="ui-icon-star" title="Creates new User Role"/>
+      </h:form>      
+      
+      <p:growl id="growl" showDetail="true" life="1000"/> 
+  </ui:define>  
+  
+<ui:define name="dialog">
+      <p:dialog header="User Role Detail" widgetVar="userToDialog" resizable="false" id="userToRoleDlg" modal="true" >
+               <h:form id="userToRoleDetailForm">
+                <p:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+  					<h:outputText value="UserId :"></h:outputText>
+                        <h:inputText value="#{userToRoleMgmtBean.selectedUserToRole.userId}" required="true" requiredMessage="Please Enter UserId!"/>
+  					    
+  					        <p:pickList id="userRoleList" value="#{userRoles.roles}" var="role" effect="bounce"  
+				                    itemValue="#{role}" itemLabel="#{role}" converter="role"
+				                    showSourceControls="true" showTargetControls="true" showCheckbox="true"  
+				                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" > 
+  					
+				  					<f:facet name="sourceCaption">Available User Roles</f:facet>  
+				        			<f:facet name="targetCaption">Selected User Roles</f:facet>
+  					         		
+  					         
+  					         		<p:ajax event="transfer" listener="#{userToRoleMgmtBean.onTransfer}" /> 
+  					
+									 <p:column style="width:75%;">  
+            							#{role}  
+        							</p:column>  					
+  					</p:pickList>
+  					
+  					<f:facet name="footer">
+                            <p:commandButton value="Update" update=":userToRoleTableForm:userToRoleTable"  oncomplete="PF('userToRoleDialog').hide()" actionListener="#{userToRoleMgmtBean.doUpdateUserToRole}"/>
+                            <p:commandButton value="Delete" onclick="PF('cd').show()" oncomplete="PF('userToRoleDialog').hide()"/>                    
+                            
+                    </f:facet>
+                </p:panelGrid>
+             </h:form>
+          </p:dialog>
+          
+      <p:dialog header="Create New User Role" widgetVar="newUserToRoleDialog" resizable="false" id="newUserToRoleDlg" modal="true">
+              <h:form id="newLeaveTypeForm">
+                <p:panelGrid id="displayNewUserToRole" columns="2" cellpadding="4" style="margin:0 auto;">
+       
+                    <f:facet name="footer">
+                            <p:commandButton value="Submit" update=":userToRoleTableForm:userToRoleTable"  oncomplete="PF('newUserToRoleDialog').hide()" actionListener="#{userToRoleMgmtBean.doCreateUserToRole}"/>
+                            <p:commandButton type="reset" value="Reset"></p:commandButton>
+                    </f:facet>
+                </p:panelGrid>
+              </h:form>
+          </p:dialog>
+          
+          <p:confirmDialog message="Are you sure?" header="Deleting User Role" 
+          	severity="alert" widgetVar="cd">	
+			<h:form>
+			<p:commandButton value="Yes" actionListener="#{userToRoleMgmtBean.doDeleteUserToRole}" update=":userToRoleTableForm:userToRoleTable" oncomplete="PF('cd').hide();"/>
+			<p:commandButton value="No" onclick="PF('cd').hide();PF('userToRoleDialog').show();" type="button" />
+			</h:form>
+			</p:confirmDialog>
+
+</ui:define>
+
+
+</ui:composition>
+</h:body>
+</html>	

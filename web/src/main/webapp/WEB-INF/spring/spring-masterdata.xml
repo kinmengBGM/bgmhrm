@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+	<import resource="spring-ds.xml"/>
+	
+    <bean id="employeeRepositoryImpl" class="com.beans.leaveapp.employee.service.EmployeeRepositoryImpl">
+    	<property name="dataSource" ref="dataSource"></property>
+    </bean>
+    
+	
+	<bean id="leaveType" class="com.beans.leaveapp.leavetype.model.LeaveType" />
+
+	<bean id="leaveTypeService" class="com.beans.leaveapp.leavetype.service.LeaveTypeServiceImpl" >
+	</bean>
+	
+	  <bean id="employeeGrade" class="com.beans.leaveapp.employeegrade.model.EmployeeGrade" /> 
+	
+	 <bean id="employeeGradeService" class="com.beans.leaveapp.employeegrade.service.EmployeeGradeServiceImpl" >
+	 </bean>   
+	 
+	<bean id="employeeType" class="com.beans.leaveapp.employeetype.model.EmployeeType" /> 
+	
+	 <bean id="employeeTypeService" class="com.beans.leaveapp.employeetype.service.EmployeeTypeServiceImpl" >
+	 </bean>
+	 
+	 <bean id="systemAuditTrail" class="com.beans.common.audit.model.SystemAuditTrail"/>
+	
+	<bean id="systemAuditTrailService" class="com.beans.common.audit.service.SystemAuditTrailRecordServiceImpl">
+	</bean>
+	
+	<bean id="auditTrail" class="com.beans.common.audit.service.AuditTrail">
+		<property name="systemAuditTrailRecordService" >
+			<ref bean="systemAuditTrailService"/>
+		</property>
+	</bean>
+	
+	 <bean id="department" class="com.beans.leaveapp.department.model.Department" /> 
+	
+	 <bean id="departmentService" class="com.beans.leaveapp.department.service.DepartmentServiceImpl" >
+	 </bean>	 
+ 
+
+	<bean id="yearlyEntitlement" class="com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement" />	
+	<bean id="yearlyEntitlementService" class=" com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementServiceImpl">	
+	</bean>	 
+	
+	<bean id="leaveTransaction" class="com.beans.leaveapp.leavetransaction.model.LeaveTransaction"/>
+	<bean id="leaveTransactionService" class="com.beans.leaveapp.leavetransaction.service.LeaveTransactionServiceImpl"/>
+	
+	<bean id="sendLeaveReportService" class="com.beans.leaveapp.monthlyreport.SendMonthlyLeaveReportServiceImpl"/>
+
+</beans>
+

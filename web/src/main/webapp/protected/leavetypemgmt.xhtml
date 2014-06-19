@@ -1,0 +1,94 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions" >
+	<f:metadata>
+    	<f:event type="preRenderView" listener="#{authenticationBean.hasPageAccess('AdminFunctions')}" />
+    </f:metadata>
+<h:body>
+<ui:composition template="/templates/mainlayout.xhtml">
+<ui:define name="title">Leave Type Maintenance</ui:define>
+<ui:define name="content" >
+        <h1>Leave Type Maintenance </h1>
+		<h:form id="leaveTypeTableForm">
+		<p:messages autoUpdate="true"  showDetail="true" severity="info"/>
+        <p:dataTable id="leaveTypeTable" var="leaveType0" value="#{leaveTypeMgmtBean.leaveTypeDataModel}" widgetVar="leaveTypeSearch" rowKey="#{leaveType0.id}"
+                 										  selection="#{leaveTypeMgmtBean.selectedLeaveType}" selectionMode="single" paginator="true" rows="10" scrollable="true" emptyMessage="No data found with given criteria" >
+          <p:ajax event="rowSelect" listener="#{leaveTypeMgmtBean.onRowSelect}" update=":leaveTypeDetailForm:display, :growl" oncomplete="PF('leaveTypeDialog').show()" />  
+          	<p:column id="nameHeader"  headerText="Name" sortBy="name"> <h:outputText value="#{leaveType0.name}" /></p:column>
+        	<p:column id="descHeader" headerText="Description" sortBy="description"><h:outputText value="#{leaveType0.description}" /></p:column>
+            <p:column id="employeeIdHeader" headerText="Employee Type" sortBy="employeeType"><h:outputText value="#{leaveType0.employeeType.name}" /></p:column>
+            <p:column id="entitlementHeader" headerText="Entitlement" sortBy="entitlement"><h:outputText value="#{leaveType0.entitlement}" /></p:column>
+            <p:column id="lastModifiedByHeader"  sortBy="lastModifiedBy" ><f:facet name="header"> Last Modified By </f:facet><h:outputText value="#{leaveType0.lastModifiedBy}" /></p:column>
+	        <p:column id="lastModifiedHeader"  sortBy="lastModifiedTime" ><f:facet name="header"> Last Modified Time</f:facet><h:outputText value="#{leaveType0.lastModifiedTime}" ><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /></h:outputText></p:column>
+        </p:dataTable>
+        <p:commandButton value="New Leave Type" oncomplete="PF('newLeaveTypeDialog').show()" actionListener="#{leaveTypeMgmtBean.resetFormFields}" icon="ui-icon-star" title="Creates new leave type"/>
+      </h:form>      
+      <p:growl id="growl" showDetail="true" life="1000"/> 
+  </ui:define>  
+  
+  <ui:define name="dialog">
+		<p:dialog header="Leave Type Detail" widgetVar="leaveTypeDialog" resizable="false" id="leaveTypeDlg" modal="true">
+				<h:form id="leaveTypeDetailForm">
+				 <p:messages autoUpdate="true"/>
+					<p:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+						<h:outputText value="Name :"></h:outputText>
+						<h:inputText value="#{leaveTypeMgmtBean.selectedLeaveType.name}" required="true" requiredMessage="Please Enter Name!" label="Name "> <f:validateLength minimum="4" maximum="25"/></h:inputText>
+						<h:outputText value="Description :"></h:outputText>
+						<h:inputText value="#{leaveTypeMgmtBean.selectedLeaveType.description}"  required="true" requiredMessage="Please Enter Description!" label="Description"> <f:validateLength minimum="" maximum="25"/></h:inputText>
+						<h:outputText value="EmployeeType :"></h:outputText>
+						<p:selectOneMenu value="#{leaveTypeMgmtBean.name}" required="true" requiredMessage="Please select Employee Type" label="Employee Type ">
+							<f:selectItem itemLabel="Select one" itemValue="" />
+
+							<f:selectItems value="#{leaveTypeMgmtBean.employeeTypes}"
+								var="employeeType0"  itemValue="#{name}" />
+
+
+
+						</p:selectOneMenu>
+						<h:outputText value="Entitlement :"></h:outputText>
+						<h:inputText value="#{leaveTypeMgmtBean.selectedLeaveType.entitlement}" required="true" requiredMessage="Please Enter Entitlement!" label="Entitlement "/>
+						<f:facet name="footer">
+							<p:commandButton value="Update" update=":leaveTypeTableForm:leaveTypeTable" oncomplete="if(!args.validationFailed) PF('leaveTypeDialog').hide()" actionListener="#{leaveTypeMgmtBean.doUpdateLeaveType}" />
+							<p:commandButton value="Delete" onclick="PF('cd').show()" oncomplete="PF('leaveTypeDialog').hide()" />
+						</f:facet>
+					</p:panelGrid>
+				</h:form>
+		</p:dialog>
+
+		<p:dialog header="Create New Leave Type" widgetVar="newLeaveTypeDialog" resizable="false" id="newLeaveTypeDlg" modal="true">
+			    <h:form id="newLeaveTypeForm">
+			    <p:messages autoUpdate="true" />
+					<p:panelGrid id="displayNewLeaveType" columns="2" cellpadding="4" style="margin:0 auto;">
+						<h:outputText value="Name :"></h:outputText>
+						<p:inputText value="#{leaveTypeMgmtBean.newLeaveType.name}" required="true" requiredMessage="Please Enter Name!" label="Name "> <f:validateLength minimum="4" maximum="25"/></p:inputText>
+						<h:outputText value="Description :"></h:outputText>
+						<p:inputText value="#{leaveTypeMgmtBean.newLeaveType.description}" required="true" requiredMessage="Please Enter Description!" label="Description "> <f:validateLength minimum="4" maximum="25"/></p:inputText>
+						<h:outputText value="EmployeeType :"></h:outputText>
+						<p:selectOneMenu value="#{leaveTypeMgmtBean.name}" id="myMenu" required="true" requiredMessage="Please select Employee Type" label="Employee Type ">
+							<f:selectItem itemLabel="Select One" itemValue=""/>
+							<f:selectItems value="#{employeeTypeListBean.employeeTypeList}" var="employeeType0" itemLabel="#{employeeType0.name}" itemValue="#{employeeType0.name}" />
+						</p:selectOneMenu>
+						<h:outputText value="Entitlement :"></h:outputText>
+						<p:inputText value="#{leaveTypeMgmtBean.newLeaveType.entitlement}" required="true" requiredMessage="Please enter Entitlement" label="Entitlement "/>
+						<f:facet name="footer">
+							<p:commandButton value="Submit" update=":leaveTypeTableForm:leaveTypeTable" oncomplete="if(!args.validationFailed) PF('newLeaveTypeDialog').hide()" actionListener="#{leaveTypeMgmtBean.doCreateLeaveType}" />
+							<p:commandButton value="Reset" update=":newLeaveTypeForm" immediate="true"><p:resetInput target=":newLeaveTypeForm" /> </p:commandButton>
+						</f:facet>
+					</p:panelGrid>
+				</h:form>
+			</p:dialog>
+
+			<p:confirmDialog message="Are you sure?" header="Deleting leave type" severity="alert" widgetVar="cd">
+				<h:form>
+					<p:commandButton value="Yes" actionListener="#{leaveTypeMgmtBean.doDeleteLeaveType}" update=":leaveTypeTableForm:leaveTypeTable" oncomplete="PF('cd').hide();" />
+					<p:commandButton value="No" onclick="PF('cd').hide();PF('leaveTypeDialog').show();" type="button" />
+				</h:form>
+			</p:confirmDialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

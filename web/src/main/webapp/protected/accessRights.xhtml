@@ -1,0 +1,85 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions" >
+	<f:metadata>
+    	<f:event type="preRenderView" listener="#{authenticationBean.hasPageAccess('AdminFunctions')}" />
+    </f:metadata>
+<h:body>
+	<ui:composition template="/templates/mainlayout.xhtml">
+	<ui:define name="title"> Access Rights </ui:define>
+	<ui:define name="content">
+        <h1>Access Rights</h1>
+		<h:form id="accessRightsTableForm">
+		<p:messages autoUpdate="true" showDetail="true" severity="info"/>
+			 <p:panel header="Search" toggleable="true">
+					<p:panelGrid id="SearchAccessRight" columns="2" cellpadding="4">
+						<h:outputText value="Access Right" />
+							<h:inputText value="#{accessRightsMgmtBean.searchAccessRight}"></h:inputText>					
+						<f:facet name="footer">				
+							<p:commandButton value="Search" update="accessRightsTable" actionListener="#{accessRightsMgmtBean.searchAccessRightName()}"></p:commandButton>
+							<p:commandButton type="reset" value="Reset"></p:commandButton>
+						</f:facet>
+					</p:panelGrid>
+			</p:panel>
+        <p:dataTable id="accessRightsTable" var="accessRights0" value="#{accessRightsMgmtBean.accessRightsDataModel}" widgetVar="accessRightsSearch" rowKey="#{accessRights0.id}"
+                 							selection="#{accessRightsMgmtBean.selectedAccessRights}" paginator="true" rows="20" scrollable="true"  selectionMode="single" emptyMessage="No data found with given criteria" >
+          <p:ajax event="rowSelect" listener="#{accessRightsMgmtBean.onRowSelect}" update=":accessRightsDetailForm:display, :growl" oncomplete="PF('accessRightsDialog').show()" />  
+          	<p:column id="accessRightHeader"  sortBy="accessRights" ><f:facet name="header"> Access Right</f:facet><h:outputText value="#{accessRights0.accessRights}" /></p:column>  
+          	<p:column id="descHeader"  sortBy="description" ><f:facet name="header"> Description</f:facet><h:outputText value="#{accessRights0.description}" /></p:column>
+          	<p:column id="lastModifiedByHeader"  sortBy="lastModifiedTime" > <f:facet name="header"> Last Modified By</f:facet><h:outputText value="#{accessRights0.lastModifiedBy}" /> </p:column>
+	        <p:column id="lastModifiedTimeHeader"  sortBy="lastModifiedTime" ><f:facet name="header"> Last Modified Time</f:facet><h:outputText value="#{accessRights0.lastModifiedTime}" >  <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /> </h:outputText> </p:column>
+       </p:dataTable>
+       </h:form>
+	   <h:form id="commandButtonForm">
+	       <p:commandButton value="New Access Rights" update=":newAccessRightsForm" oncomplete="PF('newAccessRightsDialog').show()" actionListener="#{accessRightsMgmtBean.resetFormFields()}" icon="ui-icon-star" title="Creates New Access Right"/>
+	   </h:form>      
+       <p:growl id="growl" showDetail="true" life="1000"/> 
+  </ui:define>  
+  <ui:define name="dialog">
+      <p:dialog header="Access Rights Detail" widgetVar="accessRightsDialog" resizable="false" id="accessRightsDlg" modal="true" >
+           <h:form id="accessRightsDetailForm">
+           <p:messages autoUpdate="true"/>
+           <p:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+            <h:outputText value="Name :"></h:outputText>
+            <h:inputText value="#{accessRightsMgmtBean.selectedAccessRights.accessRights}" required="true" requiredMessage="Please Enter Name!" label="Name "><f:validateLength minimum="4"/></h:inputText>
+            <h:outputText value="Description"></h:outputText>
+            <h:inputText value="#{accessRightsMgmtBean.selectedAccessRights.description}" required="true" requiredMessage="please Enter Description" label="Description "><f:validateLength minimum="4"/></h:inputText>
+                    <f:facet name="footer">
+                            <p:commandButton value="Update" update=":accessRightsTableForm:accessRightsTable"  oncomplete="if(!args.validationFailed)  PF('accessRightsDialog').hide()" validateClient="true" actionListener="#{accessRightsMgmtBean.doUpdateAccessRights}"/>
+                            <p:commandButton value="Delete" onclick="PF('cd').show()" oncomplete="PF('accessRightsDialog').hide()"/>                        
+                            
+                    </f:facet>
+          </p:panelGrid>
+        </h:form>
+    </p:dialog>
+    <p:dialog header="Create New Access Right" widgetVar="newAccessRightsDialog" resizable="false" id="newAccessRightsDlg" modal="true">
+         <h:form id="newAccessRightsForm">
+         <p:messages autoUpdate="true"/>
+           <p:panelGrid id="displayNewAccessRights" columns="2" cellpadding="4" style="margin:0 auto;">
+            <h:outputText value="Name :"></h:outputText>
+            <p:inputText value="#{accessRightsMgmtBean.newAccessRights.accessRights}" required="true" requiredMessage="Please Enter Name!" label="Name "><f:validateLength minimum="4"/></p:inputText>
+            <h:outputText value="Description"></h:outputText>           
+			<p:inputText value="#{accessRightsMgmtBean.newAccessRights.description}" required="true" requiredMessage="please Enter Description" label="Description "><f:validateLength minimum="4"/></p:inputText>
+            <f:facet name="footer">
+                            <p:commandButton value="Submit" update=":accessRightsTableForm:accessRightsTable"  oncomplete="if(!args.validationFailed) PF('newAccessRightsDialog').hide()" validateClient="true" actionListener="#{accessRightsMgmtBean.doCreateAccessRights}"/>
+                            <p:commandButton type="reset" value="Reset"></p:commandButton>
+                    </f:facet>
+         </p:panelGrid>
+       </h:form>
+   </p:dialog>
+      <p:confirmDialog message="Are you sure?" header="Deleting Access Right" severity="alert" widgetVar="cd">	
+		<h:form>
+		  <p:commandButton value="Yes" actionListener="#{accessRightsMgmtBean.doDeleteAccessRights}" update=":accessRightsTableForm:accessRightsTable" oncomplete="PF('cd').hide();"/>
+		  <p:commandButton value="No" onclick="PF('cd').hide();PF('accessRightsDialog').show();" type="button" />
+		</h:form>
+		</p:confirmDialog>
+  </ui:define>
+ </ui:composition>
+</h:body>	
+</html>	
+
+

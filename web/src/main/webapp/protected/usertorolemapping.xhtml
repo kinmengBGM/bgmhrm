@@ -1,0 +1,75 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions" >
+	<f:metadata>
+    	<f:event type="preRenderView" listener="#{authenticationBean.hasPageAccess('AdminFunctions')}" />
+    </f:metadata>
+<h:body>
+<ui:composition template="/templates/mainlayout.xhtml">
+
+<ui:define name="title">User Role Mapping</ui:define>
+  
+           <ui:define name="content">
+           <h1>User Role Mapping</h1>
+		<h:form id="usersTableForm"> 
+		
+		<p:panel header="Search" toggleable="true">
+			<p:panelGrid id="SearchUsername" columns="2" cellpadding="4">
+				
+				<h:outputText value="Username" />
+					<h:inputText value="#{userToRoleMgmtBean.searchUsername}">
+					</h:inputText>					
+					
+				<f:facet name="footer">				
+					<p:commandButton value="Search" update="usersTable" actionListener="#{userToRoleMgmtBean.searchUser}" ></p:commandButton>
+					<p:commandButton type="reset" value="Reset"></p:commandButton>
+				</f:facet>
+			</p:panelGrid>
+		</p:panel>
+	 
+	 	
+        <p:dataTable id="usersTable" var="users0" value="#{userToRoleMgmtBean.userToRoleDataModel}" widgetVar="usersSearch" rowKey="#{users0.id}"
+                 paginator="true" rows="10" scrollable="true" selectionMode="single" emptyMessage="No data found with given criteria" >
+                 <!--  selection="#{userToRoleMgmtBean.selectedUsers}" -->
+        
+         <p:ajax event="rowSelect" listener="#{userToRoleMgmtBean.onRowSelect}" update=":usersTableForm,:usersDlg, :growl" oncomplete="PF('usersDialog').show()" />
+          
+          <p:column id="userIdHeader"  headerText="User Id" sortBy="id">
+            <h:outputText value="#{users0.id}" />
+          </p:column>      
+        	<p:column id="usernameHeader"  headerText="Username" sortBy="username">
+            <h:outputText value="#{users0.username}" />
+          </p:column> 
+        </p:dataTable>       
+        
+      </h:form>      
+      
+      <p:growl id="growl" showDetail="true" life="1000"/> 
+  </ui:define>  
+<ui:define name="dialog">
+      <p:dialog header="User Role Mapper" widgetVar="usersDialog" resizable="false" id="usersDlg" modal="true" >
+          <h3>Map Roles to User #{userToRoleMgmtBean.selectedUsers.username}</h3>
+          <h:form>
+          <p:panelGrid id="displayNewLeaveType" columns="2" cellpadding="4" style="margin:0 auto;">
+          	<p:pickList id="rolePickList" value="#{userToRoleMgmtBean.dualRoleList}"
+          		var="role0" converter="rolePickListConverter" itemValue="#{role0}" itemLabel="#{role0.role}" >
+          		
+          		
+          	 <f:facet name="sourceCaption">Unassigned Roles</f:facet>  
+        		<f:facet name="targetCaption">Assigned Roles</f:facet>  
+          	</p:pickList>
+          	<f:facet name="footer">
+          	<p:commandButton value="Submit"  oncomplete="PF('usersDialog').hide()" actionListener="#{userToRoleMgmtBean.saveRoleMapping}"/>
+            <p:commandButton value="Cancel" immediate="true" oncomplete="PF('usersDialog').hide()"></p:commandButton>
+            </f:facet>
+          </p:panelGrid>
+          </h:form>
+          </p:dialog>
+          </ui:define>
+</ui:composition>
+</h:body>
+</html>	

@@ -1,0 +1,76 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions" >
+	<f:metadata>
+    	<f:event type="preRenderView" listener="#{authenticationBean.hasPageAccess('AdminFunctions')}" />
+    </f:metadata>
+<h:head>
+</h:head>
+<h:body>
+ <ui:composition template="/templates/mainlayout.xhtml">
+	<ui:define name="title">Employee Type Maintenance</ui:define>
+	<ui:define name="content">
+        <h1>Employee Type Maintenance</h1>
+		<h:form id="employeeTypeTableForm">
+		<p:messages autoUpdate="true" showDetail="true" severity="info"/>
+         <p:dataTable id="employeeTypeTable" widgetVar="employeeTypeTable" var="employeeType0" value="#{employeeTypeMgmtBean.employeeTypeDataModel}" rowKey="#{employeeType0.id}"
+                 selection="#{employeeTypeMgmtBean.selectedEmployeeType}" selectionMode="single" >
+          <p:ajax event="rowSelect" listener="#{employeeTypeMgmtBean.onRowSelect}" update=":employeeTypeDetailForm:display, :growl" oncomplete="PF('employeeTypeDialog').show()" />  
+          <p:column id="nameHeader" sortBy="name"><f:facet name="header"> Employee Type </f:facet><h:outputText value="#{employeeType0.name}" /> </p:column>
+          <p:column id="descHeader"  sortBy="description" ><f:facet name="header"> Description </f:facet><h:outputText value="#{employeeType0.description}" /></p:column>
+          <p:column id="lastModifiedByHeader"  sortBy="lastModifiedBy" ><f:facet name="header"> Last Modified By </f:facet><h:outputText value="#{employeeType0.lastModifiedBy}" /></p:column>
+          <p:column id="lastModifiedHeader"  sortBy="lastModifiedTime" ><f:facet name="header"> Last Modified Time</f:facet><h:outputText value="#{employeeType0.lastModifiedTime}" ><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /></h:outputText></p:column>
+        </p:dataTable>
+      	 <p:commandButton value="New Employee Type" update=":newEmployeeTypeForm" oncomplete="PF('newEmployeeTypeDialog').show()" actionListener="#{employeeTypeMgmtBean.resetFormFields}"   icon="ui-icon-star" title="Creates new type"/>
+       </h:form>
+       <p:growl id="growl" showDetail="true" life="1000"/> 
+   </ui:define>  
+   <ui:define name="dialog">
+      <p:dialog header="Employee Type Detail" styleClass="dlgCSS" widgetVar="employeeTypeDialog" resizable="false" id="employeeTypeDlg" modal ="true">
+               <h:form id="employeeTypeDetailForm">
+   				<p:messages autoUpdate="true" />
+                <p:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+            		<h:outputText value="Type :"></h:outputText>
+                    <h:inputText value="#{employeeTypeMgmtBean.selectedEmployeeType.name}" required="true" requiredMessage="Please Enter Name!" label="Employee Type "><f:validateLength minimum="4" maximum="30"/></h:inputText>
+            		<h:outputText value="Description :"></h:outputText>
+                    <h:inputText value="#{employeeTypeMgmtBean.selectedEmployeeType.description}" required="true" requiredMessage="Please Enter Description!" label="Description "><f:validateLength minimum="4" maximum="30"/></h:inputText>
+                    <f:facet name="footer">
+                            <p:commandButton value="Update" update=":employeeTypeTableForm:employeeTypeTable" oncomplete="if(!args.validationFailed) PF('employeeTypeDialog').hide()" actionListener="#{employeeTypeMgmtBean.doUpdateEmployeeType}" validateClient="true"/>
+                            <p:commandButton value="Delete" onclick="PF('cd').show()" oncomplete="PF('employeeTypeDialog').hide()"/>
+                    </f:facet>
+                </p:panelGrid>
+              </h:form>
+      </p:dialog>
+          
+      <p:dialog header="Create New Employee Type" styleClass="dlgCSS" widgetVar="newEmployeeTypeDialog" resizable="false" id="newEmployeeTypeDlg"  modal ="true">
+              <h:form id="newEmployeeTypeForm">
+              <p:messages autoUpdate="true" />
+                <p:panelGrid id="displayNewEmployeeType" columns="2" cellpadding="4" style="margin:0 auto;">
+           			 <h:outputText value="Type :"></h:outputText>
+                     <p:inputText value="#{employeeTypeMgmtBean.newEmployeeType.name}" required="true" requiredMessage="Please Enter Employee Type!" label="Employee Type "> 
+                          <f:validateLength minimum="4" maximum="30"/></p:inputText>
+            		 <h:outputText value="Description :"></h:outputText>
+                     <p:inputText value="#{employeeTypeMgmtBean.newEmployeeType.description}" required="true" requiredMessage="Please Enter Employee Description!" label="Description "> 
+                          <f:validateLength minimum="4" maximum="30"/></p:inputText>
+                     <f:facet name="footer">
+                            <p:commandButton value="Submit" update=":employeeTypeTableForm:employeeTypeTable"  oncomplete="if(!args.validationFailed) PF('newEmployeeTypeDialog').hide()" validateClient="true" actionListener="#{employeeTypeMgmtBean.doCreateEmployeeType}"/>
+                            <p:commandButton type="reset" value="Reset"></p:commandButton>
+                    </f:facet>
+                </p:panelGrid>
+              </h:form>
+          </p:dialog>
+          
+          <p:confirmDialog message="Are you sure?" header="Deleting Employee Type" severity="alert" widgetVar="cd">	
+			<h:form>
+				<p:commandButton value="Yes" actionListener="#{employeeTypeMgmtBean.doDeleteEmployeeType}" update=":employeeTypeTableForm:employeeTypeTable" oncomplete="PF('cd').hide();"/>
+				<p:commandButton value="No" onclick="PF('cd').hide();PF('employeeTypeDialog').show();" type="button" />
+			</h:form>
+			</p:confirmDialog>
+     </ui:define>
+  </ui:composition>
+</h:body>
+</html>

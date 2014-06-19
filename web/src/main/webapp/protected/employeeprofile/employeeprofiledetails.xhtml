@@ -1,0 +1,298 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+
+	<p:panelGrid id="displayNewEmployee" layout="block" columns="1"
+		cellpadding="4" style="margin:0 auto;">
+	<h:form id="newEmployeeForm">	
+			<p:messages autoUpdate="true" />
+			<p:panelGrid id="NewEmployeeDetail" columns="2" cellpadding="4"
+				style="margin:0 auto;"
+				rendered="#{employeeProfileMgmtBean.page == 'details'}">
+				<f:facet name="header"><h3>Basic Details</h3></f:facet>
+				<p:panelGrid id="NewEmployeeDetailLeft" columns="2" cellpadding="4"
+					style="margin:0 auto;">
+					<h:outputText value="Name"  class="req" />
+					<h:inputText value="#{employeeProfileMgmtBean.newEmployee.name}"
+						required="true" requiredMessage="Please Enter Name"/>
+
+					<h:outputText value="Employee Number"  class="req" />
+					<h:inputText
+						value="#{employeeProfileMgmtBean.newEmployee.employeeNumber}"
+						required="true" requiredMessage="Please Enter Employee Number" />
+
+					<h:outputText value="Position"  class="req"/>
+					<h:inputText
+						value="#{employeeProfileMgmtBean.newEmployee.position}"
+						required="true" requiredMessage="Please Enter Position" />
+
+					<h:outputText value="IC Number" />
+					<h:inputText
+						value="#{employeeProfileMgmtBean.newEmployee.idNumber}" />
+
+					<h:outputText value="Passport Number" />
+					<h:inputText
+						value="#{employeeProfileMgmtBean.newEmployee.passportNumber}" />
+
+					<h:outputText value="Gender" />
+					<p:selectOneMenu
+						value="#{employeeProfileMgmtBean.newEmployee.gender}"
+						effect="fade">
+						<f:selectItem itemLabel="Select one" itemValue=""/>
+						<f:selectItem itemLabel="Male" itemValue="M" />
+						<f:selectItem itemLabel="Female" itemValue="F" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Religion" />
+					<p:selectOneMenu
+						value="#{employeeProfileMgmtBean.newEmployee.religion}"
+						effect="fade">
+						<f:selectItem itemLabel="Select one" itemValue=""/>
+						<f:selectItem itemLabel="Islam" itemValue="Islam" />
+						<f:selectItem itemLabel="Buddhism" itemValue="Buddhism" />
+						<f:selectItem itemLabel="Christian" itemValue="Christian" />
+						<f:selectItem itemLabel="Hindduism" itemValue="Hindduism" />
+						<f:selectItem itemLabel="Catholic" itemValue="Catholic" />
+						<f:selectItem itemLabel="Others" itemValue="Others" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Marital Status" />
+					<p:selectOneMenu
+						value="#{employeeProfileMgmtBean.newEmployee.maritalStatus}"
+						effect="fade">
+						<f:selectItem itemLabel="Select one" itemValue=""/>
+						<f:selectItem itemLabel="Single" itemValue="Single" />
+						<f:selectItem itemLabel="Married" itemValue="Married" />
+						<f:selectItem itemLabel="Divorced" itemValue="Divorced" />
+						<f:selectItem itemLabel="Widowed" itemValue="Widowed" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Nationality" />
+					<h:inputText
+						value="#{employeeProfileMgmtBean.newEmployee.nationality}" />
+
+				</p:panelGrid>
+				<p:panelGrid id="NewEmployeeDetailRight" columns="2" cellpadding="4"
+					style="margin:0 auto;">
+
+
+					<h:outputText value="Grade"  class="req"/>
+					<p:selectOneMenu
+						value="#{employeeProfileMgmtBean.selectedEmployeeGrade}"
+						effect="fade" required="true"
+						requiredMessage="Please select Grade">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{employeeGradeListBean.employeeGradeList}"
+							var="employeeGrade0" itemLabel="#{employeeGrade0.description}"
+							itemValue="#{employeeGrade0.id}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Employee Type"  class="req"/>
+					<p:selectOneMenu
+						value="#{employeeProfileMgmtBean.selectedEmployeeType}"
+						effect="fade" required="true"
+						requiredMessage="Please select Employee Type">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{employeeTypeListBean.employeeTypeList}"
+							var="employeeType0" itemLabel="#{employeeType0.description}"
+							itemValue="#{employeeType0.id}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Department"  class="req"/>
+					<p:selectOneMenu
+						value="#{employeeProfileMgmtBean.selectedDepartment}"
+						effect="fade" required="true"
+						requiredMessage="Please select Department">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{departmentListBean.departmentList}"
+							var="department0" itemLabel="#{department0.description}"
+							itemValue="#{department0.id}" />
+					</p:selectOneMenu>
+					<h:outputText value="Email Address(Work)" />
+					<h:inputText
+						value="#{employeeProfileMgmtBean.newEmployee.workEmailAddress}" />
+
+
+					<h:outputText value="Email Address(Personal)" />
+					<h:inputText
+						value="#{employeeProfileMgmtBean.newEmployee.personalEmailAddress}" />
+
+					<h:outputText value="Phone Number(Work)" />
+					<h:inputText
+						value="#{employeeProfileMgmtBean.newEmployee.officePhone}" />
+
+					<h:outputText value="Phone Number(Personal)" />
+					<h:inputText
+						value="#{employeeProfileMgmtBean.newEmployee.personalPhone}" />
+
+					<h:outputText value="Join Date" />
+					<p:calendar pattern="dd/MM/yyyy"
+						value="#{employeeProfileMgmtBean.newEmployee.joinDate}"
+						id="newEmployeeJoinDateCal" />
+
+					<h:outputText value="Resignation Date" />
+					<p:calendar pattern="dd/MM/yyyy"
+						value="#{employeeProfileMgmtBean.newEmployee.resignationDate}"
+						id="newEmployeeResignationDateCal" />
+				</p:panelGrid>
+
+
+				<f:facet name="footer">
+					<p:commandButton value="Next" update=":displayNewEmployee"
+						action="#{employeeProfileMgmtBean.setPage('address')}"
+						validateClient="true" />
+					<p:commandButton type="reset" value="Reset"></p:commandButton>
+					<p:commandButton value="Cancel" update=":displayNewEmployee" actionListener="#{employeeProfileMgmtBean.initEmployeeCreation()}" oncomplete="PF('newEmployeeDialog').hide()" immediate="true"></p:commandButton>
+				</f:facet>
+			</p:panelGrid>
+			
+
+			<p:panelGrid id="NewEmployeeAddress" columns="1" cellpadding="4"
+				style=""
+				rendered="#{employeeProfileMgmtBean.page == 'address'}">
+				
+				<f:facet name="header"><h3>Addresses</h3></f:facet>		
+				
+					
+           						<p:dataTable id="newAddressTable" var="address0" value="#{employeeProfileMgmtBean.newAddressDataModel}" rowKey="#{address0.id}"
+							                 selection="#{employeeProfileMgmtBean.selectedAddress}" selectionMode="single" emptyMessage="No data found with given criteria" >
+							        
+							          <p:ajax event="rowSelect" listener="#{employeeProfileMgmtBean.onAddressRowSelect}" update=":newEmployeeForm:NewEmployeeAddress" />  
+							          
+							           					        
+							        
+							          <p:column id="typeHeader"  headerText="Address Type" >
+							            <h:outputText value="#{address0.addressType}" />
+							          </p:column>
+							          <p:column id="line1Header" headerText="Line 1">
+							            <h:outputText value="#{address0.line1}" />
+							          </p:column>
+							        <p:column id="cityHeader" headerText="City">
+							            <h:outputText value="#{address0.city}" />
+							          </p:column>
+							        <p:column id="stateHeader" headerText="State">
+							            <h:outputText value="#{address0.state}" />
+							          </p:column>
+							          
+							          <p:column id="countryHeader" headerText="Country">
+							            <h:outputText value="#{address0.country}" />
+							          </p:column>
+							        </p:dataTable>
+							        
+							        <p:commandButton value="Add Address" update="NewEmployeeAddress" title="Add Address" actionListener="#{employeeProfileMgmtBean.setAddressOperation(true, 'Create')}" rendered="#{employeeProfileMgmtBean.isRenderAddress() == false}"/>
+							      
+							   
+							   <h:form>
+							   <p:scrollPanel id="AddressDetail" style="width:500px;height:300px" rendered="#{employeeProfileMgmtBean.isRenderAddress()}">
+									
+									<h3>#{employeeProfileMgmtBean.addressOperation} Address</h3>
+									
+									<p:panelGrid columns="2" cellpadding="4"
+									style="">
+									<h:outputText value="Address Type" />
+									<p:selectOneMenu
+										value="#{employeeProfileMgmtBean.selectedAddressType}"
+										effect="fade" required="true" requiredMessage="Please select Address Type">
+										<f:selectItem itemLabel="Permanent" itemValue="Permanent" />
+										<f:selectItem itemLabel="Correspondance" itemValue="Correspondance" />
+										<f:selectItem itemLabel="Work" itemValue="Work" />
+										<f:selectItem itemLabel="Other" itemValue="Other" />
+									</p:selectOneMenu>
+												   		
+							   		<h:outputText value="Line 1"  class="req" />
+									<h:inputText
+										value="#{employeeProfileMgmtBean.selectedAddress.line1}" required="true" requiredMessage="Please enter Line 1"/>
+										
+									<h:outputText value="Line 2" />
+									<h:inputText
+										value="#{employeeProfileMgmtBean.selectedAddress.line2}"/>
+										
+									<h:outputText value="Line 3" />
+									<h:inputText
+										value="#{employeeProfileMgmtBean.selectedAddress.line3}"/>
+							   		
+							   		<h:outputText value="Post Code" />
+									<h:inputText
+										value="#{employeeProfileMgmtBean.selectedAddress.postcode}"/>
+							   		<h:outputText value="City" />
+									<h:inputText
+										value="#{employeeProfileMgmtBean.selectedAddress.city}"/>
+										
+									<h:outputText value="State" />
+									<h:inputText
+										value="#{employeeProfileMgmtBean.selectedAddress.state}"/>
+										
+									<h:outputText value="Country"  class="req"/>
+									<h:inputText
+										value="#{employeeProfileMgmtBean.selectedAddress.country}" required="true" requiredMessage="Please enter Country"/>
+										
+									<f:facet name="footer">
+										<p:commandButton value="Cancel" update=":newEmployeeForm:NewEmployeeAddress"
+											actionListener="#{employeeProfileMgmtBean.setAddressOperation(false, 'Create')}" process="@form" immediate="true"/>
+										<p:commandButton type="reset" value="Reset" rendered="#{employeeProfileMgmtBean.addressOperation == 'Create'}"></p:commandButton>
+										<p:commandButton value="Save" update=":newEmployeeForm:NewEmployeeAddress"
+											actionListener="#{employeeProfileMgmtBean.addAddressToNewEmployee()}" validateClient="true" process="@form" rendered="#{employeeProfileMgmtBean.addressOperation == 'Create'}"/>
+										 <p:commandButton value="Delete" update=":newEmployeeForm:NewEmployeeAddress"
+											actionListener="#{employeeProfileMgmtBean.deleteAddressToNewEmployee()}" validateClient="true" process="@form" rendered="#{employeeProfileMgmtBean.addressOperation == 'Update'}"/>
+											
+										<p:commandButton value="Update" update=":newEmployeeForm:NewEmployeeAddress"
+											actionListener="#{employeeProfileMgmtBean.updateAddressToNewEmployee()}" validateClient="true" process="@form" rendered="#{employeeProfileMgmtBean.addressOperation == 'Update'}"/>
+									</f:facet>	
+									</p:panelGrid>	
+									
+								
+							   </p:scrollPanel>		
+					</h:form>		        
+					
+				<f:facet name="footer">
+					<p:commandButton value="Back" update=":displayNewEmployee"
+						action="#{employeeProfileMgmtBean.setPage('details')}" />
+					<p:commandButton value="Next" update=":displayNewEmployee"
+						action="#{employeeProfileMgmtBean.setPage('login')}" />
+					<p:commandButton value="Cancel" update=":displayNewEmployee" actionListener="#{employeeProfileMgmtBean.initEmployeeCreation()}" oncomplete="PF('newEmployeeDialog').hide()" immediate="true"></p:commandButton>
+
+				</f:facet>
+				
+				
+			</p:panelGrid>
+			
+			<p:panelGrid id="NewEmployeeLogin" columns="1" cellpadding="4"
+				style="margin:0 auto;"
+				rendered="#{employeeProfileMgmtBean.page == 'login'}">
+				
+				<f:facet name="header"><h3>Login Details</h3></f:facet>
+				
+				<p:panelGrid id="NewEmployeeLoginColumn" columns="2" cellpadding="4" style="margin:0 auto;">
+				
+				<h:outputText value="Username" />
+					<h:inputText
+						value="#{employeeProfileMgmtBean.users.username}" required="true" requiredMessage="Please enter Username" />
+				<h:outputText value="Password" />
+				<p:password id="pwd1" value="#{employeeProfileMgmtBean.users.password}" match="pwd2" required="true" requiredMessage="Please enter Password"/>
+				<h:outputText value="Confirmed Password" />
+				<p:password id="pwd2" value="#{employeeProfileMgmtBean.users.password}" required="true" requiredMessage="Plese confirm Password"/>
+				
+				</p:panelGrid>
+				
+				<f:facet name="footer">
+					<p:commandButton value="Back" update=":displayNewEmployee"
+						action="#{employeeProfileMgmtBean.setPage('address')}" immediate="true" />
+					<p:commandButton type="reset" value="Reset"></p:commandButton>
+					<p:commandButton value="Create" update=":employeeTableForm:employeeTable" actionListener="#{employeeProfileMgmtBean.doCreateEmployee()}" validateClient="true" oncomplete="PF('newEmployeeDialog').hide()"/>
+					<p:commandButton value="Cancel" update=":displayNewEmployee" actionListener="#{employeeProfileMgmtBean.initEmployeeCreation()}" oncomplete="PF('newEmployeeDialog').hide()" immediate="true"></p:commandButton>
+				</f:facet>
+				
+			</p:panelGrid>
+	</h:form>
+	</p:panelGrid>
+
+	
+
+</h:body>
+</html>

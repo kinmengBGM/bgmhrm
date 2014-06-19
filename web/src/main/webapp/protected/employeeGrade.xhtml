@@ -1,0 +1,88 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions" >
+	
+	<f:metadata>
+    	<f:event type="preRenderView" listener="#{authenticationBean.hasPageAccess('AdminFunctions')}" />
+    </f:metadata>
+<h:body>
+<ui:composition template="/templates/mainlayout.xhtml">
+
+	<ui:define name="title">Employee Grade Maintenance</ui:define>
+		<ui:define name="content">
+        	<h1>Employee Grade Maintenance</h1>
+			<h:form id="employeeGradeTabelForm" >
+			<p:messages autoUpdate="true" severity="info" showDetail="true"/>
+        		<p:dataTable id="employeeGradeTabel" widgetVar="employeeGradeTabel" var="employeeGrade0" value="#{employeeGradeMgmtBean.employeeGradeDataModel}" rowKey="#{employeeGrade0.id}"
+                 									 selection="#{employeeGradeMgmtBean.selectedEmployeeGrade}" selectionMode="single" paginator="true" rows="10" scrollable="true">
+          				<p:ajax event="rowSelect" listener="#{employeeGradeMgmtBean.onRowSelect}" update=":employeeGradeDetailForm:display, :growl" oncomplete="PF('leaveTypeDialog').show()" />  
+          			<p:column id="nameHeader" sortBy="name"><f:facet name="header"> Name </f:facet><h:outputText value="#{employeeGrade0.name}" /></p:column>
+		          	<p:column id="descHeader"  sortBy="description" ><f:facet name="header"> Description </f:facet><h:outputText value="#{employeeGrade0.description}" /></p:column>
+         			 <p:column id="lastModifiedByHeader"  sortBy="lastModifiedBy" ><f:facet name="header"> Last Modified By </f:facet><h:outputText value="#{employeeGrade0.lastModifiedBy}" /></p:column>
+          			<p:column id="lastModifiedHeader"  sortBy="lastModifiedTime" ><f:facet name="header"> Last Modified Time</f:facet><h:outputText value="#{employeeGrade0.lastModifiedTime}" ><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /></h:outputText></p:column>
+        		</p:dataTable>
+       			<p:commandButton value="New Employee Grade" update=":newEmployeeGradeForm" oncomplete="PF('newEmployeeGradeDialog').show()" actionListener="#{employeeGradeMgmtBean.resetFormFields}" icon="ui-icon-star" title="Creates new grade"/>
+          </h:form>      
+      <p:growl id="growl" showDetail="true" life="1000"/> 
+    </ui:define>  
+  
+    <ui:define name="dialog">
+      <p:dialog header="Employee Grade Detail" styleClass="dlgCSS" widgetVar="leaveTypeDialog" resizable="false" id="leaveTypeDlg" modal ="true">
+               <h:form id="employeeGradeDetailForm">
+    			<p:messages autoUpdate="true"/>
+                <p:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+            			<h:outputText value="Name :"></h:outputText>
+                        <p:inputText value="#{employeeGradeMgmtBean.selectedEmployeeGrade.name}" required="true" requiredMessage="Please Enter Name!" label="Name " ><f:validateLength minimum="4" maximum="30"/></p:inputText>
+ 
+           				<h:outputText value="Description :"></h:outputText>
+                        <p:inputText value="#{employeeGradeMgmtBean.selectedEmployeeGrade.description}" required="true" requiredMessage="Please Enter Description" label="Description "><f:validateLength minimum="4" maximum="30"/></p:inputText>
+ 
+                    	<f:facet name="footer">
+                            <p:commandButton value="Update" update=":employeeGradeTabelForm:employeeGradeTabel"  oncomplete="if(!args.validationFailed) PF('leaveTypeDialog').hide()" actionListener="#{employeeGradeMgmtBean.doUpdateEmployeeGrade}" validateClient="true"/>
+                            <p:commandButton value="Delete" onclick="PF('cd').show()" oncomplete="PF('leaveTypeDialog').hide()"/>
+                       </f:facet>
+                </p:panelGrid>
+             </h:form>
+      </p:dialog>
+          
+      <p:dialog header="Create New Employee Grade" styleClass="dlgCSS" widgetVar="newEmployeeGradeDialog" resizable="false" id="newLeaveTypeDlg"  modal ="true">
+              <h:form id="newEmployeeGradeForm">
+                <p:messages autoUpdate="true" />
+                <p:panelGrid id="displayNewGradeType" columns="2" cellpadding="4" style="margin:0 auto;">
+           			 	<h:outputText value="Name :"></h:outputText>
+                        <p:inputText value="#{employeeGradeMgmtBean.newEmployeeGrade.name}" required="true" requiredMessage="Please Enter Name" label="Name "><f:validateLength minimum="4" maximum="30"/></p:inputText>
+ 
+           				<h:outputText value="Description :"></h:outputText>
+                        <p:inputText value="#{employeeGradeMgmtBean.newEmployeeGrade.description}" required="true" requiredMessage="Please Enter Description" label="Description "><f:validateLength minimum="4" maximum="30"/> </p:inputText>
+           
+                   		<f:facet name="footer">
+                            <p:commandButton value="Submit" update=":employeeGradeTabelForm:employeeGradeTabel"  oncomplete="if(!args.validationFailed) PF('newEmployeeGradeDialog').hide()" actionListener="#{employeeGradeMgmtBean.doCreateEmployeeGrade}" validateClient="true"/>
+                            <p:commandButton   value="Reset" type="reset"></p:commandButton>
+                    	</f:facet>
+                </p:panelGrid>
+              </h:form>
+      </p:dialog>
+          
+      <p:confirmDialog message="Are you sure?" header="Deleting EmployeeGrade" severity="alert" widgetVar="cd" id="cc">	
+			<h:form>
+				<p:commandButton value="Yes" actionListener="#{employeeGradeMgmtBean.doDeleteEmployeeGrade}" update=":employeeGradeTabelForm:employeeGradeTabel" oncomplete="PF('cd').hide();"/>
+				<p:commandButton value="No" onclick="PF('cd').hide();PF('leaveTypeDialog').show();" type="button" />
+			</h:form>
+	  </p:confirmDialog>
+			
+    </ui:define>
+
+
+
+	
+</ui:composition>
+</h:body>
+
+
+</html>
+	
+	

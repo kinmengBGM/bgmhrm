@@ -22,9 +22,9 @@
   	<description>Parent Maven project for HRM application.</description>
 
 	<scm>
-    <connection>scm:git:https://github.com/kinmengBGM/bgm-hrm.git/</connection>
-    <developerConnection>scm:git:https://github.com/kinmengBGM/bgm-hrm/trunk</developerConnection>
-    <url>https://github.com/kinmengBGM/bgm-hrm</url>
+    <connection>scm:git:https://github.com/kinmengBGM/bgmhrm.git/</connection>
+    <developerConnection>scm:git:https://github.com/kinmengBGM/bgmhrm.git</developerConnection>
+    <url>https://github.com/kinmengBGM/bgmhrm</url>
   </scm>  
 
 <dependencies>
@@ -57,11 +57,17 @@
             </plugins>
         </pluginManagement>
   </build>
-  
-  <repositories>
-		<repository>
-			<id>spring-milestones</id>
-			<url>http://repo.spring.io/libs-milestone</url>
-		</repository>
-	</repositories>
+
+<distributionManagement>
+  <repository>
+     <id>beans-releases</id>
+     <name>Internal Releases</name>
+     <url>http://beans-my.dyndns.biz:8081/nexus/content/repositories/beans_releases/</url>
+  </repository>
+  <snapshotRepository>
+     <id>beans-releases</id>
+     <name>Internal Releases</name>
+     <url>http://beans-my.dyndns.biz:8081/nexus/content/repositories/beans_snapshots/</url>
+  </snapshotRepository>
+</distributionManagement>
 </project>

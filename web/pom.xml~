@@ -1,9 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.beans</groupId>
 		<artifactId>leaveapp</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
+		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>web</artifactId>
 	<packaging>war</packaging>
@@ -25,6 +27,7 @@
 		<spring.data.jpa.version>1.4.3.RELEASE</spring.data.jpa.version>
 		<spring.security.version>3.2.0.RELEASE</spring.security.version>
 		<project.groupid>com.beans</project.groupid>
+		<project.version>1.0-SNAPSHOT</project.version>
 		<hibernate.version>4.1.1.Final</hibernate.version>
 		<jbpm.version>6.0.1.Final</jbpm.version>
 		<hostname>localhost</hostname>  <!-- Where to deploy. -->
@@ -310,16 +313,25 @@
 		</plugins>
 	</build>
 
-<distributionManagement>
-  <repository>
-     <id>beans-releases</id>
-     <name>Internal Releases</name>
-     <url>http://beans-my.dyndns.biz:8081/nexus/content/repositories/beans_releases/</url>
-  </repository>
-  <snapshotRepository>
-     <id>beans-releases</id>
-     <name>Internal Releases</name>
-     <url>http://beans-my.dyndns.biz:8081/nexus/content/repositories/beans_snapshots/</url>
-  </snapshotRepository>
-</distributionManagement>
+	<repositories>
+		<repository>
+			<id>prime-repo</id>
+			<url>http://repository.primefaces.org</url>
+			<name>PrimeFaces Maven Repository</name>
+		</repository>
+
+		<repository>
+			<id>jboss-public-repository-group</id>
+			<name>JBoss Public Repository Group</name>
+			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>

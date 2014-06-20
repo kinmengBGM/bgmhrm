@@ -54,9 +54,7 @@
           <connectionType>developerConnection</connectionType>
         </configuration>
       </plugin>
-
-
-            </plugins>
+    </plugins>
         </pluginManagement>
   </build>
 

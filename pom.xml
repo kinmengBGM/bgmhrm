@@ -22,8 +22,8 @@
   	<description>Parent Maven project for HRM application.</description>
 
 	<scm>
-    <connection>scm:git:https://github.com/kinmengBGM/bgmhrm.git/</connection>
-    <developerConnection>scm:git:https://github.com/kinmengBGM/bgmhrm.git</developerConnection>
+    <connection>scm:git:ssh://git@github.com/kinmengBGM/bgmhrm</connection>
+    <developerConnection>scm:git:ssh://git@github.com/kinmengBGM/bgmhrm</developerConnection>
     <url>https://github.com/kinmengBGM/bgmhrm</url>
   </scm>  
 

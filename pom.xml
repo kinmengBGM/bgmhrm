@@ -46,7 +46,7 @@
                         <target>1.6</target>
                     </configuration>
                 </plugin>
-<plugin>
+	<plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-scm-plugin</artifactId>
         <version>1.9</version>
@@ -54,10 +54,29 @@
           <connectionType>developerConnection</connectionType>
         </configuration>
       </plugin>
+
+
             </plugins>
         </pluginManagement>
   </build>
 
+<reporting>
+	<plugins>
+		<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <minimumTokens>100</minimumTokens>
+          <targetJdk>1.6</targetJdk>
+	  <rulesets>
+		<ruleset>pmdrules/beans-pmd.xml</ruleset>
+	  </rulesets>
+        </configuration>
+	
+      </plugin>
+	</plugins>
+</reporting>
 <distributionManagement>
   <repository>
      <id>beans-releases</id>

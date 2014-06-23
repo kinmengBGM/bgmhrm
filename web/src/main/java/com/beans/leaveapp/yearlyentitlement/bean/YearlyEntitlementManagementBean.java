@@ -11,15 +11,18 @@ import org.primefaces.event.SelectEvent;
 
 import com.beans.common.audit.service.AuditTrail;
 import com.beans.common.security.users.model.Users;
+import com.beans.exceptions.BSLException;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.employee.service.EmployeeService;
 import com.beans.leaveapp.leavetype.model.LeaveType;
 import com.beans.leaveapp.leavetype.service.LeaveTypeService;
+import com.beans.leaveapp.refresh.Refresh;
+import com.beans.leaveapp.web.bean.BaseMgmtBean;
 import com.beans.leaveapp.yearlyentitlement.model.YearlyEntitleDataModel;
 import com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement;
 import com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementService;
 
-public class YearlyEntitlementManagementBean implements Serializable {
+public class YearlyEntitlementManagementBean extends BaseMgmtBean implements Serializable {
 
 	/**
 	 * 
@@ -122,11 +125,15 @@ public class YearlyEntitlementManagementBean implements Serializable {
 			selectedYearlyEntitlement.setLastModifiedTime(new java.util.Date());
 			getYearlyEntitlementService().update(selectedYearlyEntitlement);
 			setInsertDelete(true);
+			yearlyEntitlement = new YearlyEntitlement();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info",getExcptnMesProperty("info.yearlyEntitlement.update")));
+			new Refresh().refreshPage();
+		}catch(BSLException e){
+			FacesMessage msg = new FacesMessage("Error",getExcptnMesProperty(e.getMessage()));  
+			msg.setSeverity(FacesMessage.SEVERITY_INFO);
+	        FacesContext.getCurrentInstance().addMessage(null, msg); 
 		} catch (Exception e) {
-			FacesMessage msg = new FacesMessage("Error",
-					"Yearly Entitle With id: "
-							+ selectedYearlyEntitlement.getId() + " not found!");
-
+			FacesMessage msg = new FacesMessage("Error","Yearly Entitle With id: "+ selectedYearlyEntitlement.getId() + " not found!");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 		}
 	}
@@ -135,7 +142,6 @@ public class YearlyEntitlementManagementBean implements Serializable {
 		this.setSelectedYearlyEntitlement((YearlyEntitlement) event.getObject());
 		System.out.println(this.getYearlyEntitlement().getId());
 		FacesMessage msg = new FacesMessage("Yearly Entitlement Seleted");
-
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
 
@@ -143,23 +149,24 @@ public class YearlyEntitlementManagementBean implements Serializable {
 		try {
 			int id = selectedYearlyEntitlement.getId();
 			this.getYearlyEntitlementService().delete(id);
+			setInsertDelete(true);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info",getExcptnMesProperty("info.yearlyEntitlement.delete")));
+			new Refresh().refreshPage();
+		}catch(BSLException e){
+			FacesMessage msg = new FacesMessage("Error",getExcptnMesProperty(e.getMessage()));  
+			msg.setSeverity(FacesMessage.SEVERITY_INFO);
+	        FacesContext.getCurrentInstance().addMessage(null, msg); 
 		} catch (Exception e) {
-			FacesMessage msg = new FacesMessage("Error",
-					"Yearly Entitle With id: "
-							+ selectedYearlyEntitlement.getId() + " not found!");
-
+			FacesMessage msg = new FacesMessage("Error","Yearly Entitle With id: "+ selectedYearlyEntitlement.getId() + " not found!");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 		}
-
-		setInsertDelete(true);
 	}
 
 	public void doCreateYearlyEntitlement() {
-
+		try{
 		Employee employee = getYearlyEntitlementService().findByEmployee(employeeName);
 		System.out.println(employeeName + " " + this.yearlyEntitlement);
-		LeaveType leaveType = getYearlyEntitlementService().findByLeaveType(
-				leaveTypeName,employee.getEmployeeType().getId());
+		LeaveType leaveType = getYearlyEntitlementService().findByLeaveType(leaveTypeName,employee.getEmployeeType().getId());
 		System.out.println(employee.getEmployeeType().getId()+" "+leaveTypeName);
 		
 		yearlyEntitlement.setEmployee(employee);
@@ -167,13 +174,15 @@ public class YearlyEntitlementManagementBean implements Serializable {
 		yearlyEntitlement.setCreatedBy(actorUsers.getUsername());
 		yearlyEntitlement.setCreationTime(new java.util.Date());
 		this.getYearlyEntitlementService().create(yearlyEntitlement);
-
 		setInsertDelete(true);
-
-		// auditTrail.log(SystemAuditTrailActivity.CREATED,
-		// SystemAuditTrailLevel.INFO,
-		// this.getActorUsers().getId(),getActorUsers().getUsername(),
-		// getActorUsers().getUsername()+" created yearly Entitlement: "+yearlyEntitlement.getEmployee().getName());
+		yearlyEntitlement = new YearlyEntitlement();
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info",getExcptnMesProperty("info.yearlyEntitlement.create")));
+		new Refresh().refreshPage();
+	}catch(BSLException e){
+		FacesMessage msg = new FacesMessage("Error",getExcptnMesProperty(e.getMessage()));  
+		msg.setSeverity(FacesMessage.SEVERITY_INFO);
+        FacesContext.getCurrentInstance().addMessage(null, msg); 
+	}
 	}
 
 	public boolean isInsertDelete() {
@@ -274,7 +283,9 @@ public class YearlyEntitlementManagementBean implements Serializable {
 				// actorUsers.getId(),actorUsers.getUsername(),
 				// actorUsers.getUsername()+" searching Entitlement of : "+getEmployeeName());
 			}
-
+			
+			searchEmployeeName = null;
+			searchLeaveType = null;
 		}
 
 		catch (Exception e) {

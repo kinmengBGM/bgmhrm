@@ -14,11 +14,11 @@ public interface YearlyEntitlementRepository extends
 	@Query("select y from YearlyEntitlement y where isDeleted =?")
 	public List<YearlyEntitlement> findByIsDeleted(int isDeleted);
 
-	@Query("select y from YearlyEntitlement y where  employeeId =? and isDeleted = 0")
-	public List<YearlyEntitlement> findByEmployeeId(int employeeId);
+	@Query("select y from YearlyEntitlement y where  employee.id =:employeeId and leaveType.name not in ('TimeInLieu') ")
+	public List<YearlyEntitlement> findByEmployeeId(@Param("employeeId") int employeeId);
 	
-	@Query("select y from YearlyEntitlement y where  employeeId =? and leaveType.name != 'Unpaid'")
-	public List<YearlyEntitlement> findByEmployeeIdNotIncludeUnpaid(int employeeId);
+	@Query("select y from YearlyEntitlement y where  employee.id =:employeeId and leaveType.name not in ('Unpaid','TimeInLieu') ")
+	public List<YearlyEntitlement> findByEmployeeIdNotIncludeUnpaid(@Param("employeeId")int employeeId);
 
 	@Query("select y from  YearlyEntitlement y where leaveTypeId =? and isDeleted = 0")
 	public List<YearlyEntitlement> findByLeaveTypeIdLike(int leaveTypeId);
@@ -52,5 +52,9 @@ public interface YearlyEntitlementRepository extends
 	
 	@Query("select y from YearlyEntitlement y where employee.id=? and leaveType.id=?")
 	public YearlyEntitlement findByEmployeeAndLeaveTypeId(int employeeId, int leaveTypeId);
+	
+	
+	@Query("select y from YearlyEntitlement y where employee.id=:employeeId and leaveTypeId in (select id from LeaveType l where name=:leaveTypeName and employeeType.id in (select employeeType.id from Employee e where e.id =:employeeId)) and isDeleted=0)")
+	public List<YearlyEntitlement> findByEmployeeIdAndEmployeeTypeAndLeaveTypeName(@Param("employeeId") int employeeId,@Param("leaveTypeName") String leaveTypeName);
 
 }

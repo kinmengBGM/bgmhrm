@@ -8,5 +8,6 @@ public interface EmployeeRepositoryCustom {
 	
 	List<Employee> getAllUsersWithRole(String role);
 
+	
 	List<Employee> findAllEmployeesForSendingMonthlyLeaveReport();
 }

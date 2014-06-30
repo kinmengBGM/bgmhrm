@@ -23,6 +23,8 @@
 		<class>com.beans.common.security.usertoaccessrights.model.UserToAccessRights</class>
 		<class>com.beans.leaveapp.leavetransaction.model.LeaveTransaction</class>
 		<class>com.beans.leaveapp.leaveapplicationcomment.model.LeaveApplicationComment</class>
+		<class>com.beans.leaveapp.monthlyreport.model.AnnualLeaveReport</class>
+		<class>com.beans.leaveapp.monthlyreport.model.MonthlyLeaveReport</class>
 		
 		<!-- jBPM6 specific -->
 		<mapping-file>META-INF/JBPMorm.xml</mapping-file>

@@ -14,7 +14,7 @@ end
 rule "Require Operation Director Approval" ruleflow-group "leaveapprovalrequirement"
 no-loop true
     when
-        approvalLevelModel: ApprovalLevelModel(role in ("ROLE_TEAMLEAD", "ROLE_HR"))
+        approvalLevelModel: ApprovalLevelModel(role in ("ROLE_TEAMLEAD","ROLE_JRHR","ROLE_SRHR", "ROLE_HR","ROLE_PM"))
     then
 		approvalLevelModel.setApprover("ROLE_OPERDIR");
 		insert(approvalLevelModel);

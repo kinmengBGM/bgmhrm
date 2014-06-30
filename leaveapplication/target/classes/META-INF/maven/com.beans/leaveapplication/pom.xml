@@ -1,17 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.beans</groupId>
     <artifactId>leaveapp</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.1-SNAPSHOT</version>
   </parent>
   <artifactId>leaveapplication</artifactId>
   <properties>
 		<spring.data.jpa.version>1.4.3.RELEASE</spring.data.jpa.version>
 		<hibernate.version>4.1.0.Final</hibernate.version>
 		<spring.version>4.0.0.RELEASE</spring.version>
-		<project.version>1.0-SNAPSHOT</project.version>
 		<project.groupid>com.beans</project.groupid>
 	</properties>
 	
@@ -94,4 +92,16 @@
 
 	</dependencies>
   
+<distributionManagement>
+  <repository>
+     <id>beans-releases</id>
+     <name>Internal Releases</name>
+     <url>http://beans-my.dyndns.biz:8081/nexus/content/repositories/beans_releases/</url>
+  </repository>
+  <snapshotRepository>
+     <id>beans-releases</id>
+     <name>Internal Releases</name>
+     <url>http://beans-my.dyndns.biz:8081/nexus/content/repositories/beans_snapshots/</url>
+  </snapshotRepository>
+</distributionManagement>
 </project>

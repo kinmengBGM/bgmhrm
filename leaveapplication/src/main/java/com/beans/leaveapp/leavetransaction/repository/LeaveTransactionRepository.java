@@ -70,7 +70,13 @@ public interface LeaveTransactionRepository extends CrudRepository<LeaveTransact
    @Query("select l from LeaveTransaction l where startDateTime =? and isDeleted =0")
    List<LeaveTransaction> findByStartDateTime(Date startDateTime);
    
-   @Query("select l from LeaveTransaction l where status='A' and employeeId= :employeeId and yearlyLeaveBalance=0.00 and startDateTime<=:startDateOfMonth")
-   List<LeaveTransaction> findAllUnpaidLeavesApproved(@Param("employeeId")int employeeId,@Param("startDateOfMonth") java.sql.Date startDateOfMonth);
+   @Query("select l from LeaveTransaction l where employeeId= :employeeId and applicationDate>=:monthFirstDayOfYear and applicationDate<=:applicationDate and leaveType.id in (select l from LeaveType l where name !='TimeInLieu')")
+   List<LeaveTransaction> findAllLeavesAppliedByEmployee(@Param("employeeId")int employeeId, @Param("monthFirstDayOfYear") java.sql.Date monthFirstDayOfYear,@Param("applicationDate") java.sql.Date applicationDate );
+   
+   
+   @Query("select l from LeaveTransaction l where employeeId= :employeeId and applicationDate>=:monthFirstDayOfYear and applicationDate<=:applicationDate and leaveType.id in (select l from LeaveType l where name ='TimeInLieu')")
+   List<LeaveTransaction> findAllTimeInLieuLeavesAppliedByEmployee(@Param("employeeId")int employeeId, @Param("monthFirstDayOfYear") java.sql.Date monthFirstDayOfYear,@Param("applicationDate") java.sql.Date applicationDate );
+   
+   
    
   }

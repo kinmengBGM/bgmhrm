@@ -79,7 +79,7 @@
 					<h:outputText value="Marital Status" />
 					<p:selectOneMenu
 						value="#{myProfileMgmtBean.employee.maritalStatus}"
-						effect="fade">
+						effect="fade" >
 						<f:selectItem itemLabel="Select one" itemValue=""/>
 						<f:selectItem itemLabel="Single" itemValue="Single" />
 						<f:selectItem itemLabel="Married" itemValue="Married" />
@@ -135,7 +135,7 @@
 
 					<h:outputText value="Email Address(Personal)" />
 					<h:inputText
-						valEmployeeAddressue="#{myProfileMgmtBean.employee.personalEmailAddress}" />
+						value="#{myProfileMgmtBean.employee.personalEmailAddress}" />
 
 					<h:outputText value="Phone Number(Work)" />
 					<h:inputText
@@ -209,16 +209,16 @@
 									
 									<p:panelGrid columns="2" cellpadding="4"
 									style="">
-									<h:outputText value="Address Type" />
-									<p:selectOneMenu
-										value="#{myProfileMgmtBean.selectedAddressType}"
+									<h:outputText value="Address Type" />									
+									<h:selectOneMenu
+										value="#{myProfileMgmtBean.selectedAddressType}" style="width:170px"
 										effect="fade" required="true" requiredMessage="Please select Address Type">
+										<f:selectItem itemLabel="Select One" itemValue=""/>
 										<f:selectItem itemLabel="Permanent" itemValue="Permanent" />
 										<f:selectItem itemLabel="Correspondance" itemValue="Correspondance" />
 										<f:selectItem itemLabel="Work" itemValue="Work" />
 										<f:selectItem itemLabel="Other" itemValue="Other" />
-									</p:selectOneMenu>
-												   		
+									</h:selectOneMenu>												   		
 							   		<h:outputText value="Line 1"  class="req" />
 									<h:inputText
 										value="#{myProfileMgmtBean.selectedAddress.line1}" required="true" requiredMessage="Please enter Line 1"/>
@@ -275,8 +275,7 @@
 	
 	
 			<f:facet name="footer">
-					<p:commandButton value="Reset"
-						type="reset" />
+					<p:commandButton value="Reset" update=":myProfileForm" immediate="true" ><p:resetInput target=":myProfileForm"></p:resetInput></p:commandButton>
 					<p:commandButton value="Update" actionListener="#{myProfileMgmtBean.doUpdateEmployee}" validateClient="true" oncomplete="if(!args.validationFailed) PF('updatedcd').show();"/>
 			</f:facet>
 	</p:panelGrid>

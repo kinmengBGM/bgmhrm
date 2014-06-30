@@ -56,10 +56,10 @@
           <h3>Map Access Rights to User #{userToAccessRightsMgmtBean.selectedUsers.username}</h3>        
           <h:form id="assignedAccessRightsTableForm">
         <p:dataTable id="assignedAccessRightsTable" var="userToAccessRights0" value="#{userToAccessRightsMgmtBean.userToAssignedAccessRightsDataModel}"  rowKey="#{userToAccessRights0.id}"
-                 paginator="true" rows="20" scrollable="true" selectionMode="single" emptyMessage="No data found with given criteria" style="width:800">
+                 paginator="true" rows="10" scrollable="true" selectionMode="single" emptyMessage="No data found with given criteria">
     
         
-         <p:ajax event="rowSelect" listener="#{userToAccessRightsMgmtBean.onAssignedAccessRightsSelect}" update=":assignedAccessRightsTableForm" oncomplete="PF('cd').show()" />
+         <p:ajax event="rowSelect" listener="#{userToAccessRightsMgmtBean.onAssignedAccessRightsSelect}" update=":assignedAccessRightsTableForm" oncomplete="PF('deleteAccessRightsDialog').show()" />
           
           <p:column id="assignedAccessRightsHeader"  headerText="Assigned Access Right">
             <h:outputText value="#{userToAccessRights0.accessRights.accessRights}" />
@@ -99,7 +99,13 @@
 					
 						</h:form>			
 		  </p:dialog>
-		 <p:confirmDialog message="Are you sure?" header="Deleting Role" severity="alert" widgetVar="cd">
+		  <p:dialog header="Deleting Access Right" widgetVar="deleteAccessRightsDialog" resizable="false" id="deleteAccessRightsDlg" modal="true">
+		  			<h:form id="deleteAccessRightsForm">
+		  					<p:commandButton value="Delete" onclick="PF('cd').show()" oncomplete="PF('deleteAccessRightsDialog').hide()"> </p:commandButton>
+		  					<p:commandButton value="Cancel" onclick="PF('deleteAccessRightsDialog').hide()"></p:commandButton>
+		  			</h:form>
+		  </p:dialog>
+		 <p:confirmDialog message="Are you sure?" header="Deleting Access Right" severity="alert" widgetVar="cd">
 		 <p:commandButton value="Yes" actionListener="#{userToAccessRightsMgmtBean.deleteAssignedAccessRights}" update=":assignedAccessRightsTableForm" oncomplete="PF('cd').hide();"/>
 			<p:commandButton value="No" onclick="PF('cd').hide();PF('assignedAccessRightsDialog').show();" type="button" />				 
 		 </p:confirmDialog>		  

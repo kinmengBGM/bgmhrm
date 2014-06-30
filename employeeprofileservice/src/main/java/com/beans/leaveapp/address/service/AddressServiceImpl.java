@@ -16,7 +16,8 @@ public class AddressServiceImpl implements AddressService {
 	@Override
 	public Address create(Address address) {
 		Address addressToBeCreated = address;
-		return addressRepository.save(addressToBeCreated);
+		addressRepository.save(addressToBeCreated);
+		return addressToBeCreated;
 	}
 
 	@Override
@@ -39,22 +40,24 @@ public class AddressServiceImpl implements AddressService {
 
 	@Override
 	public Address update(Address address) throws AddressNotFound {
-		Address addressToBeUpdated = new Address();
-		
-		addressToBeUpdated.setId(address.getId());
-		addressToBeUpdated.setAddressType(address.getAddressType());
-		addressToBeUpdated.setCity(address.getCity());
-		addressToBeUpdated.setCountry(address.getCountry());
-		addressToBeUpdated.setDeleted(address.isDeleted());
-		addressToBeUpdated.setEmployee(address.getEmployee());
-		addressToBeUpdated.setLine1(address.getLine1());
-		addressToBeUpdated.setLine2(address.getLine2());
-		addressToBeUpdated.setLine3(address.getLine3());
-		addressToBeUpdated.setPostcode(address.getPostcode());
-		addressToBeUpdated.setState(address.getState());
-		addressToBeUpdated.setLastModifiedBy(address.getLastModifiedBy());
-		addressToBeUpdated.setLastModifiedTime(address.getLastModifiedTime());
-		return addressRepository.save(addressToBeUpdated);
+		Address addressToBeUpdated = addressRepository.findOne(address.getId());
+		if(addressToBeUpdated != null){
+			addressToBeUpdated.setId(address.getId());
+			addressToBeUpdated.setAddressType(address.getAddressType());
+			addressToBeUpdated.setCity(address.getCity());
+			addressToBeUpdated.setCountry(address.getCountry());
+			addressToBeUpdated.setDeleted(address.isDeleted());
+			addressToBeUpdated.setEmployee(address.getEmployee());
+			addressToBeUpdated.setLine1(address.getLine1());
+			addressToBeUpdated.setLine2(address.getLine2());
+			addressToBeUpdated.setLine3(address.getLine3());
+			addressToBeUpdated.setPostcode(address.getPostcode());
+			addressToBeUpdated.setState(address.getState());
+			addressToBeUpdated.setLastModifiedBy(address.getLastModifiedBy());
+			addressToBeUpdated.setLastModifiedTime(address.getLastModifiedTime());
+			addressRepository.save(addressToBeUpdated);
+		}
+		return addressToBeUpdated;
 	}
 
 	@Override

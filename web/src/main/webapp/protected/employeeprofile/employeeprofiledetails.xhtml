@@ -147,7 +147,7 @@
 					<p:commandButton value="Next" update=":displayNewEmployee"
 						action="#{employeeProfileMgmtBean.setPage('address')}"
 						validateClient="true" />
-					<p:commandButton type="reset" value="Reset"></p:commandButton>
+					<p:commandButton value="Reset" update=":newEmployeeForm" immediate="true"><p:resetInput target=":newEmployeeForm"/></p:commandButton>
 					<p:commandButton value="Cancel" update=":displayNewEmployee" actionListener="#{employeeProfileMgmtBean.initEmployeeCreation()}" oncomplete="PF('newEmployeeDialog').hide()" immediate="true"></p:commandButton>
 				</f:facet>
 			</p:panelGrid>
@@ -193,18 +193,16 @@
 									
 									<h3>#{employeeProfileMgmtBean.addressOperation} Address</h3>
 									
-									<p:panelGrid columns="2" cellpadding="4"
-									style="">
-									<h:outputText value="Address Type" />
-									<p:selectOneMenu
-										value="#{employeeProfileMgmtBean.selectedAddressType}"
-										effect="fade" required="true" requiredMessage="Please select Address Type">
+									<p:panelGrid columns="2" cellpadding="4">
+									<h:outputText value="Address Type" class="req" />									
+									<h:selectOneMenu value="#{employeeProfileMgmtBean.selectedAddressType}" effect="fade" required="true" requiredMessage="Please select Address Type" style="width:170px">
+										<f:selectItem itemLabel="Select One" itemValue=""/> 
 										<f:selectItem itemLabel="Permanent" itemValue="Permanent" />
 										<f:selectItem itemLabel="Correspondance" itemValue="Correspondance" />
 										<f:selectItem itemLabel="Work" itemValue="Work" />
 										<f:selectItem itemLabel="Other" itemValue="Other" />
-									</p:selectOneMenu>
-												   		
+									</h:selectOneMenu>																	   		
+							
 							   		<h:outputText value="Line 1"  class="req" />
 									<h:inputText
 										value="#{employeeProfileMgmtBean.selectedAddress.line1}" required="true" requiredMessage="Please enter Line 1"/>
@@ -284,7 +282,7 @@
 					<p:commandButton value="Back" update=":displayNewEmployee"
 						action="#{employeeProfileMgmtBean.setPage('address')}" immediate="true" />
 					<p:commandButton type="reset" value="Reset"></p:commandButton>
-					<p:commandButton value="Create" update=":employeeTableForm:employeeTable" actionListener="#{employeeProfileMgmtBean.doCreateEmployee()}" validateClient="true" oncomplete="PF('newEmployeeDialog').hide()"/>
+					<p:commandButton value="Create" update=":employeeTableForm:employeeTable" actionListener="#{employeeProfileMgmtBean.doCreateEmployee}" validateClient="true" oncomplete="if(!args.validationFailed) PF('newEmployeeDialog').hide()"/>
 					<p:commandButton value="Cancel" update=":displayNewEmployee" actionListener="#{employeeProfileMgmtBean.initEmployeeCreation()}" oncomplete="PF('newEmployeeDialog').hide()" immediate="true"></p:commandButton>
 				</f:facet>
 				

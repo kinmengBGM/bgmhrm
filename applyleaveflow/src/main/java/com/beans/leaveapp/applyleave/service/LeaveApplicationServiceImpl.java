@@ -39,38 +39,25 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 		if(!isEmployee(userRoles)) {
 			throw new RoleNotFound("You are not an employee.");
 		}
-		Role assignedRoleInLeaveFlow = getEmployeeOrTeamLead(userRoles);
+		Role assignedRoleInLeaveFlow = getHighestRoleOfEmployee(userRoles);
 		ApprovalLevelModel approvalLevelModel = new ApprovalLevelModel();
 		approvalLevelModel.setRole(assignedRoleInLeaveFlow.getRole());
 		
-		List<LeaveApplicationComment> leaveApplicationCommentList = new ArrayList<LeaveApplicationComment>();
 		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
 		parameterMap.put("approvalLevelModel", approvalLevelModel);
-		parameterMap.put("employee", employee);
 		parameterMap.put("leaveTransaction", leaveTransaction);
-		parameterMap.put("yearlyEntitlement", yearlyEntitlement);
-		parameterMap.put("isTeamLeadApproved", new Boolean(false));
-		parameterMap.put("isOperDirApproved", new Boolean(false));
-		parameterMap.put("role", assignedRoleInLeaveFlow.getRole());
-		parameterMap.put("leaveApplicationCommentList", leaveApplicationCommentList);
-		parameterMap.put("teamLeadName", null);
-		parameterMap.put("leaveTransactionId", new Integer(0));
+		parameterMap.put("approverName", null);
+		parameterMap.put("isApproverApproved", null);
 		long processInstanceId = applyLeaveRuntime.startProcessWithInitialParametersAndFireBusinessRules(PROCESS_NAME, parameterMap);
 		
 		List<Long> taskIdList = applyLeaveRuntime.getTaskIdsByProcessInstanceId(processInstanceId);
 		if(taskIdList.size() == 0) {
 			throw new LeaveApplicationException("Ooops! Something serious has happened. Please contact your Administrator");
 		}
-		
 		Long currentTaskId = taskIdList.get(0);
-		
 		leaveTransaction.setTaskId(currentTaskId);
-		
-		LeaveTransaction leaveTransactionPersist = getLeaveTransactionService().insertFromWorkflow(leaveTransaction);
-		
-		parameterMap.put("leaveTransactionId", leaveTransactionPersist.getId());
-		
 		applyLeaveRuntime.submitTask(employee.getUsers().getUsername(), currentTaskId, parameterMap);
+		getLeaveTransactionService().insertFromWorkflow(leaveTransaction);
 		
 	}
 	
@@ -91,7 +78,7 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 	}
 	
 	
-	private Role getEmployeeOrTeamLead(Set<Role> userRoles) {
+	private Role getHighestRoleOfEmployee(Set<Role> userRoles) {
 		Role resultRole = null;
 		
 		Iterator<Role> roleIterator = userRoles.iterator();
@@ -134,17 +121,29 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 		if(roleName.equals("ROLE_EMPLOYEE")) {
 			return 5;
 		} else if(roleName.equals("ROLE_TEAMLEAD")) {
-			return 10;
-		}else if(roleName.equals("ROLE_JRHR")) {
 			return 15;
+		}else if(roleName.equals("ROLE_JRHR")) {
+			return 10;
 		}else if(roleName.equals("ROLE_SRHR")) {
-			return 20;
+			return 10;
 		}
 		else if(roleName.equals("ROLE_HR")) {
-			return 25;
+			return 10;
 		}
 		else if(roleName.equals("ROLE_PM")) {
-			return 30;
+			return 10;
+		}
+		else if(roleName.equals("ROLE_OPERDIR")) {
+			return 20;
+		}
+		else if(roleName.equals("ROLE_MANGDIR")) {
+			return 20;
+		}
+		else if(roleName.equals("ROLE_DIR")) {
+			return 20;
+		}
+		else if(roleName.equals("ROLE_PROJCOR")) {
+			return 10;
 		}
 		else {
 			return -1;
@@ -193,6 +192,7 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 			leaveRequest.setReason(leaveTransactionFromWorkFlow.getReason());
 			leaveRequest.setEmployee(leaveTransactionFromWorkFlow.getEmployee());
 			leaveRequest.setYearlyLeaveBalance(leaveTransactionFromWorkFlow.getYearlyLeaveBalance());
+			leaveRequest.setId(leaveTransactionFromWorkFlow.getId());
 			leaveTransactionFromWorkFlow.getEmployee().getName();
 			}
 		}
@@ -200,38 +200,20 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 	}
 	
 	@Override
-	public void approveLeaveOfEmployee(LeaveTransaction leaveTransaction, String actorId,Set<Role> actorRoles) {
+	public void approveLeaveOfEmployee(LeaveTransaction leaveTransaction, String actorId) {
 		try{
-		HashMap<String, Object> parameterMap = getContentMapFromSelectedLeaveRequest(leaveTransaction);
+		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
 		
-		// Getting actor roles and checking who is approving the current leave request and setting map properties accordingly
-		if(parameterMap!=null && "ROLE_EMPLOYEE".equalsIgnoreCase((String)parameterMap.get("role")))
-		{
-			Set<String> roleSet = new HashSet<String>();
-			for (Role role : actorRoles) {
-				roleSet.add(role.getRole());
-			}
-			if(roleSet.contains("ROLE_TEAMLEAD")){
-				parameterMap.put("isTeamLeadApproved", new Boolean(true));
-				parameterMap.put("teamLeadName", actorId);
-			}
-			if(roleSet.contains("ROLE_OPERDIR")){
-				parameterMap.put("isOperDirApproved", new Boolean(true));
-				parameterMap.put("oprDirName", actorId);
-			}
-			
-		}else
-		{
-			parameterMap.put("isOperDirApproved", new Boolean(true));
-			parameterMap.put("oprDirName", actorId);
-		}
+			Task currentTask = applyLeaveRuntime.getTaskById(leaveTransaction.getTaskId());
+			Map<String, Object> contentMap = applyLeaveRuntime.getContentForTask(currentTask);
+			ApprovalLevelModel approvalLevelModel =(ApprovalLevelModel) contentMap.get("approvalLevelModel");
+			parameterMap.put("approvalLevelModel", approvalLevelModel);
+			parameterMap.put("leaveTransaction", leaveTransaction);
+			parameterMap.put("isApproverApproved",Boolean.TRUE);
+			parameterMap.put("approverName", actorId);
 		
 		long taskId = leaveTransaction.getTaskId();
 		applyLeaveRuntime.submitTask(actorId, taskId, parameterMap);
-		}catch(RoleNotFound e){
-			
-			log.error("Role Not Found in service ", e);
-			throw new BSLException("err.leave.approve.roleNotFound");
 		}catch(BSLException e){
 		log.error("Error while approving leave in service ", e);
 		throw new BSLException(e.getMessage());
@@ -249,43 +231,27 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 		if(!isEmployee(userRoles)) {
 			throw new RoleNotFound("You are not an employee.");
 		}
-		Role assignedRoleInLeaveFlow = getEmployeeOrTeamLead(userRoles);
+		Role assignedRoleInLeaveFlow = getHighestRoleOfEmployee(userRoles);
 		ApprovalLevelModel approvalLevelModel = new ApprovalLevelModel();
 		approvalLevelModel.setRole(assignedRoleInLeaveFlow.getRole());
 		
-		List<LeaveApplicationComment> leaveApplicationCommentList = new ArrayList<LeaveApplicationComment>();
 		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
-		parameterMap.put("approvalLevelModel", approvalLevelModel);
-		parameterMap.put("employee", leaveTransaction.getEmployee());
 		parameterMap.put("leaveTransaction", leaveTransaction);
-		parameterMap.put("isOperDirApproved", new Boolean(false));
-		parameterMap.put("role", assignedRoleInLeaveFlow.getRole());
-		parameterMap.put("leaveApplicationCommentList", leaveApplicationCommentList);
+		parameterMap.put("isApproverApproved", Boolean.TRUE);
+		
 		return parameterMap;
 	}
 	@Override
-	public void rejectLeaveOfEmployee(LeaveTransaction leaveTransaction, String actorId, Set<Role> userRoles) {
+	public void rejectLeaveOfEmployee(LeaveTransaction leaveTransaction, String actorId) {
 		try{
-		HashMap<String, Object> resultMap = getContentMapFromSelectedLeaveRequest(leaveTransaction);
-		Set<String> roleSet = new HashSet<String>();
-		for (Role role : userRoles) {
-			roleSet.add(role.getRole());
-		}
-		if(roleSet.contains("ROLE_TEAMLEAD")){
-			resultMap.put("isTeamLeadApproved", new Boolean(false));
-			resultMap.put("teamLeadName", actorId);
-		}
-		else {
-			resultMap.put("isOperDirApproved", new Boolean(false));
-			resultMap.put("oprDirName", actorId);
-		}
+			HashMap<String, Object> parameterMap = new HashMap<String, Object>();
+			
+			parameterMap.put("isApproverApproved",Boolean.FALSE);
+			parameterMap.put("approverName", actorId);
+			parameterMap.put("leaveTransaction", leaveTransaction);
 			
 		long taskId = leaveTransaction.getTaskId();
-		applyLeaveRuntime.submitTask(actorId, taskId, resultMap);
-		
-		}catch(RoleNotFound e){
-			log.error("Role Not Found in service ", e);
-			throw new BSLException("err.leave.reject.roleNotFound");
+		applyLeaveRuntime.submitTask(actorId, taskId, parameterMap);
 		}catch(BSLException e){
 		log.error("Error while rejecting leave in service ", e);
 		throw new BSLException(e.getMessage());

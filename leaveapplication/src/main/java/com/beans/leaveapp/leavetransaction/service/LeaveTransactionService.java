@@ -31,7 +31,7 @@ public interface LeaveTransactionService {
 	
     public List<LeaveTransaction> findByStatus(String status);
     
-    void updateLeaveApplicationStatus(LeaveTransaction leaveTransaction,Integer leaveTransactionId);
+    void updateLeaveApplicationStatus(LeaveTransaction leaveTransaction);
 
    
 }

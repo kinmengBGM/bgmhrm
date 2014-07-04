@@ -183,11 +183,8 @@ public class LeaveTransactionServiceImpl implements LeaveTransactionService {
 
 
 	@Override
-	public void updateLeaveApplicationStatus(LeaveTransaction leaveTransaction,Integer leaveTransactionId) {
-		LeaveTransaction leaveTransactionPersist = leaveTransactionRepository.findOne(leaveTransactionId);
-		leaveTransactionPersist.setStatus(leaveTransaction.getStatus());
-		leaveTransactionPersist.setLastModifiedTime(new Date());
-		leaveTransactionRepository.save(leaveTransactionPersist);
+	public void updateLeaveApplicationStatus(LeaveTransaction leaveTransaction) {
+		leaveTransactionRepository.save(leaveTransaction);
 	}
 
 	

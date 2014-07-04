@@ -48,6 +48,7 @@ public class LeaveTransaction implements Serializable{
 	private String lastModifiedBy;
 	private java.util.Date lastModifiedTime;
 	private String status;
+	private String rejectReason;
 	
 	public LeaveTransaction(int id, Date applicationDate,
 			Date startDateTime, Date endDateTime,
@@ -234,4 +235,13 @@ public class LeaveTransaction implements Serializable{
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	@Column(name="rejectReason",nullable=true)
+	public String getRejectReason() {
+		return rejectReason;
+	}
+	public void setRejectReason(String rejectReason) {
+		this.rejectReason = rejectReason;
+	}
+	
+	
 }

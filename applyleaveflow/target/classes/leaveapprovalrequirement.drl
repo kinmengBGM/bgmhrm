@@ -5,17 +5,35 @@ import com.beans.leaveapp.applyleave.model.ApprovalLevelModel
 rule "Require Team Lead Approval" ruleflow-group "leaveapprovalrequirement"
 no-loop true
     when
-        approvalLevelModel: ApprovalLevelModel(role in ("ROLE_EMPLOYEE"))
+        approvalLevelModelTeam: ApprovalLevelModel(role in ("ROLE_EMPLOYEE"))
     then
-		approvalLevelModel.setApprover("ROLE_TEAMLEAD");
-		insert(approvalLevelModel);
+		approvalLevelModelTeam.setApprover("ROLE_TEAMLEAD");
+		insert(approvalLevelModelTeam);
 end
 
 rule "Require Operation Director Approval" ruleflow-group "leaveapprovalrequirement"
 no-loop true
     when
-        approvalLevelModel: ApprovalLevelModel(role in ("ROLE_TEAMLEAD","ROLE_JRHR","ROLE_SRHR", "ROLE_HR","ROLE_PM"))
+        approvalLevelModelOpr: ApprovalLevelModel(role in ("ROLE_TEAMLEAD","ROLE_PM"))
     then
-		approvalLevelModel.setApprover("ROLE_OPERDIR");
-		insert(approvalLevelModel);
+		approvalLevelModelOpr.setApprover("ROLE_OPERDIR");
+		insert(approvalLevelModelOpr);
+end
+
+rule "Require Managing Director Approval" ruleflow-group "leaveapprovalrequirement"
+no-loop true
+    when
+        approvalLevelModelMng: ApprovalLevelModel(role in ("ROLE_JRHR","ROLE_SRHR", "ROLE_HR"))
+    then
+		approvalLevelModelMng.setApprover("ROLE_MANGDIR");
+		insert(approvalLevelModelMng);
+end
+
+rule "Require Company Director Approval" ruleflow-group "leaveapprovalrequirement"
+no-loop true
+    when
+        approvalLevelModelDir: ApprovalLevelModel(role in ("ROLE_PROJCOR"))
+    then
+		approvalLevelModelDir.setApprover("ROLE_DIR");
+		insert(approvalLevelModelDir);
 end

@@ -53,4 +53,7 @@ public interface EmployeeRepository extends CrudRepository<Employee, Integer>,Em
 	@Query("select employeeType.name from Employee e where e.id = ?")
 	String findByEmployeeId(int employeeId);
 	
+	@Query("select name from Employee e where users.id in (select id from Users u where username=?)")
+	String findFullNameByUsingUsername(String userName);
+	
 }

@@ -13,17 +13,19 @@ import org.apache.commons.mail.HtmlEmail;
 import org.springframework.context.ApplicationContext;
 
 import com.beans.exceptions.BSLException;
+import com.beans.leaveapp.applyleave.model.ApprovalLevelModel;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.employee.service.EmployeeService;
+import com.beans.leaveapp.employee.service.EmployeeServiceImpl;
 import com.beans.leaveapp.jbpm6.util.ApplicationContextProvider;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.beans.leaveapp.leavetype.model.LeaveType;
 import com.beans.util.email.EmailSender;
 public class LeaveApplicationSendingMailServiceImpl {
 	
-	public void sendEmailNotificationToLeaveApplicant(LeaveTransaction leaveTransaction,String role,Boolean isTeamLeadApproved,Boolean isOperDirApproved,String teamLeadName, String oprDirName,int status) {
+	public void sendEmailNotificationToLeaveApplicant(LeaveTransaction leaveTransaction,Boolean isApproverApproved,String approverName) {
 		try {
-		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("LeaveMailTemplate.html");
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("leaveApplicantMailTemplate.html");
 		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 		BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
@@ -45,7 +47,7 @@ public class LeaveApplicationSendingMailServiceImpl {
 		HtmlEmail email = new HtmlEmail();
 
 		// replacing the employee details in HTML
-		htmlEmailTemplate = htmlEmailTemplate.replace("##employeeName##",leaveTransaction.getEmployee().getName());
+		htmlEmailTemplate = htmlEmailTemplate.replaceAll("##employeeName##",leaveTransaction.getEmployee().getName());
 		htmlEmailTemplate = htmlEmailTemplate.replace("##leaveType##",leaveTransaction.getLeaveType().getDescription());
 		htmlEmailTemplate = htmlEmailTemplate.replace("##startDate##",leaveTransaction.fetchStartTimeStr());
 		htmlEmailTemplate = htmlEmailTemplate.replace("##endDate##",leaveTransaction.fetchEndTimeStr());
@@ -56,31 +58,26 @@ public class LeaveApplicationSendingMailServiceImpl {
 		else 
 			htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##","N/A for Unpaid Leave");
 		
-		if(status==1){
-			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Hi <b>"+leaveTransaction.getEmployee().getName()+"</b>,  <br/> Details for your leave application are as shown below:");
+		
+		if(isApproverApproved==null){
+			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##"," Details for your leave application are as shown below:");
+			htmlEmailTemplate = htmlEmailTemplate.replace("##firstApplied##","<br/>You will receive another email notification when your application is  approved or rejected.");
 			// set email subject
 			email.setSubject("Reg : Leave Application acknowledgment");
 		}
-		else if(("ROLE_EMPLOYEE".equalsIgnoreCase(role) && isTeamLeadApproved==true && isOperDirApproved==true) || (!"ROLE_EMPLOYEE".equalsIgnoreCase(role) && isOperDirApproved==true)){
-			if("ROLE_EMPLOYEE".equalsIgnoreCase(role))
-				htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Hi <b>"+leaveTransaction.getEmployee().getName()+"</b>,  <br/> Congratulations!!! Your leave has been approved by Team Lead <b>"+teamLeadName+"</b> and Director <b>"+oprDirName+"</b>. Following are the leave deatils you have applied for");
-			else
-				htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Hi <br>"+leaveTransaction.getEmployee().getName()+"</b>,  <br/> Congratulations!!! Your leave has been approved by Director <b>"+oprDirName+"</b>. Following are the leave deatils you have applied for");
+			else if(isApproverApproved){
+				htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Your leave application has been approved by <b>"+getEmployeeService().getFullNameOfEmployee(approverName)+"</b><br/>");
+				htmlEmailTemplate = htmlEmailTemplate.replace("##firstApplied##","");
 			// set email subject
-			email.setSubject("Reg : Your Leave request has been approved");
+			email.setSubject("Reg : Leave Application Approved");
 		}
-		else{
-			if(status==4){
-				htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Hi <b>"+leaveTransaction.getEmployee().getName()+"</b>, <br/> Sorry!!! Your leave has been rejected by Director <b>"+oprDirName+"</b>. Following are the leave deatils you have applied for");
+		else
+			if(!isApproverApproved){
+				htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Sorry but your leave application has been rejected by <b>"+getEmployeeService().getFullNameOfEmployee(approverName)+"</b> due to <b>"+leaveTransaction.getRejectReason()+"</b>");
+				htmlEmailTemplate = htmlEmailTemplate.replace("##firstApplied##","");
 				// set email subject
-				email.setSubject("Reg : Your Leave request has been rejected "+oprDirName);
+				email.setSubject("Reg : Leave Application Rejected");
 			}
-				else {
-				htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Hi <b>"+leaveTransaction.getEmployee().getName()+"</b>, <br/> Sorry!!! Your leave has been rejected by Team Lead <b>"+teamLeadName+"</b>. Following are the leave deatils you have applied for");
-				// set email subject
-				email.setSubject("Reg : Your Leave request has been rejected by "+teamLeadName);
-			}
-		}
 		// add reciepiant email address
 		try {
 			if(leaveTransaction.getEmployee().getWorkEmailAddress()!=null && !leaveTransaction.getEmployee().getWorkEmailAddress().equals(""))
@@ -107,9 +104,9 @@ public class LeaveApplicationSendingMailServiceImpl {
 	}
 
 	
-public void sendEmailNotificationToLeaveApprover(LeaveTransaction leaveTransaction,String role,Boolean isTeamLeadApproved,Boolean isOperDirApproved,String teamLeadName, String oprDirName,int status) {
+public void sendEmailNotificationToLeaveApprover(LeaveTransaction leaveTransaction,ApprovalLevelModel approvalBean) {
 		try{
-		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("LeaveMailTemplate.html");
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("leaveApproverMailTemplate.html");
 		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 		BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
@@ -144,38 +141,20 @@ public void sendEmailNotificationToLeaveApprover(LeaveTransaction leaveTransacti
 		else 
 			htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##","N/A for Unpaid Leave");
 		
-		if(status==1){
-			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Hi ,<br/><b>"+leaveTransaction.getEmployee().getName()+"</b> has applied for a leave and is pending for your approval.<br/> Details for leave application are as shown below");
+			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<b>"+leaveTransaction.getEmployee().getName()+"</b> has applied for leave and is pending for your approval at XXX(Beans HRM application address)");
 			// set email subject
-			email.setSubject("Reg : Reminder to take decision on the applied leave by "+leaveTransaction.getEmployee().getName());
-		}
-		else{
-			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Hi ,<br/><b>"+leaveTransaction.getEmployee().getName()+"</b> has applied for a leave and is approved by <b>"+teamLeadName+"</b> and waiting for your final approval. So please take a decision on this leave request <br/> Details for leave application are as shown below");
-			// set email subject
-			email.setSubject("Reg : Reminder to take final decision on the applied leave by "+leaveTransaction.getEmployee().getName());
-		}
+			email.setSubject("Reg : Leave Approval Required For "+leaveTransaction.getEmployee().getName());
 		
 		List<String> emailList = new ArrayList<String>();
-		if(!isTeamLeadApproved){
-		// Get all users with role ROLE_TEAMLEAD
-		List<Employee> teamLeadEmpolyeeList = getEmployeeService().findAllEmployeesByRole("ROLE_TEAMLEAD");
+		// Get all users with role who can approve the leave
+		List<Employee> approverList = getEmployeeService().findAllEmployeesByRole(approvalBean.getApprover());
 				
 		// add reciepiant email address
-		for (Employee employee : teamLeadEmpolyeeList) {
+		for (Employee employee : approverList) {
 			if(employee.getWorkEmailAddress()!=null && employee.getWorkEmailAddress()!="")
 			emailList.add(employee.getWorkEmailAddress());
 		}
-		}
-		else{
-			// Get all users with role ROLE_OPERDIR
-			List<Employee> operationalDirectorList = getEmployeeService().findAllEmployeesByRole("ROLE_OPERDIR");
-					
-			// add reciepiant email address
-			for (Employee employee : operationalDirectorList) {
-				if(employee.getWorkEmailAddress()!=null && employee.getWorkEmailAddress()!="")
-				emailList.add(employee.getWorkEmailAddress());
-			}
-		}
+		
 		try {
 			email.addTo(emailList.toArray(new String[emailList.size()]));
 		} catch (EmailException e) {
@@ -202,9 +181,9 @@ public void sendEmailNotificationToLeaveApprover(LeaveTransaction leaveTransacti
 		}
 	}
 
-public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,String role,Boolean isTeamLeadApproved,Boolean isOperDirApproved,String teamLeadName, String oprDirName,int status) {
+public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,Boolean isApproverApproved,String approverName) {
 	try{
-	InputStream inputStream = getClass().getClassLoader().getResourceAsStream("LeaveMailTemplate.html");
+	InputStream inputStream = getClass().getClassLoader().getResourceAsStream("leaveApproverMailTemplate.html");
 	InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 	BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
@@ -239,22 +218,15 @@ public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,String r
 		htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##","N/A for Unpaid Leave");
 	
 	
-	if(status==3){
-		htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<br/> <b>"+leaveTransaction.getEmployee().getName()+"</b> has applied for a leave and is rejected by Team Lead <b>"+teamLeadName+"</b>.\n Details for leave application are as shown below");
+	if(!isApproverApproved){
+		htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<br/><b>"+leaveTransaction.getEmployee().getName()+"</b> leave application has been rejected by <b>"+getEmployeeService().getFullNameOfEmployee(approverName)+"</b> due to <b>"+leaveTransaction.getRejectReason()+"</b> <br/> Details for your rejected leave application are shown below:");
 		// set email subject
-		email.setSubject("Reg : Leave request has been rejected by Team Lead "+teamLeadName);
+		email.setSubject("Reg : Leave Application Rejected for "+leaveTransaction.getEmployee().getName());
 	}
 	else {
-		if(isOperDirApproved){
-		htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<br/><b>"+leaveTransaction.getEmployee().getName()+"</b> has applied for a leave approve by Team Lead "+teamLeadName+" and is finally approved by <b>"+oprDirName+"</b>.<br/> Details for leave application are as shown below");
+		htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<br/><b>"+leaveTransaction.getEmployee().getName()+"</b> leave application has been approved by <b>"+getEmployeeService().getFullNameOfEmployee(approverName)+"</b>.<br/> Details for the approved leave application are shown below:<br/>");
 		// set email subject
-		email.setSubject("Reg : Leave request has been approved by "+teamLeadName+" and "+oprDirName);
-	}
-	else{
-		htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<br/><b>"+leaveTransaction.getEmployee().getName()+"</b> has applied for a leave and is rejected by Operational Director <b>"+oprDirName+"</b>.<br/> Details for leave application are as shown below");
-		// set email subject
-		email.setSubject("Reg : Leave request has been rejected by Opearational Director "+oprDirName);
-	}
+		email.setSubject("Reg : Leave Application Approved for "+leaveTransaction.getEmployee().getName());
 	}
 	// Get all users with role ROLE_TEAMLEAD
 	List<Employee> hrEmpolyeeList = getEmployeeService().findAllEmployeesByRole("ROLE_HR");
@@ -299,13 +271,16 @@ public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,String r
 	public static void main(String[] args){
 		Employee employee = new Employee();
 		employee.setName("Lakshminarayana R");
-		employee.setWorkEmailAddress("lakshmin.ravuri@beans.com.my");
+		employee.setWorkEmailAddress("beanshrmtest@gmail.com");
 		LeaveType leaveType = new LeaveType();
 		leaveType.setDescription("Annaul Leave");
+		ApprovalLevelModel approvalBean = new ApprovalLevelModel();
+		approvalBean.setApprover("ROLE_TEAMLEAD");
 		LeaveTransaction leave = new LeaveTransaction(3, new Date(), new Date(), new Date(), new Double(18.0), new Double(2.0), "Testing", "Waiting", leaveType, employee, false);
 		LeaveApplicationSendingMailServiceImpl service = new LeaveApplicationSendingMailServiceImpl();
-		//service.sendEmailNotificationToLeaveApplicant(leave, "ROLE_EMPLOYEE", false, false, 1);
-		service.sendEmailNotificationToHR(leave, "ROLE_EMPLOYEE", false, false,null,null, 1);
+		service.sendEmailNotificationToLeaveApplicant(leave,null, "Tester");
+		service.sendEmailNotificationToLeaveApprover(leave, approvalBean);
+		service.sendEmailNotificationToHR(leave, null, "xx");
 	}
 	
 	

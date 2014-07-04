@@ -43,7 +43,6 @@ public class UserToAccessRightsManagement extends BaseMgmtBean implements Serial
 	private boolean renderAccessRights = false;
 	private AccessRights selectedAccessRights = new AccessRights();
 	private boolean enabled;
-   // private Refresh refresh = new Refresh();
     List<UserToAccessRights> removedUserToAccessRightsList = new ArrayList<UserToAccessRights>();
     List<UserToAccessRights> finalAccessList = new ArrayList<UserToAccessRights>();
     

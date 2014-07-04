@@ -53,7 +53,11 @@
 	<bean id="leaveTransaction" class="com.beans.leaveapp.leavetransaction.model.LeaveTransaction"/>
 	<bean id="leaveTransactionService" class="com.beans.leaveapp.leavetransaction.service.LeaveTransactionServiceImpl"/>
 	
-	<bean id="sendLeaveReportService" class="com.beans.leaveapp.monthlyreport.SendMonthlyLeaveReportServiceImpl"/>
+	<bean id="sendLeaveReportService" class="com.beans.leaveapp.monthlyreport.service.SendMonthlyLeaveReportServiceImpl"/>
+	
+	<bean id="annualLeaveReport" class="com.beans.leaveapp.monthlyreport.model.AnnualLeaveReport"/>
+	<bean id="monthlyLeaveReport" class="com.beans.leaveapp.monthlyreport.model.MonthlyLeaveReport"/>
+	<bean id="monthlyLeaveReportService" class="com.beans.leaveapp.monthlyreport.service.MonthlyLeaveReportPrePreparationImpl"/>
 
 </beans>
 

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.beans.common.audit.service.AuditTrail;
@@ -20,6 +21,7 @@ import com.beans.util.enums.Leave;
 
 public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 
+	private Logger log = Logger.getLogger(this.getClass());
 	@Resource
 	YearlyEntitlementRepository yearlyEntitleRepository;
 
@@ -49,13 +51,12 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 	}
 
 	@Override
-	public YearlyEntitlement update(YearlyEntitlement selectedYearlyEntitlement)
-			throws Exception {
-		YearlyEntitlement yearlyEntitlementToBeUpdated = yearlyEntitleRepository
-				.findOne(selectedYearlyEntitlement.getId());
-
+	public YearlyEntitlement update(YearlyEntitlement selectedYearlyEntitlement) throws Exception {
+		YearlyEntitlement yearlyEntitlementToBeUpdated=null;
+		try{
+		 yearlyEntitlementToBeUpdated = yearlyEntitleRepository.findOne(selectedYearlyEntitlement.getId());
 		if (yearlyEntitlementToBeUpdated != null) {
-
+			yearlyEntitlementToBeUpdated.setcurrentLeaveBalance(selectedYearlyEntitlement.getCurrentLeaveBalance());
 			yearlyEntitlementToBeUpdated.setYearlyLeaveBalance(selectedYearlyEntitlement.getYearlyLeaveBalance());
 			yearlyEntitlementToBeUpdated.setEntitlement(selectedYearlyEntitlement.getEntitlement());
 			yearlyEntitlementToBeUpdated.setLastModifiedBy(selectedYearlyEntitlement.getLastModifiedBy());
@@ -63,20 +64,25 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 			yearlyEntitleRepository.save(yearlyEntitlementToBeUpdated);
 			return yearlyEntitlementToBeUpdated;
 		}
+		} catch (Exception e) {
+			log.error("Error while updating Yearly Entitlement For  :"+yearlyEntitlement.getId(), e);
+			throw new BSLException("err.yearlyEntitlement.update", e);
+		}
 		return yearlyEntitlementToBeUpdated;
 	}
 
 	@Override
 	public YearlyEntitlement delete(int id) {
-
-		YearlyEntitlement YearlyEntitlement = yearlyEntitleRepository
-				.findOne(id);
-
+		try{
+		YearlyEntitlement YearlyEntitlement = yearlyEntitleRepository.findOne(id);
 		if (YearlyEntitlement != null) {
-
 			YearlyEntitlement.setDeleted(true);
 			yearlyEntitleRepository.save(YearlyEntitlement);
 			return YearlyEntitlement;
+		}
+		} catch (Exception e) {
+			log.error("Error while updating Yearly Entitlement For  :"+yearlyEntitlement.getId(), e);
+			throw new BSLException("err.yearlyEntitlement.delete", e);
 		}
 		return null;
 	}
@@ -98,9 +104,14 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 
 	@Override
 	public YearlyEntitlement create(YearlyEntitlement yearlyEntitlement) {
+		try{
 		yearlyEntitlement.setDeleted(false);
 		YearlyEntitlement yearlyEntitlementObj = yearlyEntitleRepository.save(yearlyEntitlement);
 		return yearlyEntitlementObj;
+		} catch (Exception e) {
+			log.error("Error while updating Yearly Entitlement For  :"+yearlyEntitlement.getId(), e);
+			throw new BSLException("err.yearlyEntitlement.create", e);
+		}
 	}
 
 	@Override

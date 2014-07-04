@@ -20,12 +20,12 @@
           <p:ajax event="rowSelect" listener="#{leaveTypeMgmtBean.onRowSelect}" update=":leaveTypeDetailForm:display, :growl" oncomplete="PF('leaveTypeDialog').show()" />  
           	<p:column id="nameHeader"  headerText="Name" sortBy="name"> <h:outputText value="#{leaveType0.name}" /></p:column>
         	<p:column id="descHeader" headerText="Description" sortBy="description"><h:outputText value="#{leaveType0.description}" /></p:column>
-            <p:column id="employeeIdHeader" headerText="Employee Type" sortBy="employeeType"><h:outputText value="#{leaveType0.employeeType.name}" /></p:column>
+            <p:column id="employeeIdHeader" headerText="Employee Type" sortBy="employeeType.name"><h:outputText value="#{leaveType0.employeeType.name}" /></p:column>
             <p:column id="entitlementHeader" headerText="Entitlement" sortBy="entitlement"><h:outputText value="#{leaveType0.entitlement}" /></p:column>
             <p:column id="lastModifiedByHeader"  sortBy="lastModifiedBy" ><f:facet name="header"> Last Modified By </f:facet><h:outputText value="#{leaveType0.lastModifiedBy}" /></p:column>
 	        <p:column id="lastModifiedHeader"  sortBy="lastModifiedTime" ><f:facet name="header"> Last Modified Time</f:facet><h:outputText value="#{leaveType0.lastModifiedTime}" ><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /></h:outputText></p:column>
         </p:dataTable>
-        <p:commandButton value="New Leave Type" oncomplete="PF('newLeaveTypeDialog').show()" actionListener="#{leaveTypeMgmtBean.resetFormFields}" icon="ui-icon-star" title="Creates new leave type"/>
+        <p:commandButton value="New Leave Type" update=":newLeaveTypeForm" oncomplete="PF('newLeaveTypeDialog').show()" actionListener="#{leaveTypeMgmtBean.resetFormFields}" icon="ui-icon-star" title="Creates new leave type"/>
       </h:form>      
       <p:growl id="growl" showDetail="true" life="1000"/> 
   </ui:define>  
@@ -40,7 +40,7 @@
 						<h:outputText value="Description :"></h:outputText>
 						<h:inputText value="#{leaveTypeMgmtBean.selectedLeaveType.description}"  required="true" requiredMessage="Please Enter Description!" label="Description"> <f:validateLength minimum="" maximum="25"/></h:inputText>
 						<h:outputText value="EmployeeType :"></h:outputText>
-						<p:selectOneMenu value="#{leaveTypeMgmtBean.name}" required="true" requiredMessage="Please select Employee Type" label="Employee Type ">
+						<p:selectOneMenu value="#{leaveTypeMgmtBean.selectedLeaveType.employeeType.name}" required="true" requiredMessage="Please select Employee Type" label="Employee Type ">
 							<f:selectItem itemLabel="Select one" itemValue="" />
 
 							<f:selectItems value="#{leaveTypeMgmtBean.employeeTypes}"

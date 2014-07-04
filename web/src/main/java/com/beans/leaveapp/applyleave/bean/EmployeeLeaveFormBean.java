@@ -203,6 +203,7 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 			leaveTransaction.setEndDateTime(getEndDate());
 			leaveTransaction.setCreatedBy(getActorUsers().getUsername());
 			leaveTransaction.setCreationTime(new Date());
+			leaveTransaction.setStatus("Pending");
 			try {
 				leaveApplicationService.submitLeave(getEmployee(), getYearlyEntitlement(), leaveTransaction);
 				

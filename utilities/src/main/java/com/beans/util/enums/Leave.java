@@ -13,9 +13,9 @@ public enum Leave {
 	SICK("Sick"),
 	COMPASSIONATE("Compassionate"),
 	MARRIAGE("Marriage"),
-	UNPAID("Unpaid"),
 	MATERNITY("Maternity"),
 	PATERNITY("Paternity"),
+	UNPAID("Unpaid"),
 	TIMEINLIEU("Time-In-Lieu");
 	
 	private final String value;
@@ -27,7 +27,7 @@ public enum Leave {
         return value;
      }
     public boolean equalsName(String otherName){
-        return (otherName == null)? false:value.equals(otherName);
+        return (otherName == null)? false:value.equalsIgnoreCase(otherName);
     }
 
 };

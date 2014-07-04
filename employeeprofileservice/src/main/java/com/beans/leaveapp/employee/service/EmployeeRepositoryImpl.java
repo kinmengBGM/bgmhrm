@@ -30,9 +30,10 @@ public class EmployeeRepositoryImpl extends JdbcDaoSupport implements EmployeeRe
 		});
 	}
 
+		
 	@Override
 	public List<Employee> findAllEmployeesForSendingMonthlyLeaveReport() {
-		return getJdbcTemplate().query("SELECT * FROM beans.Employee where employeeTypeId in (select id from beans.EmployeeType) and  userId not in(select userId from beans.UserToRole where userRoleId in (select id from beans.Role where role in('ROLE_OPERDIR','ROLE_ADMIN')))",new RowMapper<Employee>(){
+		return getJdbcTemplate().query("SELECT * FROM beans.Employee where employeeTypeId in (select id from beans.EmployeeType) and  userId not in(select userId from beans.UserToRole where userRoleId in (select id from beans.Role where role in('ROLE_OPERDIR','ROLE_ADMIN'))) order by id",new RowMapper<Employee>(){
 
 			@Override
 			public Employee mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -42,6 +43,7 @@ public class EmployeeRepositoryImpl extends JdbcDaoSupport implements EmployeeRe
 			        employeeBean.setName(rs.getString("name"));
 			        employeeBean.setWorkEmailAddress(rs.getString("workEmailAddress"));
 			        employeeBean.setPersonalEmailAddress(rs.getString("personalEmailAddress"));
+			        employeeBean.setGender(rs.getString("gender"));
 			        return employeeBean;  
 			}
 	});

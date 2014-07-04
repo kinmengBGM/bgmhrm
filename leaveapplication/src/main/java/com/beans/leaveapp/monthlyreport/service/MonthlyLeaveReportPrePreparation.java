@@ -10,5 +10,4 @@ public interface MonthlyLeaveReportPrePreparation {
 	void prepareAnnualLeaveDataForYearOfEmployee(Employee employee);
 	void prepareAllLeaveDataForYearOfEmployee(Employee employee);
 	List<Employee> getAllEmployees();
-	public AnnualLeaveReport findAnnualLeaveReportByEmployeeId(int employeeId);
 }

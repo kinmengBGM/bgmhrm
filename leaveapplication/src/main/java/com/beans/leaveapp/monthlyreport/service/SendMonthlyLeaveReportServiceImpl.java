@@ -20,6 +20,8 @@ import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.employee.repository.EmployeeRepository;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.beans.leaveapp.leavetransaction.repository.LeaveTransactionRepository;
+import com.beans.leaveapp.leavetype.model.LeaveType;
+import com.beans.leaveapp.leavetype.repository.LeaveTypeRepository;
 import com.beans.leaveapp.monthlyreport.model.AnnualLeaveReport;
 import com.beans.leaveapp.monthlyreport.model.MonthlyLeaveReport;
 import com.beans.leaveapp.monthlyreport.repository.AnnualLeaveReportRepository;
@@ -46,6 +48,9 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 	
 	@Resource
 	MonthlyLeaveReportRepository monthlyLeaveRepository;
+	
+	@Resource
+	LeaveTypeRepository leaveTypeRepository;
 	
 	@Override
 	public void sendMonthlyLeaveReportToEmployees() {
@@ -237,7 +242,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 						
 								else if(EmployeeTypes.CONTRACT.equalsName(employeeRepository.findByEmployeeId(employee.getId()))){
 									/* Prepare monthly leave report of Contract Employees only*/
-									monthlyLeaveReportBuffer.append("<table border='0px' width='600px'><tr><td align='center' style='color:black;font-size:1.2em;'><b>"+employee.getName()+"</b></td></tr></table><br/><br/>");
+									monthlyLeaveReportBuffer.append("<table border='0px' width='600px'><tr><td align='center' style='color:blue;font-size:1.2em;'><u><b>"+employee.getName()+"</b></u></td></tr></table><br/><br/>");
 									
 									// Now time for Annual Leaves
 									monthlyLeaveReportBuffer = monthlyLeaveReportBuffer.append(getAnnualLeaveYearlyReport(employee));
@@ -254,7 +259,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 								}
 								else if(EmployeeTypes.PERMANENT.equalsName(employeeRepository.findByEmployeeId(employee.getId()))){
 									/* Send monthly leave report to Permanent Employees only*/
-									monthlyLeaveReportBuffer.append("<table border='0px' width='600px'><tr><td align='center' style='color:black;font-size:1.2em;'><b>"+employee.getName()+"</b></td></tr></table><br/>");
+									monthlyLeaveReportBuffer.append("<table border='0px' width='600px'><tr><td align='center' style='color:blue;font-size:1.2em;'><u><b>"+employee.getName()+"</b></u></td></tr></table><br/>");
 									
 									// Now time for Annual Leaves
 									monthlyLeaveReportBuffer = monthlyLeaveReportBuffer.append(getAnnualLeaveYearlyReport(employee));
@@ -593,19 +598,21 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 			List<LeaveTransaction>  allAppliedLeavesList =	leaveRepository.findAllLeavesAppliedByEmployee(employee.getId(),new java.sql.Date(firstDayOfYear.getTime().getTime()),new java.sql.Date(new Date().getTime()));
 			// preparation of Table headers with styles
 			leaveReportBuffer.append("<table border='0px' width='600px' class='bolder'><tr><td align='center' style='color:black;font-size:1.2em;'><b>List of Leave Applied and Approved up to "+getPresentMonth(Calendar.getInstance().get(Calendar.MONTH))+" </b></td></tr></table>");
-			leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Applied Date</td><td align='center'>Start Date</td><td align='center'>End Date</td><td align='center'>Number of Days</td></tr>");
+			leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Leave Type</td><td align='center'>Applied Date</td><td align='center'>Start Date</td><td align='center'>End Date</td><td align='center'>Number of Days</td><td  align='center'>Status </td></tr>");
 			// prepartation of Table data of All Leaves applied by employee from January to Current month.
 			if(allAppliedLeavesList!=null && allAppliedLeavesList.size()>0){
 						for (LeaveTransaction appliedLeaveBean : allAppliedLeavesList) {
-							leaveReportBuffer.append("<tr><td align='center'>"+appliedLeaveBean.getApplicationDate());
+							leaveReportBuffer.append("<tr><td align='center'>"+appliedLeaveBean.getLeaveType().getName());
+							leaveReportBuffer.append("</td><td align='center'>"+formatDate(appliedLeaveBean.getApplicationDate()));
 							leaveReportBuffer.append("</td><td align='center'>"+formatDate(appliedLeaveBean.getStartDateTime()));
 							leaveReportBuffer.append("</td><td align='center'>"+formatDate(appliedLeaveBean.getEndDateTime()));
-							leaveReportBuffer.append("</td><td align='center'>"+appliedLeaveBean.getNumberOfDays()+"</td></tr>");
+							leaveReportBuffer.append("</td><td align='center'>"+appliedLeaveBean.getNumberOfDays());
+							leaveReportBuffer.append("</td><td align='center'>"+appliedLeaveBean.getStatus()+"</td></tr>");
 						}
 					leaveReportBuffer.append("</table><br/>");
 			}
 			else
-				leaveReportBuffer.append("<tr><td colspan='4' align='center'><b>No records found!!!</b></td></tr></table><br/>");
+				leaveReportBuffer.append("<tr><td colspan='6' align='center'><b>No records found!!!</b></td></tr></table><br/>");
 			}catch(Exception e){
 				e.printStackTrace();
 				leaveReportBuffer = new StringBuffer("<table border='0px' width='600px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Applied and Approved Leaves of Employee </b></td></tr></table><br/>");
@@ -624,20 +631,21 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 			
 		List<LeaveTransaction>  allAppliedLeavesList =	leaveRepository.findAllTimeInLieuLeavesAppliedByEmployee(employee.getId(),new java.sql.Date(firstDayOfYear.getTime().getTime()),new java.sql.Date(new Date().getTime()));
 		// preparation of Table headers with styles
-		leaveReportBuffer.append("<table border='0px' width='600px' class='bolder'><tr><td align='center' style='color:black;font-size:1.2em;'><b>List of Leave Applied and Approved up to "+getPresentMonth(Calendar.getInstance().get(Calendar.MONTH))+" </b></td></tr></table>");
-		leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Applied Date</td><td align='center'>Start Date</td><td align='center'>End Date</td><td align='center'>Number of Days</td></tr>");
+		leaveReportBuffer.append("<table border='0px' width='600px' class='bolder'><tr><td align='center' style='color:black;font-size:1.2em;'><b>List of Time-In-Lieu Applied and Approved up to "+getPresentMonth(Calendar.getInstance().get(Calendar.MONTH))+" </b></td></tr></table>");
+		leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Applied Date</td><td align='center'>Start Date</td><td align='center'>End Date</td><td align='center'>Number of Days</td><td align='center'>Status</td></tr>");
 		// prepartation of Table data of All Leaves applied by employee from January to Current month.
 		if(allAppliedLeavesList!=null && allAppliedLeavesList.size()>0){
 					for (LeaveTransaction appliedLeaveBean : allAppliedLeavesList) {
-						leaveReportBuffer.append("<tr><td align='center'>"+appliedLeaveBean.getApplicationDate());
+						leaveReportBuffer.append("<tr><td align='center'>"+formatDate(appliedLeaveBean.getApplicationDate()));
 						leaveReportBuffer.append("</td><td align='center'>"+formatDate(appliedLeaveBean.getStartDateTime()));
 						leaveReportBuffer.append("</td><td align='center'>"+formatDate(appliedLeaveBean.getEndDateTime()));
-						leaveReportBuffer.append("</td><td align='center'>"+appliedLeaveBean.getNumberOfDays()+"</td></tr>");
+						leaveReportBuffer.append("</td><td align='center'>"+appliedLeaveBean.getNumberOfDays());
+						leaveReportBuffer.append("</td><td align='center'>"+appliedLeaveBean.getStatus()+"</td></tr>");
 					}
 				leaveReportBuffer.append("</table><br/><br/>");
 		}
 		else
-			leaveReportBuffer.append("<tr><td colspan='4' align='center'><b>No records found!!!</td></td></tr></table><br/>");
+			leaveReportBuffer.append("<tr><td colspan='5' align='center'><b>No records found!!!</td></td></tr></table><br/>");
 		}catch(Exception e){
 			e.printStackTrace();
 			leaveReportBuffer = new StringBuffer("<table border='0px' width='600px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Applied and Approved Leaves of Employee </b></td></tr></table><br/>");
@@ -699,7 +707,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		
 		if(Leave.ANNUAL.equalsName(leaveTransaction.getLeaveType().getName())){
 				List<AnnualLeaveReport>	 annualLeaveList = annualLeaveRepository.getEmployeeMonthlyLeaveReportData(leaveTransaction.getEmployee().getId(), leaveApplicationDate.get(Calendar.MONTH)+1, leaveApplicationDate.get(Calendar.YEAR));
-				if(annualLeaveList!=null && annualLeaveList.size()>0){
+				if(annualLeaveList!=null && annualLeaveList.size()==2){
 				
 				ArrayList<AnnualLeaveReport> annualLeaveToBeUpdatedList = new ArrayList<AnnualLeaveReport>();
 					
@@ -724,6 +732,8 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 				AnnualLeaveReport annualLeaveYearlyTotal =	annualLeaveList.get(1);
 				if(annualLeaveYearlyTotal.getLeavesTaken()!=null)
 					annualLeaveYearlyTotal.setLeavesTaken(annualLeaveYearlyTotal.getLeavesTaken()+leaveTransaction.getNumberOfDays());
+				else
+					annualLeaveYearlyTotal.setLeavesTaken(leaveTransaction.getNumberOfDays());
 				annualLeaveToBeUpdatedList.add(annualLeaveYearlyTotal);
 				annualLeaveRepository.save(annualLeaveToBeUpdatedList);
 			}
@@ -731,7 +741,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		else{
 			
 			List<MonthlyLeaveReport>  leaveReportList =	monthlyLeaveRepository.getEmployeeMonthlyLeaveReportData(leaveTransaction.getEmployee().getId(),  leaveApplicationDate.get(Calendar.MONTH)+1, leaveTransaction.getLeaveType().getId(), leaveApplicationDate.get(Calendar.YEAR));
-			if(leaveReportList!=null && leaveReportList.size()>0){
+			if(leaveReportList!=null && leaveReportList.size()==2){
 				List<MonthlyLeaveReport> leaveTypeToBeUpdatedList = new ArrayList<MonthlyLeaveReport>();
 				if(Leave.UNPAID.equalsName(leaveTransaction.getLeaveType().getName())){
 					
@@ -776,6 +786,91 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 			e.printStackTrace();
 		}
 		
+	}
+
+	@Override
+	public void initializeMonthlyLeaveReportWithDefaultValues() {
+		
+		try{
+			// Selecting all employee who are PERM , CONT and INT which excludes roles with ROLE_ADMIN and ROLE_OPERDIR
+			List<Employee> employeeList = employeeRepository.findAllEmployeesForSendingMonthlyLeaveReport();
+			if(employeeList!=null && employeeList.size()>0){
+				for (Employee employee : employeeList) {
+				// Firstly initialize Annual Leaves of present month of all employees
+				Calendar currentMonth = Calendar.getInstance();
+				List<Integer> sortingMonthList = new ArrayList<Integer>();
+				sortingMonthList.add(currentMonth.get(Calendar.MONTH));
+				sortingMonthList.add(currentMonth.get(Calendar.MONTH)+1);	
+				if(currentMonth.get(Calendar.MONTH)==0){
+					AnnualLeaveReport decemberMonthRecord =	annualLeaveRepository.getCurrentMonthAnnualLeaveRecord(employee.getId(),12,currentMonth.get(Calendar.YEAR)-1);
+					List<AnnualLeaveReport> twoRecordList =	annualLeaveRepository.getEmployeeMonthlyLeaveReportData(employee.getId(), 1, currentMonth.get(Calendar.YEAR));
+					if(twoRecordList!=null && twoRecordList.size()==2){
+					List<AnnualLeaveReport> listToBeUpdated = new ArrayList<AnnualLeaveReport>();
+					AnnualLeaveReport januaryMonthRecord =	twoRecordList.get(0);
+					januaryMonthRecord.setCurrentLeaveBalance(decemberMonthRecord.getCurrentLeaveBalance());
+					januaryMonthRecord.setYearlyLeaveBalance(decemberMonthRecord.getYearlyLeaveBalance());
+					januaryMonthRecord.setBalanceBroughtForward(new Double(0));
+					januaryMonthRecord.setLeavesCredited(new Double(0));
+					januaryMonthRecord.setLeavesTaken(new Double(0));
+					januaryMonthRecord.setTimeInLieuCredited(new Double(0));
+					listToBeUpdated.add(januaryMonthRecord);
+					
+					AnnualLeaveReport totalCountRecord =	twoRecordList.get(1);
+					totalCountRecord.setLeavesCredited(new Double(0));
+					totalCountRecord.setLeavesTaken(new Double(0));
+					totalCountRecord.setTimeInLieuCredited(new Double(0));
+					listToBeUpdated.add(totalCountRecord);
+					
+					annualLeaveRepository.save(listToBeUpdated);
+					}
+				}
+				else {
+				List<AnnualLeaveReport>	 annualLeaveList = annualLeaveRepository.getEmployeeMonthlyLeaveReportDataForInitialization(employee.getId(), sortingMonthList, currentMonth.get(Calendar.YEAR));
+				if(annualLeaveList!=null && annualLeaveList.size()==2){
+					AnnualLeaveReport previousMonthRecord = annualLeaveList.get(0);	
+					AnnualLeaveReport currentMonthRecord = annualLeaveList.get(1);
+					currentMonthRecord.setBalanceBroughtForward(new Double(0));
+					currentMonthRecord.setCurrentLeaveBalance(previousMonthRecord.getCurrentLeaveBalance());
+					currentMonthRecord.setLeavesCredited(new Double(0));
+					currentMonthRecord.setLeavesTaken(new Double(0));
+					currentMonthRecord.setTimeInLieuCredited(new Double(0));
+					currentMonthRecord.setYearlyLeaveBalance(previousMonthRecord.getYearlyLeaveBalance());
+					// setting default values and updating the current month record only
+					annualLeaveRepository.save(currentMonthRecord);
+				 }
+				}
+				// Secondly initialize except Annual Leaves of present month of all employees
+				List<LeaveType>		leaveTypeList =	leaveTypeRepository.getAllLeaveTypesGivenByEmployeeType(employee.getId());
+				if(leaveTypeList!=null && leaveTypeList.size()>0){
+					for (LeaveType leaveType : leaveTypeList) {
+						if(currentMonth.get(Calendar.MONTH)==0){
+						MonthlyLeaveReport decemberMonthRecord = monthlyLeaveRepository.getCurrentMonthAnnualLeaveRecord(employee.getId(), 12, leaveType.getId(), currentMonth.get(Calendar.YEAR)-1);
+						MonthlyLeaveReport januaryMonthRecord = monthlyLeaveRepository.getCurrentMonthAnnualLeaveRecord(employee.getId(), 1, leaveType.getId(), currentMonth.get(Calendar.YEAR));
+						januaryMonthRecord.setLeavesTaken(new Double(0));
+						januaryMonthRecord.setYearlyLeaveBalance(decemberMonthRecord.getYearlyLeaveBalance());
+						
+						monthlyLeaveRepository.save(januaryMonthRecord);
+						}
+						else {
+							List<MonthlyLeaveReport>	monthlyLeaveList = monthlyLeaveRepository.getEmployeeMonthlyLeaveReportDataForInitialization(employee.getId(), sortingMonthList, leaveType.getId(), currentMonth.get(Calendar.YEAR));
+							if(monthlyLeaveList!=null && monthlyLeaveList.size()==2){
+							MonthlyLeaveReport previousMonthRecord =	monthlyLeaveList.get(0);
+							MonthlyLeaveReport currentMonthRecord =	monthlyLeaveList.get(1);
+							currentMonthRecord.setLeavesTaken(new Double(0));
+							currentMonthRecord.setYearlyLeaveBalance(previousMonthRecord.getYearlyLeaveBalance());
+							// setting default values and updating the current month record only
+							monthlyLeaveRepository.save(currentMonthRecord);
+							}
+						}
+				   }
+				}
+				
+			 }
+			}
+			}catch(Exception e){
+				System.out.println("Error while initializing with current month leaves fields.");
+				e.printStackTrace();
+			}
 	}
 	
 }

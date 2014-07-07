@@ -17,5 +17,13 @@ public interface MonthlyLeaveReportRepository extends CrudRepository<MonthlyLeav
 	
 	@Query("select m from MonthlyLeaveReport m where employee.id=:employeeId and sortingMonthId in (:sortingMonthId,13) and leaveType.id=:leaveTypeId and financialYear=:financialYear ORDER BY sortingMonthId ASC")
 	public List<MonthlyLeaveReport> getEmployeeMonthlyLeaveReportData(@Param("employeeId") int employeeId, @Param("sortingMonthId") int sortingMonthId, @Param("leaveTypeId") int leaveTypeId,@Param("financialYear") int financialYear);
+
 	
+	@Query("select m from MonthlyLeaveReport m where employee.id=:employeeId and sortingMonthId in (:sortingMonthId) and leaveType.id=:leaveTypeId and  financialYear=:financialYear ORDER BY sortingMonthId ASC")
+	public List<MonthlyLeaveReport> getEmployeeMonthlyLeaveReportDataForInitialization(@Param("employeeId") int employeeId, @Param("sortingMonthId") List<Integer> sortingMonthId,@Param("leaveTypeId") int leaveTypeId,@Param("financialYear") int financialYear);
+	
+	
+	@Query("select m from MonthlyLeaveReport m where employee.id=:employeeId and sortingMonthId in (:sortingMonthId) and leaveType.id=:leaveTypeId and financialYear=:financialYear ORDER BY sortingMonthId ASC")
+	public MonthlyLeaveReport getCurrentMonthAnnualLeaveRecord(@Param("employeeId") int employeeId, @Param("sortingMonthId") int sortingMonthId, @Param("leaveTypeId") int leaveTypeId,@Param("financialYear") int financialYear);
+
 }

@@ -224,7 +224,7 @@ public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,Boolean 
 		email.setSubject("Reg : Leave Application Rejected for "+leaveTransaction.getEmployee().getName());
 	}
 	else {
-		htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<br/><b>"+leaveTransaction.getEmployee().getName()+"</b> leave application has been approved by <b>"+getEmployeeService().getFullNameOfEmployee(approverName)+"</b>.<br/> Details for the approved leave application are shown below:<br/>");
+		htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<b>"+leaveTransaction.getEmployee().getName()+"</b> leave application has been approved by <b>"+getEmployeeService().getFullNameOfEmployee(approverName)+"</b>.<br/> Details for the approved leave application are shown below:<br/>");
 		// set email subject
 		email.setSubject("Reg : Leave Application Approved for "+leaveTransaction.getEmployee().getName());
 	}

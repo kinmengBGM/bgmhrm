@@ -16,4 +16,10 @@ public interface AnnualLeaveReportRepository extends CrudRepository<AnnualLeaveR
 	@Query("select a from AnnualLeaveReport a where employee.id=:employeeId and sortingMonthId in (:sortingMonthId,13) and financialYear=:financialYear ORDER BY sortingMonthId ASC")
 	public List<AnnualLeaveReport> getEmployeeMonthlyLeaveReportData(@Param("employeeId") int employeeId, @Param("sortingMonthId") int sortingMonthId,@Param("financialYear") int financialYear);
 	
+	@Query("select a from AnnualLeaveReport a where employee.id=:employeeId and sortingMonthId in (:sortingMonthId) and financialYear=:financialYear ORDER BY sortingMonthId ASC")
+	public List<AnnualLeaveReport> getEmployeeMonthlyLeaveReportDataForInitialization(@Param("employeeId") int employeeId, @Param("sortingMonthId") List<Integer> sortingMonthId,@Param("financialYear") int financialYear);
+	
+	@Query("select a from AnnualLeaveReport a where employee.id=:employeeId and sortingMonthId in (:sortingMonthId) and financialYear=:financialYear ORDER BY sortingMonthId ASC")
+	public AnnualLeaveReport getCurrentMonthAnnualLeaveRecord(@Param("employeeId") int employeeId, @Param("sortingMonthId") int sortingMonthId,@Param("financialYear") int financialYear);
+	
 }

@@ -132,17 +132,14 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 			
 			log.info("Leave Request Approved...!!!");
 			//auditTrail.log(SystemAuditTrailActivity.APPROVED, SystemAuditTrailLevel.INFO, getActorUsers().getId(), getActorUsers().getUsername(), getActorUsers().getUsername() + " has approved a employee registration of " + selectedRegisteredEmployee.getFullname());
-			leaveApplicationService.approveLeaveOfEmployee(selectedLeaveRequest, getActorUsers().getUsername(),getActorUsers().getUserRoles());
+			leaveApplicationService.approveLeaveOfEmployee(selectedLeaveRequest, getActorUsers().getUsername());
 		    setInsertDeleted(true);
 		    
 		    Set<String> roleSet = new HashSet<String>();
 			for (Role role : getActorUsers().getUserRoles()) {
 				roleSet.add(role.getRole());
 			}
-			if(roleSet.contains("ROLE_TEAMLEAD"))
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info : "+getExcptnMesProperty("info.leave.approve.teamLead"),"Leave Approved"));
-			else
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info : "+getExcptnMesProperty("info.leave.approve.dir"),"Leave Approved"));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info : "+getExcptnMesProperty("info.leave.approve.dir"),"Leave Approved"));
 		}catch(BSLException e){
 			FacesMessage msg = new FacesMessage("Error : "+getExcptnMesProperty(e.getMessage()),"Leave approve error");  
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -161,7 +158,7 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 			} else {
 				
 				log.info("Leave Request Rejected...");
-				leaveApplicationService.rejectLeaveOfEmployee(selectedLeaveRequest, getActorUsers().getUsername(),getActorUsers().getUserRoles());
+				leaveApplicationService.rejectLeaveOfEmployee(selectedLeaveRequest, getActorUsers().getUsername());
 				
 				auditTrail.log(SystemAuditTrailActivity.REJECTED, SystemAuditTrailLevel.INFO, getActorUsers().getId(), getActorUsers().getUsername(), getActorUsers().getUsername() + " has rejected a leave request of " + selectedLeaveRequest.getEmployee().getName() + " due to " + selectedLeaveRequest.getReason());
 				

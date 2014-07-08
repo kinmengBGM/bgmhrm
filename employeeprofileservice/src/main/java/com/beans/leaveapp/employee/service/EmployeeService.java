@@ -26,6 +26,8 @@ public interface EmployeeService {
 
 	List<Employee> findAllEmployeesByRole(String role);
 	
+	String getFullNameOfEmployee(String userName);
+	
 	
 }
 

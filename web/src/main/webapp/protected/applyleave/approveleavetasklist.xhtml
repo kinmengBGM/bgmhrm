@@ -68,11 +68,11 @@
 			<p:messages autoUpdate="true" />
 			<p:panelGrid id="RejectReason" columns="2" cellpadding="4" style="margin:0 auto;">
 				<h:outputText value="Reason*" />
-						<p:inputTextarea id="reason" rows="5" cols="24" counter="counter" maxlength="100" counterTemplate="{0} characters remaining." autoResize="false" value="#{leaveApprovalBean.selectedLeaveRequest.reason}" required="true" requiredMessage="Please enter Reason" immediate="true"/> 
+						<p:inputTextarea id="reason" rows="5" cols="24" counter="counter" maxlength="100" counterTemplate="{0} characters remaining." autoResize="false" value="#{leaveApprovalBean.selectedLeaveRequest.rejectReason}" required="true" requiredMessage="Please enter Reason" immediate="true"/> 
 						<h:outputText value="" />
 						<h:outputText id="counter" /> 
 				<f:facet name="footer">
-					<p:commandButton value="Reject" oncomplete="if(!args.validationFailed) rejectRegistrationVar.hide()" actionListener="#{leaveApprovalBean.doRejectLeaveRequest()}" validateClient="true" update=":leaveApprovalForm:approveLeaveTable"/>
+					<p:commandButton value="Reject" oncomplete="if(!args.validationFailed) rejectRegistrationVar.hide();PF('leaveRequestDialogVar').hide();" actionListener="#{leaveApprovalBean.doRejectLeaveRequest()}" validateClient="true" update=":leaveApprovalForm:approveLeaveTable"/>
 					<p:commandButton value="Cancel" immediate="true" onclick="PF('rejectRegistrationVar').hide();PF('leaveRequestDialogVar').show();" type="button" />
 				</f:facet>
 			</p:panelGrid>

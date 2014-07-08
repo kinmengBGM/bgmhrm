@@ -354,4 +354,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return permEmployeeList;
 	}
 
+	@Override
+	public String getFullNameOfEmployee(String userName) {
+		return employeeRepository.findFullNameByUsingUsername(userName);
+	}
+
 }

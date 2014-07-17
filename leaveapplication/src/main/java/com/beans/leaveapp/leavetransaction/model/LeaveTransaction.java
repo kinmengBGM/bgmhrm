@@ -107,14 +107,14 @@ public class LeaveTransaction implements Serializable{
 	
 	public String fetchStartTimeStr(){
 		if(startDateTime!=null){
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			return sdf.format(startDateTime); 
 		}
 		return startDateTime.toString();
 	}
 	public String fetchEndTimeStr(){
 		if(endDateTime!=null){
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			return sdf.format(endDateTime); 
 		}
 		return endDateTime.toString();

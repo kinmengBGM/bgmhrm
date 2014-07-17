@@ -1,5 +1,6 @@
 package com.beans.leaveapp.leavetransaction.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -181,7 +182,37 @@ public class LeaveTransactionServiceImpl implements LeaveTransactionService {
 		
 	}
 
+	@Override
+	public List<LeaveTransaction> findByEmployeeORfindByLeaveType(String employeeName, String leaveType) {
 
+		String name = null;
+		String leaveName =null;
+		if(!employeeName.isEmpty())
+			name = "%"+ employeeName.trim()+"%";
+		if(!leaveType.isEmpty())
+		leaveName =  "%"+ leaveType.trim()+"%";
+		List<LeaveTransaction> leaveTransaction = null;
+		
+		 if(name==null && leaveName==null ){
+			 leaveTransaction =	leaveTransactionRepository.findAllApprovedLeavesOfEmployees();
+
+		 }else if(name==null && leaveName!=null){
+		    	leaveTransaction = leaveTransactionRepository.findByLeaveTypeLike(leaveName);
+		 }
+		 else if(name!=null && leaveName==null){
+			 leaveTransaction = leaveTransactionRepository.findByEmployeeLike(name);
+		 }
+		 else{
+			 leaveTransaction=leaveTransactionRepository.findByEmployeeAndLeaveTypeLike(name, leaveName);
+		 }
+		 if(leaveTransaction==null)
+			 leaveTransaction = new ArrayList<LeaveTransaction>();
+		 
+			return leaveTransaction;
+		
+	}
+
+	
 	@Override
 	public void updateLeaveApplicationStatus(LeaveTransaction leaveTransaction) {
 	LeaveTransaction  leaveTransactionPersist =	leaveTransactionRepository.findOne(leaveTransaction.getId());
@@ -189,9 +220,24 @@ public class LeaveTransactionServiceImpl implements LeaveTransactionService {
 	leaveTransactionPersist.setRejectReason(leaveTransaction.getRejectReason());
 	leaveTransactionPersist.setLastModifiedBy(leaveTransaction.getLastModifiedBy());
 	leaveTransactionPersist.setLastModifiedTime(leaveTransaction.getLastModifiedTime());
+	leaveTransactionPersist.setYearlyLeaveBalance(leaveTransaction.getYearlyLeaveBalance());
 	leaveTransactionRepository.save(leaveTransactionPersist);
 	}
 
+
+	public List<LeaveTransaction> getAllFutureLeavesAppliedByEmployee(int userId, java.sql.Date todayDate) {
+		return leaveTransactionRepository.findAllFutureLeavesOfEmployee(userId, todayDate);
+	}
+
+	public List<LeaveTransaction> getAllApprovedLeavesAppliedByEmployee() {
+		return leaveTransactionRepository.findAllApprovedLeavesOfEmployees();
+	}
+
+
+	@Override
+	public List<LeaveTransaction> getAllLeavesAppliedByEmployee(int userId) {
+		return leaveTransactionRepository.findAllLeavesHistoryOfEmployee(userId);
+	}
 	
 }
 

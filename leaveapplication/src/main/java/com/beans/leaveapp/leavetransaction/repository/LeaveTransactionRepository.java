@@ -60,10 +60,6 @@ public interface LeaveTransactionRepository extends CrudRepository<LeaveTransact
    @Query("select l from LeaveTransaction l join l.leaveType lt where lt.name like :leaveTypeName and l.startDateTime =:startDateTime")
    List<LeaveTransaction> findByLeaveTypeAndStartDate(@Param("leaveTypeName") String leaveTypeName,@Param("startDateTime") Date startDateTime);
    
-   /*@Query("select l from LeaveTransaction l where l.startDateTime :startDateTime and l.status like :status")
-   List<LeaveTransaction> findByStartDateAndStatusLike(@Param("startDateTime") Date startDateTime,@Param("status") String status);
-*/
-   
    @Query("select l from LeaveTransaction l where startDateTime > ? and isDeleted =0")
    List<LeaveTransaction> findByStartDateTimeAfter(Date startDateTime);
    
@@ -76,6 +72,17 @@ public interface LeaveTransactionRepository extends CrudRepository<LeaveTransact
    
    @Query("select l from LeaveTransaction l where employeeId= :employeeId and applicationDate>=:monthFirstDayOfYear and applicationDate<=:applicationDate and leaveType.id in (select l from LeaveType l where name ='TimeInLieu')")
    List<LeaveTransaction> findAllTimeInLieuLeavesAppliedByEmployee(@Param("employeeId")int employeeId, @Param("monthFirstDayOfYear") java.sql.Date monthFirstDayOfYear,@Param("applicationDate") java.sql.Date applicationDate );
+   
+   @Query("select l from LeaveTransaction l where status in ('Pending','Approved') and employeeId in (select id from Employee e where users.id= :userId) and endDateTime>=:todayDate  and leaveType.id in (select l from LeaveType l where name !='TimeInLieu')")
+   List<LeaveTransaction> findAllFutureLeavesOfEmployee(@Param("userId")int userId, @Param("todayDate") java.sql.Date todayDate );
+   
+   @Query("select l from LeaveTransaction l where  leaveType.id in (select l from LeaveType l where name !='TimeInLieu') and status='Approved'")
+   List<LeaveTransaction> findAllApprovedLeavesOfEmployees();
+
+   @Query("select l from LeaveTransaction l where employeeId in (select id from Employee e where users.id= :userId) and leaveType.id in (select l from LeaveType l where name !='TimeInLieu')")
+   List<LeaveTransaction> findAllLeavesHistoryOfEmployee(@Param("userId")int userId);
+   
+   
    
    
    

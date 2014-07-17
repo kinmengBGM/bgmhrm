@@ -15,4 +15,6 @@ public interface SendMonthlyLeaveReportService {
 	
 	void initializeMonthlyLeaveReportWithDefaultValues();
 	
+	void updateLeaveBalanceAfterCancelled(LeaveTransaction leaveTransaction);
+	
 }

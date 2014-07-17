@@ -872,5 +872,86 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 				e.printStackTrace();
 			}
 	}
+
+	@Override
+	public void updateLeaveBalanceAfterCancelled(LeaveTransaction leaveTransaction) {
+		
+		try{
+			Calendar leaveApplicationDate = Calendar.getInstance();
+			leaveApplicationDate.setTime(leaveTransaction.getApplicationDate());
+			
+			if(Leave.ANNUAL.equalsName(leaveTransaction.getLeaveType().getName())){
+					List<AnnualLeaveReport>	 annualLeaveList = annualLeaveRepository.getEmployeeMonthlyLeaveReportData(leaveTransaction.getEmployee().getId(), leaveApplicationDate.get(Calendar.MONTH)+1, leaveApplicationDate.get(Calendar.YEAR));
+					if(annualLeaveList!=null && annualLeaveList.size()==2){
+					
+					ArrayList<AnnualLeaveReport> annualLeaveToBeUpdatedList = new ArrayList<AnnualLeaveReport>();
+						
+					AnnualLeaveReport annualLeaveCurrentMonth =	annualLeaveList.get(0);
+					if(annualLeaveCurrentMonth.getCurrentLeaveBalance()!=null)
+						annualLeaveCurrentMonth.setCurrentLeaveBalance(annualLeaveCurrentMonth.getCurrentLeaveBalance()+leaveTransaction.getNumberOfDays());
+					
+					if(annualLeaveCurrentMonth.getYearlyLeaveBalance()!=null)
+						annualLeaveCurrentMonth.setYearlyLeaveBalance(annualLeaveCurrentMonth.getYearlyLeaveBalance()+leaveTransaction.getNumberOfDays());
+					
+					if(annualLeaveCurrentMonth.getLeavesTaken()==null)
+						annualLeaveCurrentMonth.setLeavesTaken(annualLeaveCurrentMonth.getLeavesTaken()-leaveTransaction.getNumberOfDays());
+
+					if(annualLeaveCurrentMonth.getLeavesCredited()!=null)
+						annualLeaveCurrentMonth.setLeavesCredited(annualLeaveCurrentMonth.getLeavesCredited()+leaveTransaction.getNumberOfDays());
+				
+					annualLeaveToBeUpdatedList.add(annualLeaveCurrentMonth);
+					
+					AnnualLeaveReport annualLeaveYearlyTotal =	annualLeaveList.get(1);
+					if(annualLeaveYearlyTotal.getLeavesTaken()!=null)
+						annualLeaveYearlyTotal.setLeavesTaken(annualLeaveYearlyTotal.getLeavesTaken()-leaveTransaction.getNumberOfDays());
+					if(annualLeaveYearlyTotal.getLeavesCredited()!=null)
+						annualLeaveYearlyTotal.setLeavesCredited(annualLeaveYearlyTotal.getLeavesCredited()+leaveTransaction.getNumberOfDays());
+					annualLeaveToBeUpdatedList.add(annualLeaveYearlyTotal);
+					annualLeaveRepository.save(annualLeaveToBeUpdatedList);
+				}
+			}
+			else{
+				
+				List<MonthlyLeaveReport>  leaveReportList =	monthlyLeaveRepository.getEmployeeMonthlyLeaveReportData(leaveTransaction.getEmployee().getId(),  leaveApplicationDate.get(Calendar.MONTH)+1, leaveTransaction.getLeaveType().getId(), leaveApplicationDate.get(Calendar.YEAR));
+				if(leaveReportList!=null && leaveReportList.size()==2){
+					List<MonthlyLeaveReport> leaveTypeToBeUpdatedList = new ArrayList<MonthlyLeaveReport>();
+					if(Leave.UNPAID.equalsName(leaveTransaction.getLeaveType().getName())){
+						
+						MonthlyLeaveReport leaveTypeCurrentMonth =	leaveReportList.get(0);
+						if(leaveTypeCurrentMonth.getLeavesTaken()!=null)
+							leaveTypeCurrentMonth.setLeavesTaken(leaveTypeCurrentMonth.getLeavesTaken()-leaveTransaction.getNumberOfDays());
+						leaveTypeToBeUpdatedList.add(leaveTypeCurrentMonth);
+						
+						MonthlyLeaveReport leaveTypeYearlyTotal =	leaveReportList.get(1);
+						if(leaveTypeYearlyTotal.getLeavesTaken()!=null)
+							leaveTypeYearlyTotal.setLeavesTaken(leaveTypeYearlyTotal.getLeavesTaken()-leaveTransaction.getNumberOfDays());
+						
+						leaveTypeToBeUpdatedList.add(leaveTypeYearlyTotal);
+					}
+					else{
+						MonthlyLeaveReport leaveTypeCurrentMonth =	leaveReportList.get(0);
+						if(leaveTypeCurrentMonth.getLeavesTaken()!=null)
+							leaveTypeCurrentMonth.setLeavesTaken(leaveTypeCurrentMonth.getLeavesTaken()-leaveTransaction.getNumberOfDays());
+						leaveTypeCurrentMonth.setYearlyLeaveBalance(leaveTypeCurrentMonth.getYearlyLeaveBalance()-leaveTransaction.getNumberOfDays());
+						leaveTypeToBeUpdatedList.add(leaveTypeCurrentMonth);
+						
+						MonthlyLeaveReport leaveTypeYearlyTotal =	leaveReportList.get(1);
+						if(leaveTypeYearlyTotal.getLeavesTaken()!=null)
+							leaveTypeYearlyTotal.setLeavesTaken(leaveTransaction.getNumberOfDays()+leaveTypeYearlyTotal.getLeavesTaken());
+						if(leaveTypeYearlyTotal.getYearlyLeaveBalance()!=null)
+							leaveTypeYearlyTotal.setYearlyLeaveBalance(leaveTypeYearlyTotal.getYearlyLeaveBalance()-leaveTransaction.getNumberOfDays());
+							
+						leaveTypeToBeUpdatedList.add(leaveTypeYearlyTotal);
+					}
+					monthlyLeaveRepository.save(leaveTypeToBeUpdatedList);
+				}
+			 }
+			}catch(Exception e){
+				System.out.println("Error while updating leaves balance after approval for employee : "+leaveTransaction.getEmployee().getName());
+				e.printStackTrace();
+			}
+			
+
+	}
 	
 }

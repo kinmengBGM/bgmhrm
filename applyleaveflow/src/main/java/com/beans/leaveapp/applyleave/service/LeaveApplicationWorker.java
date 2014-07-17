@@ -54,10 +54,13 @@ public class LeaveApplicationWorker {
 		
 		ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
 		LeaveTransactionService leaveTransactionService = (LeaveTransactionService) applicationContext.getBean("leaveTransactionService");
-		if(!isApproverApproved)
+		if(!isApproverApproved){
 			leaveTransaction.setStatus("Rejected");
-		else
+		}
+		else{
 			leaveTransaction.setStatus("Approved");
+		}
+			leaveTransaction.setYearlyLeaveBalance(leaveTransaction.getYearlyLeaveBalance()-leaveTransaction.getNumberOfDays());
 			leaveTransaction.setLastModifiedBy(approverName);
 			leaveTransaction.setLastModifiedTime(new Date());
 		leaveTransactionService.updateLeaveApplicationStatus(leaveTransaction);

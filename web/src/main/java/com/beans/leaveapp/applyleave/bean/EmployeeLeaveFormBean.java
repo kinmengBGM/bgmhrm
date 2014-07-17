@@ -1,6 +1,7 @@
 package com.beans.leaveapp.applyleave.bean;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.faces.application.FacesMessage;
@@ -24,6 +25,7 @@ import com.beans.leaveapp.web.bean.BaseMgmtBean;
 import com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement;
 import com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementNotFound;
 import com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementService;
+import com.beans.util.enums.Leave;
 
 public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -40,7 +42,16 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 	private YearlyEntitlementService yearlyEntitlementService;
 	private LeaveApplicationService leaveApplicationService;
 	private AuditTrail auditTrail;
+	private Double allowedMaximumLeaves;
 	
+	
+	
+	public Double getAllowedMaximumLeaves() {
+		return allowedMaximumLeaves;
+	}
+	public void setAllowedMaximumLeaves(Double allowedMaximumLeaves) {
+		this.allowedMaximumLeaves = allowedMaximumLeaves;
+	}
 	public int getSelectedYearlyEntitlement() {
 		return selectedYearlyEntitlement;
 	}
@@ -53,8 +64,23 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 		findYearlyEntitlement();
 		
 		if(getYearlyEntitlement() != null) {
+			allowedMaximumLeaves=0.0;
 			setLeaveType(getYearlyEntitlement().getLeaveType().getName());
 			setYearlyBalance(getYearlyEntitlement().getYearlyLeaveBalance());
+			if(isEmployeeFinishedOneYear()){
+				if(Leave.UNPAID.equalsName(leaveType))
+					allowedMaximumLeaves=30.0;
+				else
+					allowedMaximumLeaves=getYearlyEntitlement().getYearlyLeaveBalance();
+			}
+			else{
+				if(Leave.ANNUAL.equalsName(leaveType))
+					allowedMaximumLeaves = getYearlyEntitlement().getCurrentLeaveBalance()+3.0;
+				else if(Leave.UNPAID.equalsName(leaveType))
+					allowedMaximumLeaves=30.0;
+				else
+					allowedMaximumLeaves=getYearlyEntitlement().getYearlyLeaveBalance();
+			}
 		}
 		RequestContext.getCurrentInstance().addCallbackParam("currentBalance", yearlyEntitlement.getCurrentLeaveBalance());
 		RequestContext.getCurrentInstance().addCallbackParam("leaveType", leaveType);
@@ -158,6 +184,17 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 	
 	public void applyLeave() throws LeaveApplicationException  {
 		
+		
+		if(isEmployeeFinishedOneYear()){
+			if(!(numberOfDays<= yearlyEntitlement.getYearlyLeaveBalance())){
+				FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.sick.validation"), "Leave error message");  
+				msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+		        FacesContext.getCurrentInstance().addMessage(null, msg);  
+		        return ;
+			}
+		}
+		else
+		{
 		if(numberOfDays<0.5){
 			FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.applyleave.numberofdays"), "Leave error message");  
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -184,7 +221,7 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 			}
 			
 		}
-		
+		}
 		if(startDate.after(endDate)) {
 			FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.applyleave.datesRange"), "Leave error message.");
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -241,5 +278,33 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 		}
 		
 	}
+	
+	private boolean isEmployeeFinishedOneYear(){
+		
+		if(employee!=null){
+			Calendar joinDate = Calendar.getInstance();
+			joinDate.setTime(employee.getJoinDate());
+			Calendar today = Calendar.getInstance();
+			int curYear = today.get(Calendar.YEAR);
+			int curMonth = today.get(Calendar.MONTH);
+			int curDay = today.get(Calendar.DAY_OF_MONTH);
+
+			int year = joinDate.get(Calendar.YEAR);
+			int month = joinDate.get(Calendar.MONTH);
+			int day = joinDate.get(Calendar.DAY_OF_MONTH);
+
+			int age = curYear - year;
+			if (curMonth < month || (month == curMonth && curDay < day)) {
+			    age--;
+			}
+			if(age>=1)
+				return true;
+		}
+	
+		
+		return false;
+	}
+	
+	
 	
 }

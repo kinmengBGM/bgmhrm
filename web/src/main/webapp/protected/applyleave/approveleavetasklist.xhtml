@@ -22,7 +22,7 @@
 	<p:messages autoUpdate="true"></p:messages>
 	<p:dataTable id="approveLeaveTable" widgetVar="approveLeaveTable" var="approveLeave0" value="#{leaveApprovalBean.leaveApprovalDataModel}"
 										selection="#{leaveApprovalBean.selectedLeaveRequest}" selectionMode="single" rowKey="#{approveLeave0.taskId}">
-         <p:ajax event="rowSelect" listener="#{leaveApprovalBean.onRowSelect}" update=":leaveRequestDialogForm,:notifyApprovarForm" oncomplete="handleShowDialogRequest(xhr, status, args);" />
+         <p:ajax event="rowSelect" listener="#{leaveApprovalBean.onRowSelect}" update=":leaveRequestDialogForm" oncomplete="leaveRequestDialogVar.show();" />
 				<p:column id="nameTypeHEader"><f:facet name="header"> Name </f:facet><h:outputText value="#{approveLeave0.employee.name}" /></p:column>
 				<p:column id="leaveTypeHEader"><f:facet name="header"> Leave Type </f:facet><h:outputText value="#{approveLeave0.leaveType.name}" /></p:column>
 				<p:column id="startDateHeader"><f:facet name="header"> Start Date </f:facet><h:outputText value="#{approveLeave0.startDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /> </h:outputText></p:column>
@@ -78,34 +78,6 @@
 			</p:panelGrid>
 			</h:form>
 	  </p:dialog>
-	  
-	  <p:dialog header="Warning!" severity="alert" widgetVar="notifyApprovarVar" modal="true">	
-			<h:form id="notifyApprovarForm">
-			<p:messages autoUpdate="true" />
-			<p:panelGrid id="currentBalanceNotifying" columns="1" cellpadding="4" style="margin:0 auto;">
-				
-						<h:outputText value="Warning! [#{leaveApprovalBean.selectedLeaveRequest.employee.name}] Current Balance is [#{leaveApprovalBean.currentLeaveBalance}] days. They are allowed to apply for advanced leave up to [#{3+leaveApprovalBean.currentLeaveBalance}] days." /> 
-				<f:facet name="footer">
-					<p:commandButton value="OK"  onclick="PF('notifyApprovarVar').hide();PF('leaveRequestDialogVar').show();" type="button" />
-				</f:facet>
-			</p:panelGrid>
-			</h:form>
-	  </p:dialog>
-	  <h:outputScript target="head">
-      function handleShowDialogRequest(xhr, status, args) { 
-        if(args.leaveType=='Annual')
-       { 
-         notifyApprovarVar.show();
-         return;
-       }
-       else{
-       leaveRequestDialogVar.show();
-       }
-  		}
-      </h:outputScript>
-	  
-	  
-	  
       </ui:define>
 	</ui:composition>
 </h:body>

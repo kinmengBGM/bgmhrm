@@ -155,9 +155,9 @@ LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelMode
       <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_16</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;Email to Leave Requester and HR&quot;+employee+&quot; : leaveTransactionId &quot;+leaveTransactionId);
-com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,isApproverApproved,approverName);
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveBalanceAfterApproval(leaveTransaction,isApproverApproved);
-com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatus(leaveTransaction,approverName,isApproverApproved);</bpmn2:script>
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatus(leaveTransaction,approverName,isApproverApproved);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,isApproverApproved,approverName);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_16" tns:priority="1" name="" sourceRef="ScriptTask_4" targetRef="EndEvent_3"/>
     <bpmn2:endEvent id="EndEvent_3" name="End Process">
@@ -171,9 +171,9 @@ com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicat
       <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;Email to Leave Requester and HR&quot;+approvalLevelModel);
-com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,isApproverApproved,approverName);
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveBalanceAfterApproval(leaveTransaction,isApproverApproved);
-com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatus(leaveTransaction,approverName,isApproverApproved);</bpmn2:script>
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatus(leaveTransaction,approverName,isApproverApproved);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,isApproverApproved,approverName);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_12" tns:priority="1" name="" sourceRef="ScriptTask_1" targetRef="EndEvent_1"/>
     <bpmn2:userTask id="UserTask_3" name="Operational Director Approval">
@@ -437,9 +437,9 @@ com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicat
       <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;Email to Leave Requester and HR&quot;+approvalLevelModel);
-com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,isApproverApproved,approverName);
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveBalanceAfterApproval(leaveTransaction,isApproverApproved);
-com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatus(leaveTransaction,approverName,isApproverApproved);</bpmn2:script>
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatus(leaveTransaction,approverName,isApproverApproved);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,isApproverApproved,approverName);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_9" tns:priority="1" name="Approver Company Director" sourceRef="ExclusiveGateway_1" targetRef="UserTask_5">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_50" language="http://www.java.com/java">return approvalLevelModel.getApprover() == &quot;ROLE_DIR&quot;;</bpmn2:conditionExpression>
@@ -453,9 +453,9 @@ com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicat
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;Email to Leave Requester and HR&quot;+approvalLevelModel);
-com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,isApproverApproved,approverName);
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveBalanceAfterApproval(leaveTransaction,isApproverApproved);
-com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatus(leaveTransaction,approverName,isApproverApproved);</bpmn2:script>
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatus(leaveTransaction,approverName,isApproverApproved);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,isApproverApproved,approverName);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_3" tns:priority="1" name="" sourceRef="ScriptTask_3" targetRef="EndEvent_2"/>
     <bpmn2:userTask id="UserTask_4" name="Managing Director Approval">

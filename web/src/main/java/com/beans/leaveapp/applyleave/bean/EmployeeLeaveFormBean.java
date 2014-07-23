@@ -182,15 +182,16 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 		this.auditTrail = auditTrail;
 	}
 	
-	public void applyLeave() throws LeaveApplicationException  {
-		
+	public String applyLeave() throws LeaveApplicationException, RoleNotFound  {
+		String message=null;
 		
 		if(isEmployeeFinishedOneYear()){
+			if(!Leave.UNPAID.equalsName(leaveType))
 			if(!(numberOfDays<= yearlyEntitlement.getYearlyLeaveBalance())){
 				FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.sick.validation"), "Leave error message");  
 				msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 		        FacesContext.getCurrentInstance().addMessage(null, msg);  
-		        return ;
+		        return "";
 			}
 		}
 		else
@@ -199,7 +200,7 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 			FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.applyleave.numberofdays"), "Leave error message");  
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 	        FacesContext.getCurrentInstance().addMessage(null, msg);  
-	        return ;
+	        return "";
 		}
 		// validating applied leaves is in the range of current balance - applied leaves > = -3
 		if("Annual".equalsIgnoreCase(leaveType)&& StringUtils.isNotBlank(leaveType) && StringUtils.isNotEmpty(leaveType)){
@@ -209,7 +210,7 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 				FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.sick.validation"), "Leave error message");  
 				msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 		        FacesContext.getCurrentInstance().addMessage(null, msg);  
-		        return ;
+		        return "";
 			}
 		} else if(!"Unpaid".equalsIgnoreCase(leaveType)&& StringUtils.isNotBlank(leaveType) && StringUtils.isNotEmpty(leaveType))
 		{
@@ -217,15 +218,25 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 				FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.sick.validation"), "Leave error message");  
 				msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 		        FacesContext.getCurrentInstance().addMessage(null, msg);  
-		        return ;
+		        return "";
 			}
 			
 		}
 		}
+		// checking unpaid leaves allowing only maximum 30 days.
+		if(Leave.UNPAID.equalsName(leaveType)){
+			if(numberOfDays>30){
+			FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.unpaid.validation"), "Leave error message");  
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+	        FacesContext.getCurrentInstance().addMessage(null, msg);  
+	        return "";
+			}
+		}
 		if(startDate.after(endDate)) {
 			FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.applyleave.datesRange"), "Leave error message.");
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-	        FacesContext.getCurrentInstance().addMessage(null, msg);  
+	        FacesContext.getCurrentInstance().addMessage(null, msg);
+	        return "";
 		} else {
 			
 			LeaveTransaction leaveTransaction = new LeaveTransaction();
@@ -250,32 +261,30 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 				setEndDate(null);
 				setReason("");
 				auditTrail.log(SystemAuditTrailActivity.CREATED, SystemAuditTrailLevel.INFO, getActorUsers().getId(), getActorUsers().getUsername(), getActorUsers().getUsername() + " has successfully applied annual leave for " + getNumberOfDays() + " day(s).");
-				FacesMessage msg = new FacesMessage(getExcptnMesProperty("info.applyleave"), "Leave applied");  
-				  
-		        FacesContext.getCurrentInstance().addMessage(null, msg); 
-				
-			} catch (RoleNotFound e) {
+				FacesMessage msg = new FacesMessage(getExcptnMesProperty("info.applyleave"), getExcptnMesProperty("info.applyleave")); 
+				msg.setSeverity(FacesMessage.SEVERITY_INFO);
+				FacesContext.getCurrentInstance().addMessage("index.xhtml", msg); 
+				FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+			}  catch (BSLException e) {
 				e.printStackTrace();
 				auditTrail.log(SystemAuditTrailActivity.CREATED, SystemAuditTrailLevel.ERROR, getActorUsers().getId(), getActorUsers().getUsername(), getActorUsers().getUsername() + " has failed to apply annual leave for " + getNumberOfDays() + " day(s).");
-				FacesMessage msg = new FacesMessage("Error :"+getExcptnMesProperty(e.getMessage()), e.getMessage());  
+				FacesMessage msg = new FacesMessage(getExcptnMesProperty(e.getMessage()), getExcptnMesProperty(e.getMessage())); 
 				msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-		        FacesContext.getCurrentInstance().addMessage(null, msg);  
-			} catch (BSLException e) {
-				e.printStackTrace();
-				auditTrail.log(SystemAuditTrailActivity.CREATED, SystemAuditTrailLevel.ERROR, getActorUsers().getId(), getActorUsers().getUsername(), getActorUsers().getUsername() + " has failed to apply annual leave for " + getNumberOfDays() + " day(s).");
-				FacesMessage msg = new FacesMessage("Error :"+getExcptnMesProperty(e.getMessage()), getExcptnMesProperty(e.getMessage()));  
-				msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-		        FacesContext.getCurrentInstance().addMessage(null, msg);  
+				FacesContext.getCurrentInstance().addMessage("index.xhtml", msg); 
+				FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 			} catch (Exception e) {
 				e.printStackTrace();
 				auditTrail.log(SystemAuditTrailActivity.CREATED, SystemAuditTrailLevel.ERROR, getActorUsers().getId(), getActorUsers().getUsername(), getActorUsers().getUsername() + " has failed to apply annual leave for " + getNumberOfDays() + " day(s).");
-				FacesMessage msg = new FacesMessage("Error :"+getExcptnMesProperty(e.getMessage()), getExcptnMesProperty(e.getMessage())); 
+				FacesMessage msg = new FacesMessage(getExcptnMesProperty(e.getMessage()), getExcptnMesProperty(e.getMessage())); 
 				msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-				FacesContext.getCurrentInstance().addMessage(null, msg);  
+				FacesContext.getCurrentInstance().addMessage("index.xhtml", msg); 
+				FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 			}
 			
 			
 		}
+		
+		return "/protected/index.jsf?faces-redirect=true";
 		
 	}
 	

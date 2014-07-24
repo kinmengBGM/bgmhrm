@@ -505,6 +505,10 @@ http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
 			<property-name>yearlyEntitlementService</property-name>
 			<value>#{yearlyEntitlementService}</value>
 		</managed-property>
+		<managed-property>
+			<property-name>leaveTransactionService</property-name>
+			<value>#{leaveTransactionService}</value>
+		</managed-property>
 	</managed-bean>
 </faces-config>
 

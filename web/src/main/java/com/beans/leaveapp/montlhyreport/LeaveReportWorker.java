@@ -35,5 +35,13 @@ public class LeaveReportWorker {
 				monthlyLeaveReportService.prepareAllLeaveDataForYearOfEmployee(employee);
 			}
 	}
+	public static void doInitializeCurrentMonthLeaveRecords(){
+		ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
+		SendMonthlyLeaveReportService sendLeaveReportService = (SendMonthlyLeaveReportService) applicationContext.getBean("sendLeaveReportService");
+		
+		sendLeaveReportService.initializeMonthlyLeaveReportWithDefaultValues();
+	}
+	
+	
 
 }

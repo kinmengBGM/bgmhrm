@@ -21,7 +21,6 @@ import com.beans.common.audit.service.SystemAuditTrailLevel;
 import com.beans.common.security.users.model.Users;
 import com.beans.common.security.users.service.UsersNotFound;
 import com.beans.common.security.users.service.UsersService;
-import com.beans.leaveapp.batch.service.UpdateAnnualLeaveReport;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.employee.service.EmployeeNotFound;
 import com.beans.leaveapp.employee.service.EmployeeService;
@@ -153,11 +152,5 @@ public class AuthenticationBean implements Serializable{
 	}
 	public void setAuditTrail(AuditTrail auditTrail) {
 		this.auditTrail = auditTrail;
-	}
-	
-	public void annualLeaveReport(){
-		UpdateAnnualLeaveReport annualLeaveReport = new UpdateAnnualLeaveReport();
-		annualLeaveReport.UpdatingAnnualLeaveReport();
-	}
-	
+	}	
 }

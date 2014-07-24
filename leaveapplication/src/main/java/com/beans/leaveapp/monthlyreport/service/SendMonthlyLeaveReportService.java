@@ -13,4 +13,6 @@ public interface SendMonthlyLeaveReportService {
 	
 	void updateEmployeeLeavesAfterLeaveApproval(LeaveTransaction leaveTransaction,Date applicationDate);
 	
+	void initializeMonthlyLeaveReportWithDefaultValues();
+	
 }

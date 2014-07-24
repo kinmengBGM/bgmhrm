@@ -165,13 +165,11 @@ public class MyProfileManagementBean implements Serializable{
 	}
 	
 	public void updateAddressToEmployee() {
-		int index = newAddressMap.size() + 9000;
-		selectedAddress.setAddressType(selectedAddressType);		
-		resetAddressOperation();
+		selectedAddress.setAddressType(selectedAddressType);
 		selectedAddress.setLastModifiedBy(actorUsers.getUsername());
-		selectedAddress.setLastModifiedTime(new java.util.Date());	
-		Address addressToBeUpdated = selectedAddress;
-		newAddressMap.put(index, addressToBeUpdated);
+		selectedAddress.setLastModifiedTime(new java.util.Date());
+		
+		resetAddressOperation();
 	}
 	
 	public void deleteAddressToEmployee() {
@@ -188,7 +186,7 @@ public class MyProfileManagementBean implements Serializable{
 	private void resetAddressOperation() {
 		setAddressOperation(false, "Create");
 		setInsertDeleteAddress(true);
-		setSelectedAddressType("Permanent");
+	//	setSelectedAddressType("Permanent");
 	}
 	
 	public void setInsertDeleteAddress(boolean insertDeleteAddress) {

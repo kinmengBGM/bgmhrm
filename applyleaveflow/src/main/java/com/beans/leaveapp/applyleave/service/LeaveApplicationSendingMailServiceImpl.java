@@ -140,8 +140,7 @@ public void sendEmailNotificationToLeaveApprover(LeaveTransaction leaveTransacti
 			htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##",leaveTransaction.getYearlyLeaveBalance().toString());
 		else 
 			htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##","N/A for Unpaid Leave");
-		
-			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<b>"+leaveTransaction.getEmployee().getName()+"</b> has applied for leave and is pending for your approval at XXX(Beans HRM application address)");
+			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<b>"+leaveTransaction.getEmployee().getName()+"</b> has applied for leave and is pending for your approval at"+"<a href=\"http://localhost:8080/hrm/protected/applyleave/approveleavetasklist.jsf?id="+leaveTransaction.getId()+"\">Please Click Here</a>");
 			// set email subject
 			email.setSubject("Reg : Leave Approval Required For "+leaveTransaction.getEmployee().getName());
 		
@@ -224,7 +223,7 @@ public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,Boolean 
 		email.setSubject("Reg : Leave Application Rejected for "+leaveTransaction.getEmployee().getName());
 	}
 	else {
-		htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<br/><b>"+leaveTransaction.getEmployee().getName()+"</b> leave application has been approved by <b>"+getEmployeeService().getFullNameOfEmployee(approverName)+"</b>.<br/> Details for the approved leave application are shown below:<br/>");
+		htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<b>"+leaveTransaction.getEmployee().getName()+"</b> leave application has been approved by <b>"+getEmployeeService().getFullNameOfEmployee(approverName)+"</b>.<br/> Details for the approved leave application are shown below:<br/>");
 		// set email subject
 		email.setSubject("Reg : Leave Application Approved for "+leaveTransaction.getEmployee().getName());
 	}

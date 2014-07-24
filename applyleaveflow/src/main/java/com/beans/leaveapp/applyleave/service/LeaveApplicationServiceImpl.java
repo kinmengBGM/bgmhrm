@@ -56,8 +56,10 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 		}
 		Long currentTaskId = taskIdList.get(0);
 		leaveTransaction.setTaskId(currentTaskId);
+		LeaveTransaction leaveTransactionPersist = getLeaveTransactionService().insertFromWorkflow(leaveTransaction);
+		leaveTransaction.setId(leaveTransactionPersist.getId());
+		parameterMap.put("leaveTransaction", leaveTransaction);
 		applyLeaveRuntime.submitTask(employee.getUsers().getUsername(), currentTaskId, parameterMap);
-		getLeaveTransactionService().insertFromWorkflow(leaveTransaction);
 		
 	}
 	

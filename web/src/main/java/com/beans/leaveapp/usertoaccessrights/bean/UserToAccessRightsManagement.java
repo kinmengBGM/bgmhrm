@@ -7,6 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.primefaces.event.SelectEvent;
 
@@ -37,15 +40,15 @@ public class UserToAccessRightsManagement extends BaseMgmtBean implements Serial
 	private List<AccessRights> accessRightsList = new LinkedList<AccessRights>();
 	private UserToAssignedAccessRightsDataModel userToAssignedAccessRightsDataModel;
 	private UserToAccessRights selectedUserToAccessRights = new UserToAccessRights();
-	private int userId;
+//	private int userId;
 	private List<UserToAccessRights> userToAccessRightsList = new LinkedList<UserToAccessRights>();
 	private AccessRightsDataModel accessRightsDataModel;
 	private boolean renderAccessRights = false;
-	private AccessRights selectedAccessRights = new AccessRights();
+//	private AccessRights selectedAccessRights = new AccessRights();
 	private boolean enabled;
     List<UserToAccessRights> removedUserToAccessRightsList = new ArrayList<UserToAccessRights>();
     List<UserToAccessRights> finalAccessList = new ArrayList<UserToAccessRights>();
-    
+    List<AccessRights> selectedAccessRightsList = new ArrayList<AccessRights>();
     
 	private int id;
 
@@ -113,9 +116,9 @@ public class UserToAccessRightsManagement extends BaseMgmtBean implements Serial
 		}
 	}
 
-	public void assignedAccessRights() {
+	/*public void assignedAccessRights() {
 		userId = getSelectedUsers().getId();
-	}
+	}*/
 
 	public void assignAccessRightsToUser() {
 		this.setRenderAccessRights(true);
@@ -234,42 +237,45 @@ public class UserToAccessRightsManagement extends BaseMgmtBean implements Serial
 		this.accessRightsDataModel = accessRightsDataModel;
 	}
 
+
 	public void addAccessRights() {
+		if(selectedAccessRightsList.size() > 0){
+		for(AccessRights selectedAccessRight : selectedAccessRightsList){		
 		UserToAccessRights userToAccessRights = new UserToAccessRights();
-		userToAccessRights.setAccessRights(selectedAccessRights);
+		userToAccessRights.setAccessRights(selectedAccessRight);
 		userToAccessRights.setUsers(selectedUsers);
+		userToAccessRights.setEnabled(true);
 		userToAccessRights.setDeleted(false);		
 		userToAccessRightsList.add(userToAccessRights);
 		System.out.println(userToAccessRightsList.size());
-	//	this.userToAssignedAccessRightsDataModel = null;
 		System.out.println(accessRightsList.size());
-		accessRightsList.remove(selectedAccessRights);
-		System.out.println(accessRightsList.size());		
-		this.accessRightsDataModel = null;	
+		accessRightsList.remove(selectedAccessRight);
+		System.out.println(accessRightsList.size());			
+		}
+		this.accessRightsDataModel = null;
+		}else{
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error",getExcptnMesProperty("err.userToAccessRights.add")));
+		}
 	}
+		
 
 	public void myListener(){		
 	}
 	
-	public void deleteAssignedAccessRights(){		
+	public void deleteAssignedAccessRights(){
+		selectedUserToAccessRights = userToAssignedAccessRightsDataModel.getRowData();
 		selectedUserToAccessRights.setDeleted(true);	
-		userToAccessRightsList.remove(selectedUserToAccessRights);
-		removedUserToAccessRightsList.add(selectedUserToAccessRights);		
+		userToAccessRightsList.remove(selectedUserToAccessRights);		
+		removedUserToAccessRightsList.add(selectedUserToAccessRights);
+		AccessRights accessRight = selectedUserToAccessRights.getAccessRights();
+		accessRightsList.add(accessRight);		
+		this.accessRightsDataModel = null;
 	}
-	
-	public void onAssignedAccessRightsSelect(SelectEvent event){
-		
-		setSelectedUserToAccessRights((UserToAccessRights) event.getObject());
-	//	selectedUserToAccessRights = (UserToAccessRights) event.getObject();
-	}
-	
-	
-	public void onUnAssignedAccessRightsSelect(SelectEvent event) {
 
-		selectedAccessRights = (AccessRights) event.getObject();
+	public void cancelAccessRights(){
 		setRenderAccessRights(false);
-	}	
-
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void saveUserToAccessRights() {
 		
@@ -295,7 +301,7 @@ public class UserToAccessRightsManagement extends BaseMgmtBean implements Serial
 						}						
 				}				
 			
-				
+				new Refresh().refreshPage();
 		} catch (UserToAccessRightsNotFound e) {
 			e.printStackTrace();
 		}
@@ -333,13 +339,13 @@ public class UserToAccessRightsManagement extends BaseMgmtBean implements Serial
 		this.renderAccessRights = renderAccessRights;
 	}
 
-	public AccessRights getSelectedAccessRights() {
+	/*public AccessRights getSelectedAccessRights() {
 		return selectedAccessRights;
 	}
 
 	public void setSelectedAccessRights(AccessRights selectedAccessRights) {
 		this.selectedAccessRights = selectedAccessRights;
-	}
+	}*/
 
 	public boolean isEnabled() {
 		return enabled;
@@ -358,5 +364,16 @@ public class UserToAccessRightsManagement extends BaseMgmtBean implements Serial
 			this.userToAccessRightsDataModel = null;
 		}
 	}
+
+	public List<AccessRights> getSelectedAccessRightsList() {
+		return selectedAccessRightsList;
+	}
+
+	public void setSelectedAccessRightsList(
+			List<AccessRights> selectedAccessRightsList) {
+		this.selectedAccessRightsList = selectedAccessRightsList;
+	}
+	
+	
 
 }

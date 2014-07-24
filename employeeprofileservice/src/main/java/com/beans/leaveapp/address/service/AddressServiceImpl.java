@@ -38,7 +38,7 @@ public class AddressServiceImpl implements AddressService {
 		return addressList;
 	}
 
-	@Override
+/*	@Override
 	public Address update(Address address) throws AddressNotFound {
 		Address addressToBeUpdated = addressRepository.findOne(address.getId());
 		if(addressToBeUpdated != null){
@@ -58,7 +58,7 @@ public class AddressServiceImpl implements AddressService {
 			addressRepository.save(addressToBeUpdated);
 		}
 		return addressToBeUpdated;
-	}
+	}*/
 
 	@Override
 	public Address findById(int id) throws AddressNotFound {

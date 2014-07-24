@@ -10,7 +10,7 @@ public interface AddressService {
 	public Address delete(int id) throws AddressNotFound;
 	
 	public List<Address> findAll();
-	public Address update(Address address) throws AddressNotFound;
+/*	public Address update(Address address) throws AddressNotFound;*/
 	public Address findById(int id) throws AddressNotFound;
 	public List<Address> findByEmployeeId(int employeeId);
 }

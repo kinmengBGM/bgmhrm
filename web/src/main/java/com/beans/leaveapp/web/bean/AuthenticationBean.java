@@ -117,6 +117,10 @@ public class AuthenticationBean implements Serializable{
 
 			}
 		}		
+	}	
+
+	public String doGoLeaveApprovalPage(){
+	return "/protected/applyleave/approveleavetasklist.jsf?faces-redirect=true";
 	}
 	
 	public EmployeeService getEmployeeService() {

@@ -1,6 +1,7 @@
 package com.beans.leaveapp.applyleave.bean;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import com.beans.leaveapp.applyleave.model.LeaveApprovalDataModel;
 import com.beans.leaveapp.applyleave.service.LeaveApplicationService;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.beans.leaveapp.leavetransaction.service.LeaveTransactionService;
+import com.beans.leaveapp.monthlyreport.service.SendMonthlyLeaveReportService;
 import com.beans.leaveapp.web.bean.BaseMgmtBean;
 import com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement;
 import com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementService;
@@ -48,8 +50,8 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	private Double currentLeaveBalance;
 	private boolean dialogBoxRendered;
 	private String param;
-//	int id = 1;
-
+	private SendMonthlyLeaveReportService monthlyLeaveReportService;
+	
 	public LeaveApprovalDataModel getLeaveApprovalDataModel() {
 		FacesContext f = FacesContext.getCurrentInstance();
 		Map<String, String> parameterMap = (Map<String, String>) f.getExternalContext().getRequestParameterMap();
@@ -59,6 +61,23 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		}
 		return LeaveApprovalDataModel;
 	}
+	
+	public LeaveApprovalDataModel getLeaveApprovalDataModelFutureLeaves() {
+		return new LeaveApprovalDataModel(getLeaveRequestFutureLeaveList());
+		
+	}
+
+	public LeaveApprovalDataModel getLeaveApprovalDataModelApprovedLeaves() {
+		return new LeaveApprovalDataModel(getLeaveTransactionService().getAllApprovedLeavesAppliedByEmployee());
+		
+	}
+	
+	
+	public LeaveApprovalDataModel getLeaveApprovalDataModelAllLeaves() {
+		return new LeaveApprovalDataModel(getLeaveTransactionService().getAllLeavesAppliedByEmployee(actorUsers.getId()));
+		
+	}	
+
 
 	public void setLeaveApprovalDataModel(LeaveApprovalDataModel leaveApprovalDataModel) {
 		LeaveApprovalDataModel = leaveApprovalDataModel;
@@ -136,6 +155,19 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		return leaveRequestList;
 	}
 	
+	public List<LeaveTransaction> getLeaveRequestFutureLeaveList() {
+		if(leaveRequestList == null || insertDeleted == true) {
+			 try {
+				 leaveRequestList =   getLeaveTransactionService().getAllFutureLeavesAppliedByEmployee(actorUsers.getId(), new java.sql.Date(new Date().getTime()));
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return leaveRequestList;
+	}
+	
 
 	public void doApproveLeaveRequest() {
 		try {
@@ -183,6 +215,22 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 				log.error("Error while approving leave by "+getActorUsers().getUsername(), e);
 			}
 		}
+
+	public void doCancelLeaveTransaction(){
+		// Write code to update yearly balance,current balance and status and send mail to HR and Leave Applicant.
+		selectedLeaveRequest.setStatus("Cancelled");
+		selectedLeaveRequest.setLastModifiedBy(actorUsers.getUsername());
+		selectedLeaveRequest.setLastModifiedTime(new Date());
+		selectedLeaveRequest.setYearlyLeaveBalance(selectedLeaveRequest.getYearlyLeaveBalance()+selectedLeaveRequest.getNumberOfDays());
+		leaveTransactionService.updateLeaveApplicationStatus(selectedLeaveRequest);
+		
+		// write code for adding this cancelled leave number of days to yearly ettilement table as well annual leave report table
+		
+		yearlyEntitlementService.updateLeaveBalanceAfterCancelled(selectedLeaveRequest.getEmployee().getId(),selectedLeaveRequest.getLeaveType().getId(),selectedLeaveRequest.getNumberOfDays());
+		
+		monthlyLeaveReportService.updateLeaveBalanceAfterCancelled(selectedLeaveRequest);
+	}
+	
 	
 	public void onRowSelect(SelectEvent event) {  
 		LeaveTransaction leaveTransaction = (LeaveTransaction) event.getObject();

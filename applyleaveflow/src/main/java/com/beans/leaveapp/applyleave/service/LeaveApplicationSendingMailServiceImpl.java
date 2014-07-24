@@ -62,12 +62,14 @@ public class LeaveApplicationSendingMailServiceImpl {
 		if(isApproverApproved==null){
 			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##"," Details for your leave application are as shown below:");
 			htmlEmailTemplate = htmlEmailTemplate.replace("##firstApplied##","<br/>You will receive another email notification when your application is  approved or rejected.");
+			htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalanceLabel##","Current Yearly Balance");
 			// set email subject
 			email.setSubject("Reg : Leave Application acknowledgment");
 		}
 			else if(isApproverApproved){
 				htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Your leave application has been approved by <b>"+getEmployeeService().getFullNameOfEmployee(approverName)+"</b><br/>");
 				htmlEmailTemplate = htmlEmailTemplate.replace("##firstApplied##","");
+				htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalanceLabel##","New Yearly Balance");
 			// set email subject
 			email.setSubject("Reg : Leave Application Approved");
 		}
@@ -75,6 +77,7 @@ public class LeaveApplicationSendingMailServiceImpl {
 			if(!isApproverApproved){
 				htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Sorry but your leave application has been rejected by <b>"+getEmployeeService().getFullNameOfEmployee(approverName)+"</b> due to <b>"+leaveTransaction.getRejectReason()+"</b>");
 				htmlEmailTemplate = htmlEmailTemplate.replace("##firstApplied##","");
+				htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalanceLabel##","New Yearly Balance");
 				// set email subject
 				email.setSubject("Reg : Leave Application Rejected");
 			}
@@ -136,11 +139,13 @@ public void sendEmailNotificationToLeaveApprover(LeaveTransaction leaveTransacti
 		htmlEmailTemplate = htmlEmailTemplate.replace("##numberOfDays##",leaveTransaction.getNumberOfDays().toString());
 		htmlEmailTemplate = htmlEmailTemplate.replace("##reason##",leaveTransaction.getReason());
 		htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##",leaveTransaction.getYearlyLeaveBalance().toString());
+		htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalanceLabel##"," Current Yearly Balance");
 		if(!"Unpaid".equalsIgnoreCase(leaveTransaction.getLeaveType().getName()))
 			htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##",leaveTransaction.getYearlyLeaveBalance().toString());
 		else 
 			htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##","N/A for Unpaid Leave");
-			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<b>"+leaveTransaction.getEmployee().getName()+"</b> has applied for leave and is pending for your approval at"+"<a href=\"http://localhost:8080/hrm/protected/applyleave/approveleavetasklist.jsf?id="+leaveTransaction.getId()+"\">Please Click Here</a>");
+		
+			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<b>"+leaveTransaction.getEmployee().getName()+"</b> has applied for leave and is pending for your approval at <a href='http://localhost:8080/hrm/protected/applyleave/approveleavetasklist.jsf?id="+leaveTransaction.getId()+"'>HRM Application</a>");
 			// set email subject
 			email.setSubject("Reg : Leave Approval Required For "+leaveTransaction.getEmployee().getName());
 		
@@ -211,6 +216,7 @@ public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,Boolean 
 	htmlEmailTemplate = htmlEmailTemplate.replace("##numberOfDays##",leaveTransaction.getNumberOfDays().toString());
 	htmlEmailTemplate = htmlEmailTemplate.replace("##reason##",leaveTransaction.getReason());
 	htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##",leaveTransaction.getYearlyLeaveBalance().toString());
+	htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalanceLabel##","New Yearly Balance");
 	if(!"Unpaid".equalsIgnoreCase(leaveTransaction.getLeaveType().getName()))
 		htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##",leaveTransaction.getYearlyLeaveBalance().toString());
 	else 
@@ -280,5 +286,6 @@ public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,Boolean 
 		service.sendEmailNotificationToLeaveApplicant(leave,null, "Tester");
 		service.sendEmailNotificationToLeaveApprover(leave, approvalBean);
 		service.sendEmailNotificationToHR(leave, null, "xx");
-	}	
+	}
+	
 }

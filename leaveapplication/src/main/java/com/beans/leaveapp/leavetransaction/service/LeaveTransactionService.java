@@ -1,5 +1,6 @@
 package com.beans.leaveapp.leavetransaction.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.beans.leaveapp.employee.model.Employee;
@@ -24,9 +25,10 @@ public interface LeaveTransactionService {
 	
 	public LeaveType findByLeaveType(String name, int id);
 
-	public List<LeaveTransaction> findByEmployeeORfindByLeaveTypeORLeaveDatesORStatusORAll(
-			String employeename, String leaveType,java.util.Date startDate,String status);
+	public List<LeaveTransaction> findByEmployeeORfindByLeaveTypeORLeaveDatesORStatusORAll(String employeename, String leaveType,java.util.Date startDate,String status);
 
+	public List<LeaveTransaction> findByEmployeeORfindByLeaveType(String employeeName, String leaveType);
+	
 	public LeaveTransaction insertFromWorkflow(LeaveTransaction leaveTransaction);
 	
     public List<LeaveTransaction> findByStatus(String status);
@@ -34,7 +36,12 @@ public interface LeaveTransactionService {
     void updateLeaveApplicationStatus(LeaveTransaction leaveTransaction);
 
     public LeaveTransaction findById(int id);
+
+    List<LeaveTransaction> getAllFutureLeavesAppliedByEmployee(int employeeId,java.sql.Date todayDate);
    
+    List<LeaveTransaction> getAllApprovedLeavesAppliedByEmployee();
+    
+    List<LeaveTransaction> getAllLeavesAppliedByEmployee(int employeeId);
 }
 
 

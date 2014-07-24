@@ -17,48 +17,17 @@
 </h:head>
 
 <h:body>
-
-	<p:ajaxStatus style="width:64px;height:64px;position:fixed;right:5px;bottom:5px">  
-    <f:facet name="start">  
-        <p:graphicImage name="loading.gif" library="images"></p:graphicImage>
-    </f:facet>  
-  
-    <f:facet name="complete">  
-        <h:outputText value="" />  
-    </f:facet>  
-</p:ajaxStatus>
-
-<p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();"/>  
-              
-<p:dialog modal="true" widgetVar="statusDialog" header="Please wait..."  
-        draggable="false" closable="false">  
-    <p:graphicImage name="ajaxloadingbar.gif" library="images"></p:graphicImage>
-</p:dialog>  
-
-<div id="wrapper">
-	<div id="header row">
-		<ui:insert name="header">
-			<ui:include src="/templates/header.xhtml" />
-		</ui:insert>
-	</div>
-
-	<div id="menubar row">
-		<ui:insert name="menu">
-			<ui:include src="/templates/menu.xhtml" />
-		</ui:insert>
-	</div>
-<!-- [VG] -->
-	<div id="container">
-
-		<div id="content">
-
-			<ui:insert name="content">	
+<ui:composition template="/templates/mainlayout.xhtml">
+ <ui:define name="title">Leave Approval  Request(s)</ui:define>
+ <ui:define name="content">	
     <h1>Leave Approval Request(s)</h1>
 	<h:form id="leaveApprovalForm">			
 	<p:messages autoUpdate="true"></p:messages>
 	<p:dataTable id="approveLeaveTable" widgetVar="approveLeaveTable" var="approveLeave0" value="#{leaveApprovalBean.leaveApprovalDataModel}"
 										selection="#{leaveApprovalBean.selectedLeaveRequest}" selectionMode="single" rowKey="#{approveLeave0.taskId}">
+
          <p:ajax event="rowSelect" listener="#{leaveApprovalBean.onRowSelect}" update=":leaveRequestDialogForm" oncomplete="PF('leaveRequestDialogVar').show();" />
+
 				<p:column id="nameTypeHEader"><f:facet name="header"> Name </f:facet><h:outputText value="#{approveLeave0.employee.name}" /></p:column>
 				<p:column id="leaveTypeHEader"><f:facet name="header"> Leave Type </f:facet><h:outputText value="#{approveLeave0.leaveType.name}" /></p:column>
 				<p:column id="startDateHeader"><f:facet name="header"> Start Date </f:facet><h:outputText value="#{approveLeave0.startDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /> </h:outputText></p:column>
@@ -116,42 +85,7 @@
 			</p:panelGrid>
 			</h:form>
 	  </p:dialog>
-	  </ui:insert>
-	  </div>
-		<ui:insert name="dialog">
-  	
-  		</ui:insert>
-	</div>
-<!--  	  <p:dialog header="Warning!" severity="alert" widgetVar="notifyApprovarVar" modal="true">	
-			<h:form id="notifyApprovarForm">
-			<p:messages autoUpdate="true" />
-			<p:panelGrid id="currentBalanceNotifying" columns="1" cellpadding="4" style="margin:0 auto;">
-				
-						<h:outputText value="Warning! [#{leaveApprovalBean.selectedLeaveRequest.employee.name}] Current Balance is [#{leaveApprovalBean.currentLeaveBalance}] days. They are allowed to apply for advanced leave up to [#{3+leaveApprovalBean.currentLeaveBalance}] days." /> 
-				<f:facet name="footer">
-					<p:commandButton value="OK"  onclick="PF('notifyApprovarVar').hide();PF('leaveRequestDialogVar').show();" type="button" />
-				</f:facet>
-			</p:panelGrid>
-			</h:form>
-	  </p:dialog>
-	  <h:outputScript target="head">
-      function handleShowDialogRequest(xhr, status, args) { 
-        if(args.leaveType=='Annual')
-       { 
-         notifyApprovarVar.show();
-         return;
-       }
-       else{
-       leaveRequestDialogVar.show();
-       }
-  		}
-      </h:outputScript> -->
-	 
-	<div id="footer">
-		<ui:insert name="footer">
-			<ui:include src="/templates/footer.xhtml" />
-		</ui:insert>
-	</div> 
- </div>      
+</ui:define>
+</ui:composition>
 </h:body>
 </html>

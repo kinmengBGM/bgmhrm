@@ -41,15 +41,18 @@
 			</p:submenu>
 			<p:menuitem value="System Audit Trail" url="/protected/systemAuditTrail.jsf" rendered="#{authenticationBean.hasAccess('SystemAuditTrail')}"/>
 			<p:menuitem value="My Profile" url="/protected/employeeprofile/myprofile.jsf" rendered="#{authenticationBean.hasAccess('ViewMyProfile')}"/>
-			<p:submenu label="Employee" rendered="#{authenticationBean.hasAccess('ViewEmployees') or authenticationBean.hasAccess('ApproveEmployeeRegistration') or authenticationBean.hasAccess('ApproveLeave')}">
+			<p:submenu label="Employee" rendered="#{authenticationBean.hasAccess('ViewEmployees') or authenticationBean.hasAccess('ApproveEmployeeRegistration')}">
 				<p:menuitem value="Employee List" url="/protected/employeeprofile/employeeprofilemgmt.jsf" rendered="#{authenticationBean.hasAccess('ViewEmployees')}"/>
 				<p:menuitem value="Registration Approval" url="/protected/employeeregistration/employeeregistrationtasklist.jsf" rendered="#{authenticationBean.hasAccess('ApproveEmployeeRegistration')}"/>
-				<p:menuitem value="Leave Approval" url="/protected/applyleave/approveleavetasklist.jsf" rendered="#{authenticationBean.hasAccess('ApproveLeave')}"/>
 			</p:submenu>
-			
-			
-			<p:menuitem value="Apply Leave" url="/protected/applyleave/employeeleaveform.jsf" rendered="#{authenticationBean.hasAccess('ApplyLeave')}"/>			
-			
+			<p:submenu label="My Leave" rendered="#{authenticationBean.hasAccess('LeaveHistory') or authenticationBean.hasAccess('ApplyLeave')}">
+				<p:menuitem value="Apply Leave" url="/protected/applyleave/employeeleaveform.jsf" rendered="#{authenticationBean.hasAccess('ApplyLeave')}"/>			
+				<p:menuitem value="Leave History" url="/protected/applyleave/leaveHistory.jsf" rendered="#{authenticationBean.hasAccess('LeaveHistory')}"/>
+			</p:submenu>
+			<p:submenu label="Leave Administration" rendered="#{authenticationBean.hasAccess('CancelLeave') or authenticationBean.hasAccess('ApproveLeave')}">
+				<p:menuitem value="Leave Approval" url="/protected/applyleave/approveleavetasklist.jsf" rendered="#{authenticationBean.hasAccess('ApproveLeave')}"/>
+				<p:menuitem value="Cancel Leave" url="/protected/applyleave/cancelLeaveTransactionList.jsf" rendered="#{authenticationBean.hasAccess('CancelLeave')}"/>
+			</p:submenu>
 			<p:menuitem value="Change Password" url="/protected/userchangepassword.jsf"/>
 			<p:menuitem value="Logout" action="${authenticationBean.doLogout}"></p:menuitem>
 		</p:menubar>
@@ -60,6 +63,4 @@
 </h:body>
 
 </html>
-
-
 

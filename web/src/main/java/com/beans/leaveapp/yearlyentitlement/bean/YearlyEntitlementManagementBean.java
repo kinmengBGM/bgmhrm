@@ -2,6 +2,7 @@ package com.beans.leaveapp.yearlyentitlement.bean;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -49,6 +50,16 @@ public class YearlyEntitlementManagementBean extends BaseMgmtBean implements Ser
 	private List<YearlyEntitlement> yearlyEntitlementList;
 	private YearlyEntitleDataModel employeeYearlyEntitlementDataModel;
 	private List<String> correspondingList;
+	private String leaveMessage;
+	
+	
+	public String getLeaveMessage() {
+		return leaveMessage;
+	}
+
+	public void setLeaveMessage(String leaveMessage) {
+		this.leaveMessage = leaveMessage;
+	}
 
 	private AuditTrail auditTrail;
 
@@ -361,9 +372,13 @@ public class YearlyEntitlementManagementBean extends BaseMgmtBean implements Ser
 	public void setEmployeeYearlyEntitlement(boolean employeeYearlyEntitlement) {
 		this.employeeYearlyEntitlement = employeeYearlyEntitlement;
 	}
-
+	private String getLeaveResonseMessage(FacesContext fc){
+		Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
+		return params.get("message");
+	}
+	
 	public YearlyEntitleDataModel getEmployeeYearlyEntitlementDataModel() {
-
+	
 		if (getListOfEmployeeYearlyEntitlement().size() > 0) {
 			employeeYearlyEntitlementDataModel = new YearlyEntitleDataModel(
 					getListOfEmployeeYearlyEntitlement());
@@ -399,6 +414,5 @@ public class YearlyEntitlementManagementBean extends BaseMgmtBean implements Ser
 	public void setSearchLeaveType(String searchLeaveType) {
 		this.searchLeaveType = searchLeaveType;
 	}
-
 
 }

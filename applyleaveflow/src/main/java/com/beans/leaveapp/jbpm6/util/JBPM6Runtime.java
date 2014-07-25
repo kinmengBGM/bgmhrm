@@ -25,11 +25,8 @@ import org.kie.api.task.UserGroupCallback;
 import org.kie.api.task.model.Content;
 import org.kie.api.task.model.Task;
 import org.kie.api.task.model.TaskSummary;
-import org.kie.internal.runtime.manager.context.EmptyContext;
 import org.kie.internal.runtime.manager.context.ProcessInstanceIdContext;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
-
-import com.beans.exceptions.BSLException;
 
 
 public class JBPM6Runtime {
@@ -51,7 +48,6 @@ public class JBPM6Runtime {
 		runtimeEnvironmentBuilder.userGroupCallback(userGroupCallback);
 		RuntimeEnvironment runtimeEnvironment = runtimeEnvironmentBuilder.get();
 		manager = RuntimeManagerFactory.Factory.get().newPerProcessInstanceRuntimeManager(runtimeEnvironment, identifier);
-		RuntimeEngine runtimeEngine = manager.getRuntimeEngine(ProcessInstanceIdContext.get());	
 		
 	}	
 	

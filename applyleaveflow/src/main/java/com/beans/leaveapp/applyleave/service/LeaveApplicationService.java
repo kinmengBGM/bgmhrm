@@ -2,9 +2,7 @@
 package com.beans.leaveapp.applyleave.service;
 
 import java.util.List;
-import java.util.Set;
 
-import com.beans.common.security.role.model.Role;
 import com.beans.common.security.role.service.RoleNotFound;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;

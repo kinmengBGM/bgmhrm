@@ -25,7 +25,7 @@ public interface LeaveTransactionService {
 	
 	public LeaveType findByLeaveType(String name, int id);
 
-	public List<LeaveTransaction> findByEmployeeORfindByLeaveTypeORLeaveDatesORStatusORAll(String employeename, String leaveType,java.util.Date startDate,String status);
+	public List<LeaveTransaction> findByEmployeeORfindByLeaveTypeORLeaveDatesORStatusORAll(String employeename, String leaveType,Date startDate,String status);
 
 	public List<LeaveTransaction> findByEmployeeORfindByLeaveType(String employeeName, String leaveType);
 	

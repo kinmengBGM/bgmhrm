@@ -8,7 +8,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.beans.common.security.accessrights.model.AccessRights;
-import com.beans.common.security.role.model.Role;
 
 
 public interface AccessRightsRepository extends CrudRepository<AccessRights, Integer>{

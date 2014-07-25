@@ -1,6 +1,5 @@
 package com.beans.common.security.users.service;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;

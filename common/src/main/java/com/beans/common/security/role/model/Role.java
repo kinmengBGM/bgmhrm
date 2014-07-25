@@ -2,7 +2,6 @@ package com.beans.common.security.role.model;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -21,7 +20,6 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.Type;
 
 import com.beans.common.security.accessrights.model.AccessRights;
-import com.beans.common.security.users.model.Users;
 
 
 @Entity

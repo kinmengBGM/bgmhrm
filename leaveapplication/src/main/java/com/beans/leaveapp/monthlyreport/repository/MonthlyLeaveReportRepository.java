@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import com.beans.leaveapp.monthlyreport.model.AnnualLeaveReport;
 import com.beans.leaveapp.monthlyreport.model.MonthlyLeaveReport;
 
 public interface MonthlyLeaveReportRepository extends CrudRepository<MonthlyLeaveReport, Integer>{

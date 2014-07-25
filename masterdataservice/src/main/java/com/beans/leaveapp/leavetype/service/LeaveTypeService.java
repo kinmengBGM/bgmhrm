@@ -2,8 +2,6 @@ package com.beans.leaveapp.leavetype.service;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.Query;
-
 import com.beans.leaveapp.employeetype.model.EmployeeType;
 import com.beans.leaveapp.leavetype.model.LeaveType;
 

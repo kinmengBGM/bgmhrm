@@ -44,9 +44,9 @@ public class LeaveTransaction implements Serializable{
 	private Long taskId;
 	private boolean isDelete;
 	private String createdBy;
-	private java.util.Date creationTime;
+	private Date creationTime;
 	private String lastModifiedBy;
-	private java.util.Date lastModifiedTime;
+	private Date lastModifiedTime;
 	private String status;
 	private String rejectReason;
 	
@@ -85,7 +85,7 @@ public class LeaveTransaction implements Serializable{
 	public Date getApplicationDate() {
 		return applicationDate;
 	}
-	public void setApplicationDate(java.util.Date applicationDate) {
+	public void setApplicationDate(Date applicationDate) {
 		
 		this.applicationDate = applicationDate;
 	}
@@ -186,13 +186,13 @@ public class LeaveTransaction implements Serializable{
 	public void setTaskId(Long taskId) {
 		this.taskId = taskId;
 	}
-	public void setCreationTime(java.util.Date creationTime) {
+	public void setCreationTime(Date creationTime) {
 		this.creationTime = creationTime;
 	}
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-	public void setLastModifiedTime(java.util.Date lastModifiedTime) {
+	public void setLastModifiedTime(Date lastModifiedTime) {
 		this.lastModifiedTime = lastModifiedTime;
 	}
 	public void setLastModifiedBy(String lastModifiedBy) {
@@ -201,7 +201,7 @@ public class LeaveTransaction implements Serializable{
 			
 	@Column(name="creationTime",nullable=true)
 	@Temporal(TemporalType.TIMESTAMP)
-	public java.util.Date getCreationTime() {
+	public Date getCreationTime() {
 		return creationTime;
 	}
 	@Column(name="createdBy",nullable=true)
@@ -210,7 +210,7 @@ public class LeaveTransaction implements Serializable{
 	}
 	@Column(name="lastModifiedTime",nullable=true)
 	@Temporal(TemporalType.TIMESTAMP)
-	public java.util.Date getLastModifiedTime() {
+	public Date getLastModifiedTime() {
 		return lastModifiedTime;
 	}
 	@Column(name="lastModifiedBy",nullable=true)

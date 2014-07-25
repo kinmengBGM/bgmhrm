@@ -89,7 +89,6 @@ public class LeaveTransactionServiceImpl implements LeaveTransactionService {
 				.findOne(id);
 		System.out.println(leaveTransaction.isDeleted());
 		leaveTransaction.setDeleted(true);
-		LeaveTransaction l = leaveTransactionRepository.save(leaveTransaction);
 		System.out.println(leaveTransaction.isDeleted());
 		}catch(Exception e){
 			e.printStackTrace();
@@ -130,7 +129,7 @@ public class LeaveTransactionServiceImpl implements LeaveTransactionService {
 
 	@Override
 	public List<LeaveTransaction> findByEmployeeORfindByLeaveTypeORLeaveDatesORStatusORAll(
-			String employeeName, String leaveType, java.util.Date startDate, String status) {
+			String employeeName, String leaveType, Date startDate, String status) {
 
 		String name = "%"+ employeeName.trim()+"%";
 		String leaveName = "%"+ leaveType.trim()+"%";

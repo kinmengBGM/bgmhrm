@@ -3,7 +3,6 @@ package com.beans.leaveapp.monthlyreport.service;
 import java.util.List;
 
 import com.beans.leaveapp.employee.model.Employee;
-import com.beans.leaveapp.monthlyreport.model.AnnualLeaveReport;
 
 public interface MonthlyLeaveReportPrePreparation {
 

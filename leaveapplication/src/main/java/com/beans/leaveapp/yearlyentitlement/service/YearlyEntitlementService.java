@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.leavetype.model.LeaveType;
-import com.beans.leaveapp.yearlyentitlement.model.EmployeeEntitlement;
-import com.beans.leaveapp.yearlyentitlement.model.LeaveEntitlement;
 import com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement;
 
 public interface YearlyEntitlementService {

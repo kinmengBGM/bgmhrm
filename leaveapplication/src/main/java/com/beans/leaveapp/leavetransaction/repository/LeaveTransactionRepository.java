@@ -1,7 +1,6 @@
 package com.beans.leaveapp.leavetransaction.repository;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +8,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
-import com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement;
 
 public interface LeaveTransactionRepository extends CrudRepository<LeaveTransaction, Integer> {
 	

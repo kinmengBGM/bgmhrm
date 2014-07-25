@@ -5,9 +5,6 @@ import java.util.Date;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.beans.common.audit.model.SystemAuditTrail;
-import com.beans.common.audit.service.SystemAuditTrailActivity;
-import com.beans.common.audit.service.SystemAuditTrailLevel;
-import com.beans.common.audit.service.SystemAuditTrailRecordService;
 import com.beans.util.config.ConfigurationHolder;
 
 public class AuditTrail {

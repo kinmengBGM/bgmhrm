@@ -60,7 +60,9 @@ public class LeaveApplicationWorker {
 		else{
 			leaveTransaction.setStatus("Approved");
 		}
+		if(isApproverApproved)
 			leaveTransaction.setYearlyLeaveBalance(leaveTransaction.getYearlyLeaveBalance()-leaveTransaction.getNumberOfDays());
+		
 			leaveTransaction.setLastModifiedBy(approverName);
 			leaveTransaction.setLastModifiedTime(new Date());
 		leaveTransactionService.updateLeaveApplicationStatus(leaveTransaction);

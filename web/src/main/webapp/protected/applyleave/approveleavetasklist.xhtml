@@ -16,69 +16,9 @@
 <!-- [VG] -->
 <ui:composition template="/templates/mainlayout.xhtml">
  <ui:define name="title">Leave Approval  Request(s)</ui:define>
- <ui:define name="content">
-    <h1>Leave Approval Request(s)</h1>
-	<h:form id="leaveApprovalForm">
-	<p:messages autoUpdate="true"></p:messages>
-	<p:dataTable id="approveLeaveTable" widgetVar="approveLeaveTable" var="approveLeave0" value="#{leaveApprovalBean.leaveApprovalDataModel}"
-										selection="#{leaveApprovalBean.selectedLeaveRequest}" selectionMode="single" rowKey="#{approveLeave0.taskId}">
-         <p:ajax event="rowSelect" listener="#{leaveApprovalBean.onRowSelect}" update=":leaveRequestDialogForm" oncomplete="leaveRequestDialogVar.show();" />
-				<p:column id="nameTypeHEader"><f:facet name="header"> Name </f:facet><h:outputText value="#{approveLeave0.employee.name}" /></p:column>
-				<p:column id="leaveTypeHEader"><f:facet name="header"> Leave Type </f:facet><h:outputText value="#{approveLeave0.leaveType.name}" /></p:column>
-				<p:column id="startDateHeader"><f:facet name="header"> Start Date </f:facet><h:outputText value="#{approveLeave0.startDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /> </h:outputText></p:column>
-				<p:column id="endDateHeader"><f:facet name="header"> End Date </f:facet><h:outputText value="#{approveLeave0.endDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />  </h:outputText></p:column>
-				<p:column id="noOfDaysHeader"><f:facet name="header"> Number of Days </f:facet><h:outputText value="#{approveLeave0.numberOfDays}" /></p:column>
-				<p:column id="reasonHeader"><f:facet name="header"> Reason </f:facet><h:outputText value="#{approveLeave0.reason}"/></p:column>
-			</p:dataTable>
-		</h:form>
-	
-          <p:dialog header="Approve Leave Request" styleClass="dlgCSS" widgetVar="leaveRequestDialogVar" resizable="false" id="leaveRequestDialog" modal ="true">
-               <h:form id="leaveRequestDialogForm">
-                <p:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
-            			<h:outputText value="Name :"></h:outputText>
-            			<h:outputText value="#{leaveApprovalBean.selectedLeaveRequest.employee.name}" />
-            			
-            			<h:outputText value="Leave Type :"></h:outputText>
-            			<h:outputText value="#{leaveApprovalBean.selectedLeaveRequest.leaveType.name}" />
-            			
-            			<h:outputText value="Number of Days :"></h:outputText>
-            			<h:outputText value="#{leaveApprovalBean.selectedLeaveRequest.numberOfDays}" />
-            			
-            			
-            			<h:outputText value="Yearly Balance :" rendered="#{leaveApprovalBean.selectedLeaveRequest.leaveType.name ne 'Unpaid'}"></h:outputText>
-            			<h:outputText value="#{leaveApprovalBean.selectedLeaveRequest.yearlyLeaveBalance}" rendered="#{leaveApprovalBean.selectedLeaveRequest.leaveType.name ne 'Unpaid'}"/>
-            			
-            			<h:outputText value="Start Date :"></h:outputText>
-            			<h:outputText value="#{leaveApprovalBean.selectedLeaveRequest.startDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /></h:outputText>
-            			
-            			<h:outputText value="End Date :"></h:outputText>
-            			<h:outputText value="#{leaveApprovalBean.selectedLeaveRequest.endDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /></h:outputText>
-            			
-            			<h:outputText value="Reason :"></h:outputText>
-            			<h:outputText value="#{leaveApprovalBean.selectedLeaveRequest.reason}" />
-            			
-            			<p:commandButton value="Approve" actionListener="#{leaveApprovalBean.doApproveLeaveRequest()}" update=":leaveApprovalForm:approveLeaveTable" oncomplete="leaveRequestDialogVar.hide()"></p:commandButton>
-            			<p:commandButton value="Reject"  immediate="true" oncomplete="rejectRegistrationVar.show();"></p:commandButton>
-                </p:panelGrid>
-             </h:form>
-      </p:dialog>
-      
-      <p:dialog header="Reject Leave Request" severity="alert" widgetVar="rejectRegistrationVar" modal="true">	
-			<h:form>
-			<p:messages autoUpdate="true" />
-			<p:panelGrid id="RejectReason" columns="2" cellpadding="4" style="margin:0 auto;">
-				<h:outputText value="Reason*" />
-						<p:inputTextarea id="reason" rows="5" cols="24" counter="counter" maxlength="100" counterTemplate="{0} characters remaining." autoResize="false" value="#{leaveApprovalBean.selectedLeaveRequest.rejectReason}" required="true" requiredMessage="Please enter Reason" immediate="true"/> 
-						<h:outputText value="" />
-						<h:outputText id="counter" /> 
-				<f:facet name="footer">
-					<p:commandButton value="Reject" oncomplete="if(!args.validationFailed) rejectRegistrationVar.hide();PF('leaveRequestDialogVar').hide();" actionListener="#{leaveApprovalBean.doRejectLeaveRequest()}" validateClient="true" update=":leaveApprovalForm:approveLeaveTable"/>
-					<p:commandButton value="Cancel" immediate="true" onclick="PF('rejectRegistrationVar').hide();PF('leaveRequestDialogVar').show();" type="button" />
-				</f:facet>
-			</p:panelGrid>
-			</h:form>
-	  </p:dialog>
-      </ui:define>
+ 	<ui:define name="content">
+ 		 <ui:include src="/protected/applyleave/approvetasklist_include.xhtml" ></ui:include>
+     </ui:define>
 	</ui:composition>
 </h:body>
 </html>

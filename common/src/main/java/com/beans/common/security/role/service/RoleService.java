@@ -8,14 +8,14 @@ import com.beans.common.security.role.model.Role;
 public interface RoleService {
 	
 	
-	public Role create(Role role);
-	public Role delete(int id);
-	public List<Role> findAll();
-	public Role update(Role role);
-	public Role findById(int id) throws RoleNotFound;
-	public Role findByRole(String role) throws RoleNotFound;
-	public List<Role> findRoleByRoleName(String role);
-	public Set<Role> findAllInSet();
-	public List<String> findRoleNamesByUsername(String username);
+	 Role create(Role role);
+	 Role delete(int id);
+	 List<Role> findAll();
+	 Role update(Role role);
+	 Role findById(int id) throws RoleNotFound;
+	 Role findByRole(String role) throws RoleNotFound;
+	 List<Role> findRoleByRoleName(String role);
+	 Set<Role> findAllInSet();
+	 List<String> findRoleNamesByUsername(String username);
 }
 

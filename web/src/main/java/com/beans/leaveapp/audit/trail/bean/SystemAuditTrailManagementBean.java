@@ -5,11 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-
-import org.primefaces.event.SelectEvent;
-
 import com.beans.common.audit.model.SystemAuditTrail;
 import com.beans.common.audit.service.SystemAuditTrailRecordService;
 import com.beans.leaveapp.audit.trail.model.SystemAuditTrailDataModel;
@@ -62,11 +57,7 @@ public class SystemAuditTrailManagementBean implements Serializable {
 			java.sql.Date fromDate = new java.sql.Date(date1.getTime());
 			java.sql.Date toDate = new java.sql.Date(date2.getTime());
 
-			List<SystemAuditTrail> systemAuditTrailList = getSystemAuditTrailService()
-					.findSelectedDates(fromDate, toDate,activity);
-
-			setSystemAuditTrailList(getSystemAuditTrailService()
-					.findSelectedDates(fromDate, toDate,activity));
+			setSystemAuditTrailList(getSystemAuditTrailService().findSelectedDates(fromDate, toDate,activity));
 			System.out.println(getSystemAuditTrailList().size());
 			forDates = true;
 			this.getSystemAuditTrailDataModel();

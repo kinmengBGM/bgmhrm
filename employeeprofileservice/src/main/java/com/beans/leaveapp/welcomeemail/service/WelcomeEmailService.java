@@ -6,6 +6,6 @@ import com.beans.leaveapp.employee.model.Employee;
 
 public interface WelcomeEmailService {
 	
-	public void sendHTMLEmail(Employee employee);
+	 void sendHTMLEmail(Employee employee);
 	
 }

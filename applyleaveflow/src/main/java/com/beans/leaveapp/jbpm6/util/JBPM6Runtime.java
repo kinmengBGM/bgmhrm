@@ -176,6 +176,7 @@ public class JBPM6Runtime {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> getContentForTask(Task task) {
 		RuntimeEngine runtimeEngine = manager.getRuntimeEngine(ProcessInstanceIdContext.get());
 		

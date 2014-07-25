@@ -3,7 +3,6 @@ package com.beans.leaveapp.usertorole.bean;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -12,7 +11,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.event.SelectEvent;
-import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
 
 import com.beans.common.audit.service.AuditTrail;

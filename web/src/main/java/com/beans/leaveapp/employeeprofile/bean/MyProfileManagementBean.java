@@ -13,7 +13,6 @@ import com.beans.common.audit.service.SystemAuditTrailActivity;
 import com.beans.common.audit.service.SystemAuditTrailLevel;
 import com.beans.common.security.users.model.Users;
 import com.beans.leaveapp.address.model.Address;
-import com.beans.leaveapp.address.service.AddressNotFound;
 import com.beans.leaveapp.address.service.AddressService;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.employee.service.EmployeeService;

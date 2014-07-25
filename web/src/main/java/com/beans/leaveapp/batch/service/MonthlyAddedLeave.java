@@ -55,8 +55,7 @@ public class MonthlyAddedLeave implements Serializable{
 					yearlyEntitlement.setcurrentLeaveBalance(currentLeaveBalaceWithAddedLeave);
 					yearlyEntitlementService.update(yearlyEntitlement);
 				}			
-				if(employee.getEmployeeType().getId() == 3){
-				if(yearlyEntitlement != null){
+				if(employee.getEmployeeType().getId() == 3 && yearlyEntitlement != null){
 					if(yearlyEntitlement.getEntitlement() < 16){						
 						if(currentDateMonth == joinDateMonth && currentDateYear != joinDateYear){
 							double entitlement =yearlyEntitlement.getEntitlement();
@@ -69,7 +68,7 @@ public class MonthlyAddedLeave implements Serializable{
 							yearlyEntitlement.setcurrentLeaveBalance(addedCurrentBalance);
 							yearlyEntitlementService.update(yearlyEntitlement);
 						}
-						else if((joinDateday == 29 && joinDateMonth == 1)  && (currentDateDay == 1 && currentDateMonth == 2) && (currentDateYear != joinDateYear)){
+						else if(joinDateday == 29 && joinDateMonth == 1  && currentDateDay == 1 && currentDateMonth == 2 && currentDateYear != joinDateYear){
 							double entitlement =yearlyEntitlement.getEntitlement();
 							double addedEntitlement = entitlement+1.00;
 							System.out.println(addedEntitlement);
@@ -91,7 +90,7 @@ public class MonthlyAddedLeave implements Serializable{
 							yearlyEntitlement.setcurrentLeaveBalance(addedCurrentBalance);
 							yearlyEntitlementService.update(yearlyEntitlement);
 						}
-						else if((joinDateday == 29 && joinDateMonth == 1)  && (currentDateDay == 1 && currentDateMonth == 2) && (currentDateYear != joinDateYear)){
+						else if(joinDateday == 29 && joinDateMonth == 1  && currentDateDay == 1 && currentDateMonth == 2 && currentDateYear != joinDateYear){
 							double entitlement =yearlyEntitlement.getEntitlement();					
 							double addToCurrentBalance = entitlement - 12.0;
 							double currentBalance = yearlyEntitlement.getCurrentLeaveBalance();
@@ -101,8 +100,6 @@ public class MonthlyAddedLeave implements Serializable{
 						}
 					}			
 				}
-				
-			}	
 		}
 		}	
 	}

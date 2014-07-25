@@ -6,8 +6,6 @@ import javax.faces.model.ListDataModel;
 
 import org.primefaces.model.SelectableDataModel;
 
-import com.beans.common.security.accessrights.model.AccessRights;
-
 public class UserToUnAssignedAccessRightsDataModel extends ListDataModel<List<String>> implements SelectableDataModel<String>   {
 
 	public UserToUnAssignedAccessRightsDataModel() {

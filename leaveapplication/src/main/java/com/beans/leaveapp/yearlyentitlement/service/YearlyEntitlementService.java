@@ -8,38 +8,38 @@ import com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement;
 
 public interface YearlyEntitlementService {
 
-	public List<YearlyEntitlement> findAll() throws Exception;
+	 List<YearlyEntitlement> findAll() throws Exception;
 
-	public YearlyEntitlement update(YearlyEntitlement selectedYearlyEntitlement) throws Exception;
+	 YearlyEntitlement update(YearlyEntitlement selectedYearlyEntitlement) throws Exception;
 
-	public YearlyEntitlement delete(int id);
+	 YearlyEntitlement delete(int id);
 
-	public YearlyEntitlement create(YearlyEntitlement yearlyEntitlement);
+	 YearlyEntitlement create(YearlyEntitlement yearlyEntitlement);
    
-	public List<String> employeeNames();
+	 List<String> employeeNames();
 
-	public List<String> findLeaveTypes(int employeeTypeId);
+	 List<String> findLeaveTypes(int employeeTypeId);
 	
-	public Employee findByEmployee(String name);
+	 Employee findByEmployee(String name);
 	
-	public LeaveType findByLeaveType(String name,int employeeTyped);
+	 LeaveType findByLeaveType(String name,int employeeTyped);
 	
-	public List<YearlyEntitlement> findByEmployeeOrfindByLeaveTypeOrBoth(String employeeName,String leaveType);
+	 List<YearlyEntitlement> findByEmployeeOrfindByLeaveTypeOrBoth(String employeeName,String leaveType);
 	
-	public List<YearlyEntitlement> findByEmployeeId(int employeeId);
+	 List<YearlyEntitlement> findByEmployeeId(int employeeId);
 	
-	public YearlyEntitlement findByEmployeeAndLeaveType(int employeeId, int leaveTypeId) throws YearlyEntitlementNotFound;
+	 YearlyEntitlement findByEmployeeAndLeaveType(int employeeId, int leaveTypeId) throws YearlyEntitlementNotFound;
 	//TODO Change method name after Pradeep removed his
-	public List<YearlyEntitlement> findYearlyEntitlementListByEmployee(int employeeId);
+	 List<YearlyEntitlement> findYearlyEntitlementListByEmployee(int employeeId);
 	
-	public YearlyEntitlement findOne(int yearlyEntitlementId) throws YearlyEntitlementNotFound;
+	 YearlyEntitlement findOne(int yearlyEntitlementId) throws YearlyEntitlementNotFound;
 	
 
-	public YearlyEntitlement findByEmployeeIdPermAndCont(int employeeId);
+	 YearlyEntitlement findByEmployeeIdPermAndCont(int employeeId);
 	
-	public YearlyEntitlement findByEmployeeIdPerm(int employeeId);
+	 YearlyEntitlement findByEmployeeIdPerm(int employeeId);
 	
-	public List<YearlyEntitlement> findByEmployeeIdForRemainingLeaves(int employeeId);
+	 List<YearlyEntitlement> findByEmployeeIdForRemainingLeaves(int employeeId);
 
 	void updateLeaveBalanceAfterApproval(int employeeId,int leaveTypeId,double numberOfDaysApproved);
 	

@@ -42,9 +42,9 @@ public class WelcomeEmailServiceImpl implements WelcomeEmailService {
 				String htmlEmailTemplate = responseData.toString();
 		
 		// replacing the employee details in HTML
-		htmlEmailTemplate.replace("##employeeName##", empName.toString());
-		htmlEmailTemplate.replace("##employeeUserName##",employee.getUsers().getUsername());
-		htmlEmailTemplate.replace("##employeePosition##", empPosition.toString());
+		htmlEmailTemplate = htmlEmailTemplate.replace("##employeeName##", empName.toString());
+		htmlEmailTemplate = htmlEmailTemplate.replace("##employeeUserName##",employee.getUsers().getUsername());
+		htmlEmailTemplate = htmlEmailTemplate.replace("##employeePosition##", empPosition.toString());
 		
 		// create the email message
 		HtmlEmail email = new HtmlEmail();

@@ -271,42 +271,19 @@ public class YearlyEntitlementManagementBean extends BaseMgmtBean implements Ser
 
 	public void search() {
 		try {
-			if ((getSearchEmployeeName().trim().equals(""))
-					&& (getSearchLeaveType().trim().equals(""))) {
+			if (getSearchEmployeeName().trim().equals("") && getSearchLeaveType().trim().equals("")) {
 				this.yearlyEntitlementList = null;
 				this.yearlyEntitlementDataModel = null;
 			} else {
-
-				yearlyEntitlementList = this.getYearlyEntitlementService()
-						.findByEmployeeOrfindByLeaveTypeOrBoth(
-								this.getSearchEmployeeName(), this.getSearchLeaveType());
-
+				yearlyEntitlementList = this.getYearlyEntitlementService().findByEmployeeOrfindByLeaveTypeOrBoth(this.getSearchEmployeeName(), this.getSearchLeaveType());
 				this.yearlyEntitlementDataModel = null;
-				// if(leaveEntitlementList != null){
-				// auditTrail.log(SystemAuditTrailActivity.ACCESSED,
-				// SystemAuditTrailLevel.INFO,
-				// actorUsers.getId(),actorUsers.getUsername(),
-				// actorUsers.getUsername()+" searching Entitlement of : "+getEmployeeName());
-				// }
-
-				// auditTrail.log(SystemAuditTrailActivity.ACCESSED,
-				// SystemAuditTrailLevel.INFO,
-				// actorUsers.getId(),actorUsers.getUsername(),
-				// actorUsers.getUsername()+" searching Entitlement of : "+getEmployeeName());
 			}
-			
 			searchEmployeeName = null;
 			searchLeaveType = null;
 		}
-
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	private Object getUsers() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public LeaveTypeService getLeaveTypeService() {
@@ -372,11 +349,6 @@ public class YearlyEntitlementManagementBean extends BaseMgmtBean implements Ser
 	public void setEmployeeYearlyEntitlement(boolean employeeYearlyEntitlement) {
 		this.employeeYearlyEntitlement = employeeYearlyEntitlement;
 	}
-	private String getLeaveResonseMessage(FacesContext fc){
-		Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
-		return params.get("message");
-	}
-	
 	public YearlyEntitleDataModel getEmployeeYearlyEntitlementDataModel() {
 	
 		if (getListOfEmployeeYearlyEntitlement().size() > 0) {

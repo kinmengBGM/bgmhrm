@@ -18,6 +18,7 @@ public class EmployeeGradeDataModel extends ListDataModel<EmployeeGrade> impleme
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public EmployeeGrade getRowData(String rowkey) {
 		 List<EmployeeGrade> employeeGradeList = (List<EmployeeGrade>) getWrappedData();

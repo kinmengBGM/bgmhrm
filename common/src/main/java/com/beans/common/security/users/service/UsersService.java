@@ -7,16 +7,16 @@ import com.beans.common.security.users.model.Users;
 
 public interface UsersService {
 
-	 public Users create(Users users);
-	 public Users delete(int id) throws UsersNotFound;
-	 public List<Users> findAll();
-	 public Users update(Users users) throws UsersNotFound;
-	 public Users findById(int id) throws UsersNotFound;
-	 public Users registerUser(Users users);
-	 public Users findByUsername(String username) throws UsersNotFound;
-	 public List<Users> findUsersByUsername(String username);
-	 public HashSet<String> getAccessRightsMapForUser(int userId) throws UsersNotFound;
-	 public void changePassword(Users users, String oldPassword, String newPassword) throws ChangePasswordException, UsersNotFound;
+	  Users create(Users users);
+	  Users delete(int id) throws UsersNotFound;
+	  List<Users> findAll();
+	  Users update(Users users) throws UsersNotFound;
+	  Users findById(int id) throws UsersNotFound;
+	  Users registerUser(Users users);
+	  Users findByUsername(String username) throws UsersNotFound;
+	  List<Users> findUsersByUsername(String username);
+	  HashSet<String> getAccessRightsMapForUser(int userId) throws UsersNotFound;
+	  void changePassword(Users users, String oldPassword, String newPassword) throws ChangePasswordException, UsersNotFound;
 }
 
 

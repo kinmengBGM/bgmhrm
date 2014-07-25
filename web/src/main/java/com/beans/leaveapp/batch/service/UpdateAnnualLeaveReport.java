@@ -58,7 +58,7 @@ public void UpdatingAnnualLeaveReport(){
 		
 		double noOfLeavesCredited;		
 		
-		if((currentDateMonth == joinDateMonth)  && (currentDateYear != joinDateYear))
+		if(currentDateMonth == joinDateMonth  && currentDateYear != joinDateYear)
 		{
 			
 			if(sortingMonthId == 1){

@@ -6,14 +6,14 @@ import com.beans.leaveapp.employeetype.model.EmployeeType;
 import com.beans.leaveapp.leavetype.model.LeaveType;
 
 public interface LeaveTypeService {
-	public LeaveType create(LeaveType leaveType);
-	public LeaveType delete(int id);
-	public List<LeaveType> findAll();
-	public LeaveType update(LeaveType leaveType);
-	public LeaveType findById(int id) throws LeaveTypeNotFound;
-	public LeaveType findByLeaveType(String name,int id) throws LeaveTypeNotFound;
-	public List<String> findByName();
-	public EmployeeType findByEmployeeName(String name);
-    public List<String> findByEmployeeTypes();
+	 LeaveType create(LeaveType leaveType);
+	 LeaveType delete(int id);
+	 List<LeaveType> findAll();
+	 LeaveType update(LeaveType leaveType);
+	 LeaveType findById(int id) throws LeaveTypeNotFound;
+	 LeaveType findByLeaveType(String name,int id) throws LeaveTypeNotFound;
+	 List<String> findByName();
+	 EmployeeType findByEmployeeName(String name);
+     List<String> findByEmployeeTypes();
 }
 

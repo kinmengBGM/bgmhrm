@@ -7,12 +7,6 @@ import javax.faces.model.ListDataModel;
 import org.primefaces.model.SelectableDataModel;
 
 
-import com.beans.leaveapp.department.model.Department;
-
-
-
-
-
 public class DepartmentDataModel extends ListDataModel<Department> implements SelectableDataModel<Department> {
 
 	
@@ -25,6 +19,7 @@ public class DepartmentDataModel extends ListDataModel<Department> implements Se
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Department getRowData(String rowkey) {
 		  List<Department> departmentList = (List<Department>) getWrappedData();

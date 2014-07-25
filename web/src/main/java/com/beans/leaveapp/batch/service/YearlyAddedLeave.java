@@ -65,7 +65,7 @@ public class YearlyAddedLeave implements Serializable{
 					yearlyEntitleMent.setcurrentLeaveBalance(addedCurrentBalance);
 					yearlyEntitlementService.update(yearlyEntitleMent);
 				}
-				else if((joinDateday == 29 && joinDateMonth == 1)  && (currentDateDay == 1 && currentDateMonth == 2) && (currentDateYear != joinDateYear)){
+				else if(joinDateday == 29 && joinDateMonth == 1  && currentDateDay == 1 && currentDateMonth == 2 && currentDateYear != joinDateYear){
 					double entitlement =yearlyEntitleMent.getEntitlement();
 					double addedEntitlement = entitlement+1.00;
 					System.out.println(addedEntitlement);
@@ -85,7 +85,7 @@ public class YearlyAddedLeave implements Serializable{
 					yearlyEntitleMent.setcurrentLeaveBalance(addedCurrentBalance);
 					yearlyEntitlementService.update(yearlyEntitleMent);
 				}
-				else if((joinDateday == 29 && joinDateMonth == 1)  && (currentDateDay == 1 && currentDateMonth == 2) && (currentDateYear != joinDateYear)){
+				else if(joinDateday == 29 && joinDateMonth == 1  && currentDateDay == 1 && currentDateMonth == 2 && currentDateYear != joinDateYear){
 					double entitlement =yearlyEntitleMent.getEntitlement();					
 					double addToCurrentBalance = entitlement - 12.0;
 					double currentBalance = yearlyEntitleMent.getCurrentLeaveBalance();

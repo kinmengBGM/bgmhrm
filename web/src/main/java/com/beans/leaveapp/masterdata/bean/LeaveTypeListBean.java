@@ -3,7 +3,6 @@ package com.beans.leaveapp.masterdata.bean;
 import java.io.Serializable;
 import java.util.List;
 
-import com.beans.leaveapp.employeetype.model.EmployeeType;
 import com.beans.leaveapp.leavetype.model.LeaveType;
 import com.beans.leaveapp.leavetype.service.LeaveTypeService;
 

@@ -4,11 +4,7 @@ import java.util.List;
 
 import org.kie.api.task.UserGroupCallback;
 
-import com.beans.common.security.role.model.Role;
-import com.beans.common.security.role.service.RoleNotFound;
 import com.beans.common.security.role.service.RoleService;
-import com.beans.common.security.users.model.Users;
-import com.beans.common.security.users.service.UsersNotFound;
 import com.beans.common.security.users.service.UsersService;
 
 public class RoleBasedUserGroupCallback implements UserGroupCallback {

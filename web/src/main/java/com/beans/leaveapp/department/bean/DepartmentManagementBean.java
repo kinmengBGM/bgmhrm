@@ -105,7 +105,7 @@ private static final long serialVersionUID = 1L;
 		try{
 			newDepartment.setDeleted(false);
 			newDepartment.setCreatedBy(getActorUsers().getUsername());
-			newDepartment.setCreationTime(new java.util.Date());
+			newDepartment.setCreationTime(new Date());
 			getDepartmentService().create(newDepartment);
 			setInsertDelete(true);
 			newDepartment = new Department();

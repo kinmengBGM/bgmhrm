@@ -4,10 +4,13 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -40,15 +43,19 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	private Users actorUsers;
 	private AuditTrail auditTrail;
 	private LeaveApplicationService leaveApplicationService;
+	private LeaveTransactionService leaveTransactionService;
 	private LeaveApprovalDataModel LeaveApprovalDataModel;
 	private LeaveTransaction selectedLeaveRequest;
 	private YearlyEntitlementService yearlyEntitlementService;
 	private Double currentLeaveBalance;
-	private LeaveTransactionService leaveTransactionService;
+	private boolean dialogBoxRendered;
+	private String param;
 	private SendMonthlyLeaveReportService monthlyLeaveReportService;
 	
-	
 	public LeaveApprovalDataModel getLeaveApprovalDataModel() {
+		FacesContext f = FacesContext.getCurrentInstance();
+		Map<String, String> parameterMap = (Map<String, String>) f.getExternalContext().getRequestParameterMap();
+		param = parameterMap.get("id");		
 		if(LeaveApprovalDataModel == null || insertDeleted == true) {
 			LeaveApprovalDataModel = new LeaveApprovalDataModel(getLeaveRequestApprovalList());
 		}
@@ -69,16 +76,8 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	public LeaveApprovalDataModel getLeaveApprovalDataModelAllLeaves() {
 		return new LeaveApprovalDataModel(getLeaveTransactionService().getAllLeavesAppliedByEmployee(actorUsers.getId()));
 		
-	}
-	
-	public LeaveTransactionService getLeaveTransactionService() {
-		return leaveTransactionService;
-	}
+	}	
 
-	public void setLeaveTransactionService(
-			LeaveTransactionService leaveTransactionService) {
-		this.leaveTransactionService = leaveTransactionService;
-	}
 
 	public void setLeaveApprovalDataModel(LeaveApprovalDataModel leaveApprovalDataModel) {
 		LeaveApprovalDataModel = leaveApprovalDataModel;
@@ -240,4 +239,38 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		currentLeaveBalance = entitlement.getCurrentLeaveBalance();
 		RequestContext.getCurrentInstance().addCallbackParam("leaveType", leaveTransaction.getLeaveType().getName());
     }
+	
+	public void showDialogBox(){
+		if(param != null){
+		int leaveTransactionId = Integer.parseInt(param);
+	//	int leaveTransactionId = 1;
+		LeaveTransaction leaveTransaction = leaveTransactionService.findById(leaveTransactionId);
+		
+		if(leaveTransaction != null && "Pending".equalsIgnoreCase(leaveTransaction.getStatus())){
+		setSelectedLeaveRequest(leaveTransaction); 
+		YearlyEntitlement entitlement = yearlyEntitlementService.findYearlyEntitlementById(leaveTransaction.getEmployee().getId(), leaveTransaction.getLeaveType().getId());
+		currentLeaveBalance = entitlement.getCurrentLeaveBalance();
+		RequestContext.getCurrentInstance().addCallbackParam("leaveType", leaveTransaction.getLeaveType().getName());
+		RequestContext.getCurrentInstance().execute("leaveRequestDialogVar.show();");
+		}
+		}	
+		}
+	
+	public boolean isDialogBoxRendered() {
+		return dialogBoxRendered;
+	}
+
+	public void setDialogBoxRendered(boolean dialogBoxRendered) {
+		this.dialogBoxRendered = dialogBoxRendered;
+	}
+
+	public LeaveTransactionService getLeaveTransactionService() {
+		return leaveTransactionService;
+	}
+
+	public void setLeaveTransactionService(
+			LeaveTransactionService leaveTransactionService) {
+		this.leaveTransactionService = leaveTransactionService;
+	}
+	
 }

@@ -1,6 +1,8 @@
 package com.beans.leaveapp.batch.service;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.context.ApplicationContext;
@@ -19,16 +21,89 @@ public class MonthlyAddedLeave implements Serializable{
 	EmployeeService employeeService = (EmployeeService) applicationContext.getBean("employeeService");
 	YearlyEntitlementService yearlyEntitlementService = (YearlyEntitlementService) applicationContext.getBean("yearlyEntitlementService");
 	
-	public void MonthlyAddedLeaves() throws Exception {				
+	public void MonthlyAddedLeaves() throws Exception {	
+		
+		int currentDateDay;
+		int currentDateMonth;
+		int currentDateYear;
+		int joinDateday;
+		int joinDateMonth;
+		int joinDateYear;		
+		
+		Date currentDate = new Date();		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currentDate);
+		currentDateDay = cal.get(Calendar.DAY_OF_MONTH);
+		currentDateMonth = cal.get(Calendar.MONTH);
+		currentDateYear = cal.get(Calendar.YEAR);
+		
 		List<Employee> employeeList = employeeService.findByEmployeeTypePermAndCont();
 		for(Employee employee:employeeList){
-			YearlyEntitlement yearlyEntitlement = yearlyEntitlementService.findByEmployeeIdPermAndCont(employee.getId());
-			if(yearlyEntitlement != null){
-			double currentLeaveBalance =yearlyEntitlement.getCurrentLeaveBalance();
-			double currentLeaveBalaceWithAddedLeave = currentLeaveBalance+1.00;			
-			yearlyEntitlement.setcurrentLeaveBalance(currentLeaveBalaceWithAddedLeave);
-			yearlyEntitlementService.update(yearlyEntitlement);
-		}	
+			
+			Date joinDate;
+			joinDate = employee.getJoinDate();
+			if(joinDate != null){
+			cal.setTime(joinDate);
+			joinDateday = cal.get(Calendar.DAY_OF_MONTH);
+			joinDateMonth = cal.get(Calendar.MONTH);
+			joinDateYear = cal.get(Calendar.YEAR);
+		
+				YearlyEntitlement yearlyEntitlement = yearlyEntitlementService.findByEmployeeIdPermAndCont(employee.getId());
+				if(yearlyEntitlement != null){
+					double currentLeaveBalance =yearlyEntitlement.getCurrentLeaveBalance();
+					double currentLeaveBalaceWithAddedLeave = currentLeaveBalance+1.00;			
+					yearlyEntitlement.setcurrentLeaveBalance(currentLeaveBalaceWithAddedLeave);
+					yearlyEntitlementService.update(yearlyEntitlement);
+				}			
+				if(employee.getEmployeeType().getId() == 3){
+				if(yearlyEntitlement != null){
+					if(yearlyEntitlement.getEntitlement() < 16){						
+						if(currentDateMonth == joinDateMonth && currentDateYear != joinDateYear){
+							double entitlement =yearlyEntitlement.getEntitlement();
+							double addedEntitlement = entitlement+1.00;
+							System.out.println(addedEntitlement);
+							yearlyEntitlement.setEntitlement(addedEntitlement);
+							double addToCurrentBalance = addedEntitlement - 12.0;
+							double currentBalance = yearlyEntitlement.getCurrentLeaveBalance();
+							double addedCurrentBalance = currentBalance + addToCurrentBalance;
+							yearlyEntitlement.setcurrentLeaveBalance(addedCurrentBalance);
+							yearlyEntitlementService.update(yearlyEntitlement);
+						}
+						else if((joinDateday == 29 && joinDateMonth == 1)  && (currentDateDay == 1 && currentDateMonth == 2) && (currentDateYear != joinDateYear)){
+							double entitlement =yearlyEntitlement.getEntitlement();
+							double addedEntitlement = entitlement+1.00;
+							System.out.println(addedEntitlement);
+							yearlyEntitlement.setEntitlement(addedEntitlement);
+							double addToCurrentBalance = addedEntitlement - 12.0;
+							double currentBalance = yearlyEntitlement.getCurrentLeaveBalance();
+							double addedCurrentBalance = currentBalance + addToCurrentBalance;
+							yearlyEntitlement.setcurrentLeaveBalance(addedCurrentBalance);
+							yearlyEntitlementService.update(yearlyEntitlement);
+						}				
+					}
+					else if(yearlyEntitlement.getEntitlement() == 16){
+						yearlyEntitlementService.update(yearlyEntitlement);
+						if(currentDateMonth == joinDateMonth && currentDateYear != joinDateYear){
+							double entitlement =yearlyEntitlement.getEntitlement();
+							double addToCurrentBalance = entitlement - 12.0;
+							double currentBalance = yearlyEntitlement.getCurrentLeaveBalance();
+							double addedCurrentBalance = currentBalance + addToCurrentBalance;
+							yearlyEntitlement.setcurrentLeaveBalance(addedCurrentBalance);
+							yearlyEntitlementService.update(yearlyEntitlement);
+						}
+						else if((joinDateday == 29 && joinDateMonth == 1)  && (currentDateDay == 1 && currentDateMonth == 2) && (currentDateYear != joinDateYear)){
+							double entitlement =yearlyEntitlement.getEntitlement();					
+							double addToCurrentBalance = entitlement - 12.0;
+							double currentBalance = yearlyEntitlement.getCurrentLeaveBalance();
+							double addedCurrentBalance = currentBalance + addToCurrentBalance;
+							yearlyEntitlement.setcurrentLeaveBalance(addedCurrentBalance);
+							yearlyEntitlementService.update(yearlyEntitlement);
+						}
+					}			
+				}
+				
+			}	
+		}
 		}	
 	}
 

@@ -72,7 +72,9 @@ public interface LeaveTransactionRepository extends CrudRepository<LeaveTransact
    
    @Query("select l from LeaveTransaction l where employeeId= :employeeId and applicationDate>=:monthFirstDayOfYear and applicationDate<=:applicationDate and leaveType.id in (select l from LeaveType l where name ='TimeInLieu')")
    List<LeaveTransaction> findAllTimeInLieuLeavesAppliedByEmployee(@Param("employeeId")int employeeId, @Param("monthFirstDayOfYear") java.sql.Date monthFirstDayOfYear,@Param("applicationDate") java.sql.Date applicationDate );
-   
+
+   @Query("select l from LeaveTransaction l where id = ? and isDeleted = 0")
+   LeaveTransaction findById(int id);
    @Query("select l from LeaveTransaction l where status in ('Pending','Approved') and employeeId in (select id from Employee e where users.id= :userId) and endDateTime>=:todayDate  and leaveType.id in (select l from LeaveType l where name !='TimeInLieu')")
    List<LeaveTransaction> findAllFutureLeavesOfEmployee(@Param("userId")int userId, @Param("todayDate") java.sql.Date todayDate );
    
@@ -81,9 +83,5 @@ public interface LeaveTransactionRepository extends CrudRepository<LeaveTransact
 
    @Query("select l from LeaveTransaction l where employeeId in (select id from Employee e where users.id= :userId) and leaveType.id in (select l from LeaveType l where name !='TimeInLieu')")
    List<LeaveTransaction> findAllLeavesHistoryOfEmployee(@Param("userId")int userId);
-   
-   
-   
-   
    
   }

@@ -64,10 +64,7 @@ public class UsersServiceImpl implements UsersService {
 		if(usersToBeUpdated == null)
 			 throw new UsersNotFound();
 		usersToBeUpdated.setUsername(users.getUsername());
-		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		String hashedPassword = passwordEncoder.encode(users.getPassword());
-		usersToBeUpdated.setPassword(hashedPassword);
-		usersToBeUpdated.setPassword(hashedPassword);
+		usersToBeUpdated.setPassword(users.getPassword());
 		usersToBeUpdated.setEnabled(users.isEnabled());
 		usersToBeUpdated.setLastModifiedBy(users.getLastModifiedBy());
 		usersToBeUpdated.setLastModifiedTime(users.getLastModifiedTime());
@@ -176,11 +173,9 @@ public class UsersServiceImpl implements UsersService {
 			throw new ChangePasswordException("Invalid old password");
 		}
 		
-		
-		users.setPassword(newPassword);
-		
-		update(users);
-		
+		String hashedPassword = passwordEncoder.encode(newPassword);		
+		users.setPassword(hashedPassword);		
+		update(users);		
 	}
 
 	public RoleService getRoleService() {

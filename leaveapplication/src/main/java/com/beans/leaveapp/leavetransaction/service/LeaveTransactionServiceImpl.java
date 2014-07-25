@@ -224,7 +224,11 @@ public class LeaveTransactionServiceImpl implements LeaveTransactionService {
 	leaveTransactionRepository.save(leaveTransactionPersist);
 	}
 
-
+	@Override
+	public LeaveTransaction findById(int id) {
+		LeaveTransaction leaveTransaction = leaveTransactionRepository.findById(id);
+		return leaveTransaction;
+	}
 	public List<LeaveTransaction> getAllFutureLeavesAppliedByEmployee(int userId, java.sql.Date todayDate) {
 		return leaveTransactionRepository.findAllFutureLeavesOfEmployee(userId, todayDate);
 	}

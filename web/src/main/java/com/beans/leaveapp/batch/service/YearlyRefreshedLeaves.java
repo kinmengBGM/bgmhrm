@@ -47,84 +47,86 @@ public class YearlyRefreshedLeaves implements Serializable{
 			
 		List<YearlyEntitlement> yearlyEntitlementList = yearlyEntitlementService.findByEmployeeIdForRemainingLeaves(employee.getId());
 		for(YearlyEntitlement yearlyEntitlement : yearlyEntitlementList){
-			if(yearlyEntitlement.getLeaveType().getId() == 2){
-				double carryForwardDays = yearlyEntitlement.getCurrentLeaveBalance();
-				double yearlyBalance = carryForwardDays + 12.0;
-				yearlyEntitlement.setYearlyLeaveBalance(yearlyBalance);
-				yearlyEntitlementService.update(yearlyEntitlement);
-			}
-			else if(yearlyEntitlement.getLeaveType().getId() == 3){
-				if(yearBalanceRemaining <= 4){
-					double carryForwardDays = yearlyEntitlement.getCurrentLeaveBalance();
-					double yearlyBalance = carryForwardDays + yearBalanceRemaining + 12.0;
-					yearlyEntitlement.setYearlyLeaveBalance(yearlyBalance);
-					yearlyEntitlementService.update(yearlyEntitlement);
-				}else {
-					double carryForwardDays = yearlyEntitlement.getCurrentLeaveBalance();
-					double yearlyBalance = carryForwardDays + 4.0 + 12.0;
-					yearlyEntitlement.setYearlyLeaveBalance(yearlyBalance);
-					yearlyEntitlementService.update(yearlyEntitlement);
+					if (yearlyEntitlement.getLeaveType().getId() == 1) {
+						if (yearBalanceRemaining <= 4) {
+							double carryForwardDays = yearlyEntitlement.getCurrentLeaveBalance();
+							double yearlyBalance = carryForwardDays + yearBalanceRemaining + 12.0;
+							yearlyEntitlement.setYearlyLeaveBalance(yearlyBalance);
+							yearlyEntitlementService.update(yearlyEntitlement);
+							} 
+						else 
+							{
+							double carryForwardDays = yearlyEntitlement.getCurrentLeaveBalance();
+							double yearlyBalance = carryForwardDays + 4.0 + 12.0;
+							yearlyEntitlement.setYearlyLeaveBalance(yearlyBalance);
+							yearlyEntitlementService.update(yearlyEntitlement);
+							}
+					} 
+					else if (yearlyEntitlement.getLeaveType().getId() == 2) {
+						double carryForwardDays = yearlyEntitlement.getCurrentLeaveBalance();
+						double yearlyBalance = carryForwardDays + 12.0;
+						yearlyEntitlement.setYearlyLeaveBalance(yearlyBalance);
+						yearlyEntitlementService.update(yearlyEntitlement);
+					} 
+					else if (yearlyEntitlement.getLeaveType().getId() == 3) {
+						double entitlement = 14.0;
+						yearlyEntitlement.setEntitlement(entitlement);
+						yearlyEntitlement.setcurrentLeaveBalance(entitlement);
+						yearlyEntitlement.setYearlyLeaveBalance(entitlement);
+						yearlyEntitlementService.update(yearlyEntitlement);
+					}
+					else if (yearlyEntitlement.getLeaveType().getId() == 4) {
+						double entitlement = 30.0;
+						yearlyEntitlement.setEntitlement(entitlement);
+						yearlyEntitlement.setcurrentLeaveBalance(entitlement);
+						yearlyEntitlement.setYearlyLeaveBalance(entitlement);
+						yearlyEntitlementService.update(yearlyEntitlement);
+					} 
+					else if (yearlyEntitlement.getLeaveType().getId() == 5) {
+						double entitlement = 30.0;
+						yearlyEntitlement.setEntitlement(entitlement);
+						yearlyEntitlement.setcurrentLeaveBalance(entitlement);
+						yearlyEntitlement.setYearlyLeaveBalance(entitlement);
+						yearlyEntitlementService.update(yearlyEntitlement);
+					}
+					else if (yearlyEntitlement.getLeaveType().getId() == 6) {
+						double entitlement = 30.0;
+						yearlyEntitlement.setEntitlement(entitlement);
+						yearlyEntitlement.setcurrentLeaveBalance(entitlement);
+						yearlyEntitlement.setYearlyLeaveBalance(entitlement);
+						yearlyEntitlementService.update(yearlyEntitlement);
+					}
+					else if (yearlyEntitlement.getLeaveType().getId() == 7) {
+						double entitlement = 3.0;
+						yearlyEntitlement.setEntitlement(entitlement);
+						yearlyEntitlement.setcurrentLeaveBalance(entitlement);
+						yearlyEntitlement.setYearlyLeaveBalance(entitlement);
+						yearlyEntitlementService.update(yearlyEntitlement);
+					}
+					else if (yearlyEntitlement.getLeaveType().getId() == 8) {
+						double entitlement = 3.0;
+						yearlyEntitlement.setEntitlement(entitlement);
+						yearlyEntitlement.setcurrentLeaveBalance(entitlement);
+						yearlyEntitlement.setYearlyLeaveBalance(entitlement);
+						yearlyEntitlementService.update(yearlyEntitlement);
+					}
+					else if (yearlyEntitlement.getLeaveType().getId() == 9) {
+						double entitlement = 60.0;
+						yearlyEntitlement.setEntitlement(entitlement);
+						yearlyEntitlement.setcurrentLeaveBalance(entitlement);
+						yearlyEntitlement.setYearlyLeaveBalance(entitlement);
+						yearlyEntitlementService.update(yearlyEntitlement);
+					}
+					else if (yearlyEntitlement.getLeaveType().getId() == 10) {
+						double entitlement = 3.0;
+						yearlyEntitlement.setEntitlement(entitlement);
+						yearlyEntitlement.setcurrentLeaveBalance(entitlement);
+						yearlyEntitlement.setYearlyLeaveBalance(entitlement);
+						yearlyEntitlementService.update(yearlyEntitlement);
+					}
 				}
-			}			
-			else if(yearlyEntitlement.getLeaveType().getId() == 6){
-				double entitlement = 14.0;
-				yearlyEntitlement.setEntitlement(entitlement);
-				yearlyEntitlement.setcurrentLeaveBalance(entitlement);
-				yearlyEntitlement.setYearlyLeaveBalance(entitlement);
-				yearlyEntitlementService.update(yearlyEntitlement);
-			}
-			else if(yearlyEntitlement.getLeaveType().getId() == 7){
-				double entitlement = 3.0;
-				yearlyEntitlement.setEntitlement(entitlement);
-				yearlyEntitlement.setcurrentLeaveBalance(entitlement);
-				yearlyEntitlement.setYearlyLeaveBalance(entitlement);
-				yearlyEntitlementService.update(yearlyEntitlement);
-			}
-			else if(yearlyEntitlement.getLeaveType().getId() == 8){
-				double entitlement = 3.0;
-				yearlyEntitlement.setEntitlement(entitlement);
-				yearlyEntitlement.setcurrentLeaveBalance(entitlement);
-				yearlyEntitlement.setYearlyLeaveBalance(entitlement);
-				yearlyEntitlementService.update(yearlyEntitlement);
-			}
-			else if(yearlyEntitlement.getLeaveType().getId() == 9){
-				double entitlement = 60.0;
-				yearlyEntitlement.setEntitlement(entitlement);
-				yearlyEntitlement.setcurrentLeaveBalance(entitlement);
-				yearlyEntitlement.setYearlyLeaveBalance(entitlement);
-				yearlyEntitlementService.update(yearlyEntitlement);
-			}
-			else if(yearlyEntitlement.getLeaveType().getId() == 10){
-				double entitlement = 3.0;
-				yearlyEntitlement.setEntitlement(entitlement);
-				yearlyEntitlement.setcurrentLeaveBalance(entitlement);
-				yearlyEntitlement.setYearlyLeaveBalance(entitlement);
-				yearlyEntitlementService.update(yearlyEntitlement);
-			}
-			else if(yearlyEntitlement.getLeaveType().getId() == 11){
-				double entitlement = 30.0;
-				yearlyEntitlement.setEntitlement(entitlement);
-				yearlyEntitlement.setcurrentLeaveBalance(entitlement);
-				yearlyEntitlement.setYearlyLeaveBalance(entitlement);
-				yearlyEntitlementService.update(yearlyEntitlement);
-			}
-			else if(yearlyEntitlement.getLeaveType().getId() == 12){
-				double entitlement = 30.0;
-				yearlyEntitlement.setEntitlement(entitlement);
-				yearlyEntitlement.setcurrentLeaveBalance(entitlement);
-				yearlyEntitlement.setYearlyLeaveBalance(entitlement);
-				yearlyEntitlementService.update(yearlyEntitlement);
-			}
-			else if(yearlyEntitlement.getLeaveType().getId() == 13){
-				double entitlement = 30.0;
-				yearlyEntitlement.setEntitlement(entitlement);
-				yearlyEntitlement.setcurrentLeaveBalance(entitlement);
-				yearlyEntitlement.setYearlyLeaveBalance(entitlement);
-				yearlyEntitlementService.update(yearlyEntitlement);
 			}
 		}
-			}
-		}		
 	}
 	
 	public EmployeeService getEmployeeService() {

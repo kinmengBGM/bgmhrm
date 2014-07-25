@@ -472,6 +472,20 @@ http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
 	</managed-bean>
 	
 	<managed-bean>
+	<managed-bean-name>updatedAnnualLeaveReportBean</managed-bean-name>
+	<managed-bean-class>com.beans.leaveapp.batch.service.UpdateAnnualLeaveReport</managed-bean-class>
+	<managed-bean-scope>view</managed-bean-scope>
+	<managed-property>
+			<property-name>employeeService</property-name>
+			<value>#{employeeService}</value>
+	</managed-property>
+	<managed-property>
+			<property-name>annualLeaveReportService</property-name>
+			<value>#{annualLeaveReportService}</value>	
+	</managed-property>
+	</managed-bean>
+	
+	<managed-bean>
 		<managed-bean-name>leaveApprovalBean</managed-bean-name>
 		<managed-bean-class>com.beans.leaveapp.applyleave.bean.LeaveApprovalMgmtBean</managed-bean-class>
 		<managed-bean-scope>view</managed-bean-scope>
@@ -495,7 +509,6 @@ http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
 			<property-name>leaveTransactionService</property-name>
 			<value>#{leaveTransactionService}</value>
 		</managed-property>
-		
 	</managed-bean>
 </faces-config>
 

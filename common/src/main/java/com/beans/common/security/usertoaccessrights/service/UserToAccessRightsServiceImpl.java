@@ -51,7 +51,7 @@ public class UserToAccessRightsServiceImpl implements UserToAccessRightsService{
 		userAccessRightsToBeUpdated.setEnabled(userToAccessRights.isEnabled());
 		userAccessRightsToBeUpdated.setDeleted(userToAccessRights.isDeleted());
 		userToAccessRightsRepository.save(userAccessRightsToBeUpdated);
-		}
+		}			
 		return userAccessRightsToBeUpdated;
 	}
 
@@ -95,8 +95,14 @@ public class UserToAccessRightsServiceImpl implements UserToAccessRightsService{
 		 userToAccessRights.setDeleted(userToAccessRights.isDeleted());
 		 userToAccessRightsRepository.save(userToAccessRightsToBeCreated);
 		return userToAccessRightsToBeCreated;
-	}		
+	}
 
+	@Override
+	public UserToAccessRights findByAccessRight(UserToAccessRights userToAccessRights) {
+		UserToAccessRights userToAccessRights1 = userToAccessRightsRepository.findByAccessRight(userToAccessRights.getUsers().getId(),userToAccessRights.getAccessRights().getId());
+		return userToAccessRights1;
+	}	
+	
 	}	
 	
 	

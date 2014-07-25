@@ -46,7 +46,7 @@ public class EmployeeProfileManagementBean implements Serializable{
 	private Users users = new Users();
 	private boolean isRenderAddress = false;
 	private String addressOperation = "Create";
-	private String selectedAddressType = "Permanent";
+	private String selectedAddressType;
 	private boolean isEmployeeCreation = false;
 	private List<Address> existingAddressList = new ArrayList<Address>();
 	private String employeeName = "";

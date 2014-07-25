@@ -13,6 +13,7 @@ import com.beans.common.audit.service.SystemAuditTrailActivity;
 import com.beans.common.audit.service.SystemAuditTrailLevel;
 import com.beans.common.security.users.model.Users;
 import com.beans.leaveapp.address.model.Address;
+import com.beans.leaveapp.address.service.AddressNotFound;
 import com.beans.leaveapp.address.service.AddressService;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.employee.service.EmployeeService;
@@ -29,7 +30,7 @@ public class MyProfileManagementBean implements Serializable{
 	private AddressDataModel addressDataModel;
 	private boolean isRenderAddress = false;
 	private String addressOperation = "Create";
-	private String selectedAddressType = "Permanent";
+	private String selectedAddressType;
 	private Address selectedAddress = new Address();
 	private HashMap<Integer, Address> newAddressMap = new HashMap<Integer, Address>();
 	private List<Address> existingAddressList = new ArrayList<Address>();
@@ -165,10 +166,10 @@ public class MyProfileManagementBean implements Serializable{
 	
 	public void updateAddressToEmployee() {
 		selectedAddress.setAddressType(selectedAddressType);
-		
-		resetAddressOperation();
 		selectedAddress.setLastModifiedBy(actorUsers.getUsername());
 		selectedAddress.setLastModifiedTime(new java.util.Date());
+		
+		resetAddressOperation();
 	}
 	
 	public void deleteAddressToEmployee() {
@@ -185,7 +186,7 @@ public class MyProfileManagementBean implements Serializable{
 	private void resetAddressOperation() {
 		setAddressOperation(false, "Create");
 		setInsertDeleteAddress(true);
-		setSelectedAddressType("Permanent");
+	//	setSelectedAddressType("Permanent");
 	}
 	
 	public void setInsertDeleteAddress(boolean insertDeleteAddress) {

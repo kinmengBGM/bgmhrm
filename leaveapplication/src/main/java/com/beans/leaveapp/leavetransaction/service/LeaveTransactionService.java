@@ -35,6 +35,8 @@ public interface LeaveTransactionService {
     
     void updateLeaveApplicationStatus(LeaveTransaction leaveTransaction);
 
+    public LeaveTransaction findById(int id);
+
     List<LeaveTransaction> getAllFutureLeavesAppliedByEmployee(int employeeId,java.sql.Date todayDate);
    
     List<LeaveTransaction> getAllApprovedLeavesAppliedByEmployee();

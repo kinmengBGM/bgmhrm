@@ -263,5 +263,7 @@ public class MonthlyLeaveReportPrePreparationImpl implements MonthlyLeaveReportP
 	
 	public List<Employee> getAllEmployees(){
 		return employeeRepository.findAllEmployeesForSendingMonthlyLeaveReport();
-	}
+	}	
+
+	
 }

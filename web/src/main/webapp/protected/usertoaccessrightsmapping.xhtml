@@ -25,7 +25,7 @@
 					</h:inputText>					
 					
 				<f:facet name="footer">				
-					<p:commandButton value="Search" update="usersTable" actionListener="#{userToAccessRightsMgmtBean.searchUser}"  ajax="false"></p:commandButton>
+					<p:commandButton value="Search" update="usersTable" actionListener="#{userToAccessRightsMgmtBean.searchUser}"></p:commandButton>
 					<p:commandButton type="reset" value="Reset"></p:commandButton>
 				</f:facet>
 			</p:panelGrid>
@@ -56,33 +56,42 @@
           <h3>Map Access Rights to User #{userToAccessRightsMgmtBean.selectedUsers.username}</h3>        
           <h:form id="assignedAccessRightsTableForm">
         <p:dataTable id="assignedAccessRightsTable" var="userToAccessRights0" value="#{userToAccessRightsMgmtBean.userToAssignedAccessRightsDataModel}"  rowKey="#{userToAccessRights0.id}"
-                 paginator="true" rows="20" scrollable="true" selectionMode="single" emptyMessage="No data found with given criteria" style="width:800">
+                 paginator="true" rows="10" scrollable="true" emptyMessage="No data found with given criteria" >
     
         
-         <p:ajax event="rowSelect" listener="#{userToAccessRightsMgmtBean.onAssignedAccessRightsSelect}" update=":assignedAccessRightsTableForm" oncomplete="PF('cd').show()" />
+          <!-- <p:ajax event="rowSelect" listener="#{userToAccessRightsMgmtBean.onAssignedAccessRightsSelect}" update=":assignedAccessRightsTableForm"/> -->
           
           <p:column id="assignedAccessRightsHeader"  headerText="Assigned Access Right">
             <h:outputText value="#{userToAccessRights0.accessRights.accessRights}" />
           </p:column>      
-        	<p:column id="enabledHeader"  headerText="Enabled" >
+        	<p:column id="disabledHeader"  headerText="Disable" >
             <p:selectBooleanCheckbox value="#{userToAccessRights0.enabled}">
             <f:ajax listener="#{userToAccessRightsMgmtBean.myListener()}"/>
             </p:selectBooleanCheckbox>
+          </p:column>
+          <p:column id="deleteHeader" headerText="Delete">
+          		<p:commandButton icon="ui-icon-trash" actionListener="#{userToAccessRightsMgmtBean.deleteAssignedAccessRights}" update=":assignedAccessRightsTableForm"></p:commandButton>
           </p:column>          
-        </p:dataTable> 	
-					
+        </p:dataTable> 					
 					
 					 <p:commandButton value="Add Access Rights" update=":assignedAccessRightsTableForm" title="Add Access Rights" actionListener="#{userToAccessRightsMgmtBean.assignAccessRightsToUser()}" rendered="#{userToAccessRightsMgmtBean.renderAccessRights == false}"/>
 							      			  
-			      <h:form>			      		
+			      <h:form>
+			            <p:messages autoUpdate="true" showDetail="true"/>			      		
 			     		<p:dataTable id="unAssignedAccessRightsTable" var="accessRights0" value="#{userToAccessRightsMgmtBean.accessRightsDataModel}" rowKey="#{accessRights0.id}" rendered="#{userToAccessRightsMgmtBean.renderAccessRights == true}"
-		               widgetVar="dia" 	 paginator="true" rows="20" scrollable="true" selectionMode="single" emptyMessage="No data found with given criteria" >
+		               widgetVar="dia" 	 paginator="true" rows="20" scrollable="true" selection="#{userToAccessRightsMgmtBean.selectedAccessRightsList}" emptyMessage="No data found with given criteria">
 					     	
-					     <p:ajax event="rowSelect" listener="#{userToAccessRightsMgmtBean.onUnAssignedAccessRightsSelect}" update=":assignedAccessRightsTableForm" oncomplete="PF('addAccessRightsDialog').show()"/> 
+					     <!-- <p:ajax event="rowSelect" listener="#{userToAccessRightsMgmtBean.onUnAssignedAccessRightsSelect}" update=":assignedAccessRightsTableForm" oncomplete="PF('addAccessRightsDialog').show()"/>  -->
 					     	
+					     	 <p:column selectionMode="multiple" style="width:160px;text-align:center"/>
 					     	<p:column id="unAssignedAccessRightsHeader"  headerText="Un Assigned Access Rights" sortBy="accessRights">
 				            <h:outputText value="#{accessRights0.accessRights}" />
 				           </p:column>
+				           <f:facet name="footer">
+            				<p:commandButton value="Add" actionListener="#{userToAccessRightsMgmtBean.addAccessRights}" update=":assignedAccessRightsTableForm"/>
+        					<p:commandButton value="Close" actionListener="#{userToAccessRightsMgmtBean.cancelAccessRights}" update=":assignedAccessRightsTableForm" process="@form" immediate="true" />
+        					</f:facet>
+				           
 			     	</p:dataTable>	
 			     			     	
 			   	</h:form>			   		      			 			     			
@@ -91,18 +100,7 @@
 			     <p:commandButton value="Cancel" actionListener="#{userToAccessRightsMgmtBean.cancelAccessRightsDialog}" oncomplete="PF('assignedAccessRightsDialog').hide()"/>
 			     <p:commandButton value="Submit" actionListener="#{userToAccessRightsMgmtBean.saveUserToAccessRights}" update=":userToAccessRightsTableForm:usersTable"  oncomplete="PF('assignedAccessRightsDialog').hide()" />  
 			    </f:facet> 
-          </p:dialog>
-          <p:dialog header="Assigning Access Rights" widgetVar="addAccessRightsDialog" resizable="false" id="addAccessRightsDlg" modal="true" closable="false" closeOnEscape="false" >	
-						<h:form id="addAccessRightsForm">
-						
-							<p:commandButton value="Add" actionListener="#{userToAccessRightsMgmtBean.addAccessRights}" update=":assignedAccessRightsTableForm:assignedAccessRightsTable" oncomplete="PF('addAccessRightsDialog').hide()" />	
-					
-						</h:form>			
-		  </p:dialog>
-		 <p:confirmDialog message="Are you sure?" header="Deleting Role" severity="alert" widgetVar="cd">
-		 <p:commandButton value="Yes" actionListener="#{userToAccessRightsMgmtBean.deleteAssignedAccessRights}" update=":assignedAccessRightsTableForm" oncomplete="PF('cd').hide();"/>
-			<p:commandButton value="No" onclick="PF('cd').hide();PF('assignedAccessRightsDialog').show();" type="button" />				 
-		 </p:confirmDialog>		  
+          </p:dialog> 				  
           </ui:define>  
   </ui:composition>
   </h:body>

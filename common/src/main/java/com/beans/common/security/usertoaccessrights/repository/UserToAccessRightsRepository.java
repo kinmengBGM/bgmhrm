@@ -17,5 +17,8 @@ public interface UserToAccessRightsRepository extends CrudRepository<UserToAcces
 	
 	@Query("select uar from UserToAccessRights uar join uar.users u where u.id = :userId and isDeleted = 0")
 	List<UserToAccessRights> findByUserId(@Param("userId") int x);	
+	
+	@Query("select uar from UserToAccessRights uar where userid = ? and accessRightsid = ?")
+	UserToAccessRights findByAccessRight(int userId,int accessRightsId);		
 }
 

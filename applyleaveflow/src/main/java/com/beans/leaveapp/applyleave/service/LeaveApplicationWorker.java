@@ -37,6 +37,11 @@ public class LeaveApplicationWorker {
 		}
 	}
 	
+	public static void sendCancelLeaveMail(LeaveTransaction leaveTransaction, String hrName){
+		LeaveApplicationSendingMailServiceImpl sendMailService = new LeaveApplicationSendingMailServiceImpl();
+		sendMailService.sendEmailNotificationForCancelLeave(leaveTransaction, hrName);
+	}
+	
 	public static void updateLeaveBalanceAfterApproval(LeaveTransaction leaveTransaction,Boolean isApproverApproved){
 		log.info("Data coming from process is  leaveTransaction : "+leaveTransaction+" and isApproverApproved :"+isApproverApproved);
 		if(leaveTransaction!=null && isApproverApproved==true)

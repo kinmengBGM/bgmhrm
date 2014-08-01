@@ -33,7 +33,7 @@ public interface LeaveTransactionService {
 	
      List<LeaveTransaction> findByStatus(String status);
     
-    void updateLeaveApplicationStatus(LeaveTransaction leaveTransaction);
+    LeaveTransaction updateLeaveApplicationStatus(LeaveTransaction leaveTransaction);
 
     LeaveTransaction findById(int id);
 

@@ -90,7 +90,7 @@
          noLeaveBalanceDialog.show();
          return;
        }
-       if(!(args.currentBalance >=1.0) &amp;&amp; (args.leaveType=='Annual'))
+       if(!(args.currentBalance >=1.0) &amp;&amp; (args.leaveType=='Annual') &amp;&amp; !(args.isOneYearOver))
        { 
          currentLeaveBalanceDialog.show();
          return;

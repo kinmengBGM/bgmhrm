@@ -22,6 +22,7 @@ import com.beans.common.security.users.model.Users;
 import com.beans.exceptions.BSLException;
 import com.beans.leaveapp.applyleave.model.LeaveApprovalDataModel;
 import com.beans.leaveapp.applyleave.service.LeaveApplicationService;
+import com.beans.leaveapp.applyleave.service.LeaveApplicationWorker;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.beans.leaveapp.leavetransaction.service.LeaveTransactionService;
 import com.beans.leaveapp.monthlyreport.service.SendMonthlyLeaveReportService;
@@ -132,6 +133,16 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	}
 
 	
+	
+	public SendMonthlyLeaveReportService getMonthlyLeaveReportService() {
+		return monthlyLeaveReportService;
+	}
+
+	public void setMonthlyLeaveReportService(
+			SendMonthlyLeaveReportService monthlyLeaveReportService) {
+		this.monthlyLeaveReportService = monthlyLeaveReportService;
+	}
+
 	public Double getCurrentLeaveBalance() {
 		return currentLeaveBalance;
 	}
@@ -216,17 +227,31 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 
 	public void doCancelLeaveTransaction(){
 		// Write code to update yearly balance,current balance and status and send mail to HR and Leave Applicant.
+		try{
 		selectedLeaveRequest.setStatus("Cancelled");
 		selectedLeaveRequest.setLastModifiedBy(actorUsers.getUsername());
 		selectedLeaveRequest.setLastModifiedTime(new Date());
 		selectedLeaveRequest.setYearlyLeaveBalance(selectedLeaveRequest.getYearlyLeaveBalance()+selectedLeaveRequest.getNumberOfDays());
-		leaveTransactionService.updateLeaveApplicationStatus(selectedLeaveRequest);
+		LeaveTransaction leaveTransactionPersist = leaveTransactionService.updateLeaveApplicationStatus(selectedLeaveRequest);
 		
 		// write code for adding this cancelled leave number of days to yearly ettilement table as well annual leave report table
 		
 		yearlyEntitlementService.updateLeaveBalanceAfterCancelled(selectedLeaveRequest.getEmployee().getId(),selectedLeaveRequest.getLeaveType().getId(),selectedLeaveRequest.getNumberOfDays());
 		
 		monthlyLeaveReportService.updateLeaveBalanceAfterCancelled(selectedLeaveRequest);
+		
+		LeaveApplicationWorker.sendCancelLeaveMail(leaveTransactionPersist, actorUsers.getUsername());
+
+		auditTrail.log(SystemAuditTrailActivity.REJECTED, SystemAuditTrailLevel.INFO, getActorUsers().getId(), getActorUsers().getUsername(), getActorUsers().getUsername() + " has cancelled a leave request of " + selectedLeaveRequest.getEmployee().getName() + " due to " + selectedLeaveRequest.getReason());
+		setInsertDeleted(true);
+	    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info : "+getExcptnMesProperty("info.leave.cancel"),"Leave Cancelled"));
+		}catch(BSLException e){
+			FacesMessage msg = new FacesMessage("Error : "+getExcptnMesProperty(e.getMessage()),"Leave Cancel Error");  
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+	        FacesContext.getCurrentInstance().addMessage(null, msg); 
+		}catch(Exception e) {
+			log.error("Error while cancelling leave by "+getActorUsers().getUsername(), e);
+		}
 	}
 	
 	

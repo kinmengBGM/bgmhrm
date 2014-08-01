@@ -509,6 +509,10 @@ http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
 			<property-name>leaveTransactionService</property-name>
 			<value>#{leaveTransactionService}</value>
 		</managed-property>
-	</managed-bean>
+		<managed-property>
+				<property-name>monthlyLeaveReportService</property-name>
+				<value>#{monthlyLeaveReportService}</value>
+			</managed-property>
+		</managed-bean>
 </faces-config>
 

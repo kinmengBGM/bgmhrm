@@ -143,7 +143,7 @@ public class MonthlyLeaveReportPrePreparationImpl implements MonthlyLeaveReportP
 		if(employeeLeaveList!=null && employeeLeaveList.size()>0){
 			for (LeaveType leaveType : employeeLeaveList) {
 				// Discard inserting data for Leave Type Maternity but Gender is F and vice versa
-				if((Leave.MATERNITY.equalsName(leaveType.getName())&& "M".equalsIgnoreCase(employee.getGender())) || (Leave.PATERNITY.equalsName(leaveType.getName())&& "F".equalsIgnoreCase(employee.getGender())))
+				if(Leave.MATERNITY.equalsName(leaveType.getName())&& "M".equalsIgnoreCase(employee.getGender()) || Leave.PATERNITY.equalsName(leaveType.getName())&& "F".equalsIgnoreCase(employee.getGender()))
 					continue;
 				List<MonthlyLeaveReport> yearlyLeaveReportList = new ArrayList<MonthlyLeaveReport>();
 				

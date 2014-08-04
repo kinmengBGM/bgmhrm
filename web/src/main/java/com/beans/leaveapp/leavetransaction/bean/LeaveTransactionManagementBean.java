@@ -1,20 +1,17 @@
 package com.beans.leaveapp.leavetransaction.bean;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.faces.event.AjaxBehaviorEvent;
 
 import org.primefaces.event.SelectEvent;
-import org.primefaces.expression.impl.ThisExpressionResolver;
 
 import com.beans.common.audit.service.AuditTrail;
 import com.beans.common.security.users.model.Users;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.employee.service.EmployeeService;
-import com.beans.leaveapp.employeetype.model.EmployeeType;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransactionsDataModel;
 import com.beans.leaveapp.leavetransaction.service.LeaveTransactionService;
@@ -151,9 +148,7 @@ public class LeaveTransactionManagementBean implements Serializable {
 
 
 		try {
-			if ((getName().equals("")) && (getSearchLeaveType().equals(""))
-					&& (date1 == null)
-					&& getStatus().equals("")) {
+			if (getName().equals("") && getSearchLeaveType().equals("") && date1 == null && getStatus().equals("")) {
 				this.leaveTransactionlist = null;
 				this.leaveTransactionDataModel = null;
 			} else {
@@ -166,12 +161,6 @@ public class LeaveTransactionManagementBean implements Serializable {
 
 				// System.out.println(leaveTransactionlist.size());
 				this.leaveTransactionDataModel = null;
-				if (leaveTransactionlist != null) {
-					// auditTrail.log(SystemAuditTrailActivity.ACCESSED,
-					// SystemAuditTrailLevel.INFO,
-					// actorUsers.getId(),actorUsers.getUsername(),
-					// actorUsers.getUsername()+" searching Entitlement of : "+getEmployeename());
-				}
 			}
 
 		} catch (Exception e) {
@@ -190,7 +179,7 @@ public class LeaveTransactionManagementBean implements Serializable {
 		selectedLeaveTransaction.setEmployee(employee);
 		selectedLeaveTransaction.setLeaveType(leaveType);
 		selectedLeaveTransaction.setLastModifiedBy(actorUsers.getUsername());
-		selectedLeaveTransaction.setLastModifiedTime(new java.util.Date());
+		selectedLeaveTransaction.setLastModifiedTime(new Date());
 		this.getLeaveTransactionService().update(selectedLeaveTransaction);
 		this.setInsert(true);
 	}
@@ -211,7 +200,7 @@ public class LeaveTransactionManagementBean implements Serializable {
 		newLeaveTransaction.setEmployee(employee);
 		newLeaveTransaction.setLeaveType(leaveType);
 		newLeaveTransaction.setCreatedBy(actorUsers.getUsername());
-		newLeaveTransaction.setCreationTime(new java.util.Date());
+		newLeaveTransaction.setCreationTime(new Date());
 		getLeaveTransactionService().create(newLeaveTransaction);
 		this.setInsert(true);
 	}
@@ -251,10 +240,7 @@ public class LeaveTransactionManagementBean implements Serializable {
 
 			if (this.getSelectedLeaveTransaction().getEmployee() != null) {
 				System.out.println(this.selectedLeaveTransaction);
-				leaveTypeList = (List<String>) this
-						.getLeaveTransactionService().findLeaveTypes(
-								selectedLeaveTransaction.getEmployee()
-										.getName().trim());
+				leaveTypeList = (List<String>) this.getLeaveTransactionService().findLeaveTypes(selectedLeaveTransaction.getEmployee().getName().trim());
 				return leaveTypeList;
 			}
 		} catch (Exception e) {
@@ -282,9 +268,6 @@ public class LeaveTransactionManagementBean implements Serializable {
 	public void setInsert(boolean isInsert) {
 		this.isInsert = isInsert;
 	}
-
-	// leaveTransactionReasonList =
-	// Arrays.asList(LeaveTransactionReason.values());
 
 	public String getName() {
 		return name;

@@ -25,7 +25,6 @@ public class EnvironmentProducer {
 
 	@Inject
 	private EntityManagerFactory emf;
-	private BeanManager beanManager;
 	
 	@PersistenceUnit(unitName = "masterDataMysql")
 	@ApplicationScoped

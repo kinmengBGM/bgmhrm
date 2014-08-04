@@ -7,7 +7,6 @@ import java.util.HashSet;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -24,7 +23,6 @@ import com.beans.common.security.users.service.UsersService;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.employee.service.EmployeeNotFound;
 import com.beans.leaveapp.employee.service.EmployeeService;
-import com.beans.leaveapp.montlhyreport.LeaveReportWorker;
 
 
 public class AuthenticationBean implements Serializable{
@@ -97,25 +95,19 @@ public class AuthenticationBean implements Serializable{
 	}
 	
 	public Boolean hasAccess(String key) {
-		if (key != null) {
-			if (accessRightsSet.contains(key)) {
+		if (key != null && accessRightsSet.contains(key)) {
 				return true;
-
-			}
 		}		
 		return false;
 	}
 	
 	public void hasPageAccess(String key) {
-		if (key != null) {
-			if (!accessRightsSet.contains(key)) {
+		if (key != null && !accessRightsSet.contains(key)) {
 				try {
 					FacesContext.getCurrentInstance().getExternalContext().redirect(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/protected/accessdenied.jsf");
 				} catch(IOException e) {
 					e.printStackTrace();
 				}
-
-			}
 		}		
 	}	
 

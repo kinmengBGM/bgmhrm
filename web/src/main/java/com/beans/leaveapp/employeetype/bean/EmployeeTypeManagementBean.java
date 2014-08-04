@@ -11,23 +11,13 @@ import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 
-
-
-
-
-
-
-
-
-
-
 import com.beans.common.audit.service.AuditTrail;
 import com.beans.common.audit.service.SystemAuditTrailActivity;
 import com.beans.common.audit.service.SystemAuditTrailLevel;
 import com.beans.common.security.users.model.Users;
 import com.beans.exceptions.BSLException;
-import com.beans.leaveapp.employeetype.model.EmployeeTypeDataModel;
 import com.beans.leaveapp.employeetype.model.EmployeeType;
+import com.beans.leaveapp.employeetype.model.EmployeeTypeDataModel;
 import com.beans.leaveapp.employeetype.service.EmployeeTypeNotFound;
 import com.beans.leaveapp.employeetype.service.EmployeeTypeService;
 import com.beans.leaveapp.refresh.Refresh;
@@ -117,7 +107,7 @@ public class EmployeeTypeManagementBean extends BaseMgmtBean implements Serializ
 		try{
 		newEmployeeType.setDeleted(false);
 		newEmployeeType.setCreatedBy(getActorUsers().getUsername());
-		newEmployeeType.setCreationTime(new java.util.Date());
+		newEmployeeType.setCreationTime(new Date());
 		getEmployeeTypeService().create(newEmployeeType);
 		setInsertDelete(true);
 		newEmployeeType = new EmployeeType();

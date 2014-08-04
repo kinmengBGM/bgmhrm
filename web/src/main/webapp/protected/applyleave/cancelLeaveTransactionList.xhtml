@@ -94,7 +94,7 @@
 		            			<h:outputText value="Status :"></h:outputText>
 		            			<h:outputText value="#{leaveApprovalBean.selectedLeaveRequest.status}" />
 		            			
-		            			<p:commandButton value="Cancel Leave" actionListener="#{leaveApprovalBean.doCancelLeaveTransaction()}" update=":approvedLeaveForm:approvedLeaveTable" oncomplete="cancelRegistrationVar.show();"></p:commandButton>
+		            			<p:commandButton value="Cancel Leave"  oncomplete="cancelRegistrationVar.show();"></p:commandButton>
 		                </p:panelGrid>
 		             </h:form>
 		      </p:dialog>

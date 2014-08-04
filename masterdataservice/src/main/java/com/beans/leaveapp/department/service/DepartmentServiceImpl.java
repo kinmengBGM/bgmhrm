@@ -66,7 +66,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 				departmentToBeUpDepartment.setName(department.getName());
 				departmentToBeUpDepartment.setDescription(department.getDescription());
 				departmentToBeUpDepartment.setLastModifiedBy(department.getLastModifiedBy());
-				departmentToBeUpDepartment.setLastModifiedTime(new java.util.Date());
+				departmentToBeUpDepartment.setLastModifiedTime(new Date());
 				departmentToBeUpDepartment.setDeleted(department.isDeleted());
 			}
 			return departmentRepository.save(departmentToBeUpDepartment);

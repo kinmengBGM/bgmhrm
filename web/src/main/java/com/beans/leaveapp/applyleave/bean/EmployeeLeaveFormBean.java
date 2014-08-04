@@ -183,11 +183,10 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 	}
 	
 	public String applyLeave() throws LeaveApplicationException, RoleNotFound  {
-		String message=null;
 		
 		if(isEmployeeFinishedOneYear()){
-			if(!Leave.UNPAID.equalsName(leaveType))
-			if(!(numberOfDays<= yearlyEntitlement.getYearlyLeaveBalance())){
+			if(!Leave.UNPAID.equalsName(leaveType) && !(numberOfDays<= yearlyEntitlement.getYearlyLeaveBalance()))
+			{
 				FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.sick.validation"), "Leave error message");  
 				msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 		        FacesContext.getCurrentInstance().addMessage(null, msg);  
@@ -212,25 +211,20 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 		        FacesContext.getCurrentInstance().addMessage(null, msg);  
 		        return "";
 			}
-		} else if(!"Unpaid".equalsIgnoreCase(leaveType)&& StringUtils.isNotBlank(leaveType) && StringUtils.isNotEmpty(leaveType))
+		} else if(!"Unpaid".equalsIgnoreCase(leaveType)&& StringUtils.isNotBlank(leaveType) && StringUtils.isNotEmpty(leaveType) && numberOfDays > yearlyEntitlement.getYearlyLeaveBalance())
 		{
-			if(numberOfDays > yearlyEntitlement.getYearlyLeaveBalance()){
 				FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.sick.validation"), "Leave error message");  
 				msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 		        FacesContext.getCurrentInstance().addMessage(null, msg);  
 		        return "";
-			}
-			
 		}
 		}
 		// checking unpaid leaves allowing only maximum 30 days.
-		if(Leave.UNPAID.equalsName(leaveType)){
-			if(numberOfDays>30){
+		if(Leave.UNPAID.equalsName(leaveType) && numberOfDays>30){
 			FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.unpaid.validation"), "Leave error message");  
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 	        FacesContext.getCurrentInstance().addMessage(null, msg);  
 	        return "";
-			}
 		}
 		if(startDate.after(endDate)) {
 			FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.applyleave.datesRange"), "Leave error message.");
@@ -303,9 +297,9 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 			int day = joinDate.get(Calendar.DAY_OF_MONTH);
 
 			int age = curYear - year;
-			if (curMonth < month || (month == curMonth && curDay < day)) {
+			if (curMonth < month || (month == curMonth && curDay < day))
 			    age--;
-			}
+			
 			if(age>=1)
 				return true;
 		}

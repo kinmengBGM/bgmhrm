@@ -20,7 +20,6 @@ import com.beans.common.audit.service.SystemAuditTrailLevel;
 import com.beans.common.security.accessrights.model.AccessRights;
 import com.beans.common.security.accessrights.service.AccessRightsService;
 import com.beans.common.security.role.model.Role;
-import com.beans.common.security.role.service.RoleNotFound;
 import com.beans.common.security.role.service.RoleService;
 import com.beans.common.security.users.model.Users;
 import com.beans.exceptions.BSLException;

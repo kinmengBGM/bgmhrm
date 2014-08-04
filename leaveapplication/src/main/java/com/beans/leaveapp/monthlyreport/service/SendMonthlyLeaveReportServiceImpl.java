@@ -668,7 +668,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 	}
 	
 	private String formatDate(Date givenDate){
-		return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(givenDate);
+		return new SimpleDateFormat("dd/MM/yyyy").format(givenDate);
 	}
 	
 	private StringBuffer getTimeInLieuYearlyReportForInternship(Employee employee){

@@ -9,33 +9,33 @@ import com.beans.leaveapp.leavetype.model.LeaveType;
 
 public interface LeaveTransactionService {
 
-	public List<LeaveTransaction> findAll();
+	 List<LeaveTransaction> findAll();
 	
-	public List<String> findEmployeeNames();
+	 List<String> findEmployeeNames();
 	
-	public List<String> findLeaveTypes(String name);
+	 List<String> findLeaveTypes(String name);
 	
-	public int create(LeaveTransaction adminLeaveTransaction);
+	 int create(LeaveTransaction adminLeaveTransaction);
 	
-	public void update(LeaveTransaction adminLeaveTransaction);
+	 void update(LeaveTransaction adminLeaveTransaction);
 	
-	public void delete(int id);
+	 void delete(int id);
 	
-	public Employee findByEmployee(String name);
+	 Employee findByEmployee(String name);
 	
-	public LeaveType findByLeaveType(String name, int id);
+	 LeaveType findByLeaveType(String name, int id);
 
-	public List<LeaveTransaction> findByEmployeeORfindByLeaveTypeORLeaveDatesORStatusORAll(String employeename, String leaveType,java.util.Date startDate,String status);
+	 List<LeaveTransaction> findByEmployeeORfindByLeaveTypeORLeaveDatesORStatusORAll(String employeename, String leaveType,Date startDate,String status);
 
-	public List<LeaveTransaction> findByEmployeeORfindByLeaveType(String employeeName, String leaveType);
+	 List<LeaveTransaction> findByEmployeeORfindByLeaveType(String employeeName, String leaveType);
 	
-	public LeaveTransaction insertFromWorkflow(LeaveTransaction leaveTransaction);
+	 LeaveTransaction insertFromWorkflow(LeaveTransaction leaveTransaction);
 	
-    public List<LeaveTransaction> findByStatus(String status);
+     List<LeaveTransaction> findByStatus(String status);
     
     void updateLeaveApplicationStatus(LeaveTransaction leaveTransaction);
 
-    public LeaveTransaction findById(int id);
+    LeaveTransaction findById(int id);
 
     List<LeaveTransaction> getAllFutureLeavesAppliedByEmployee(int employeeId,java.sql.Date todayDate);
    

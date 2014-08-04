@@ -16,7 +16,6 @@ import com.beans.exceptions.BSLException;
 import com.beans.leaveapp.applyleave.model.ApprovalLevelModel;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.employee.service.EmployeeService;
-import com.beans.leaveapp.employee.service.EmployeeServiceImpl;
 import com.beans.leaveapp.jbpm6.util.ApplicationContextProvider;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.beans.leaveapp.leavetype.model.LeaveType;
@@ -145,7 +144,9 @@ public void sendEmailNotificationToLeaveApprover(LeaveTransaction leaveTransacti
 		else 
 			htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##","N/A for Unpaid Leave");
 		
+
 			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<b>"+leaveTransaction.getEmployee().getName()+"</b> has applied for leave and is pending for your approval at <a href='http://localhost:8080/hrm/protected/applyleave/approveleavetasklist.jsf?id="+leaveTransaction.getId()+"'>HRM Application</a>");
+
 			// set email subject
 			email.setSubject("Reg : Leave Approval Required For "+leaveTransaction.getEmployee().getName());
 		
@@ -215,7 +216,6 @@ public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,Boolean 
 	htmlEmailTemplate = htmlEmailTemplate.replace("##endDate##",leaveTransaction.fetchEndTimeStr());
 	htmlEmailTemplate = htmlEmailTemplate.replace("##numberOfDays##",leaveTransaction.getNumberOfDays().toString());
 	htmlEmailTemplate = htmlEmailTemplate.replace("##reason##",leaveTransaction.getReason());
-	htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##",leaveTransaction.getYearlyLeaveBalance().toString());
 	htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalanceLabel##","New Yearly Balance");
 	if(!"Unpaid".equalsIgnoreCase(leaveTransaction.getLeaveType().getName()))
 		htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##",leaveTransaction.getYearlyLeaveBalance().toString());

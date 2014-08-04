@@ -13,7 +13,6 @@ import com.beans.exceptions.BSLException;
 import com.beans.leaveapp.employeetype.model.EmployeeType;
 import com.beans.leaveapp.leavetype.model.LeaveType;
 import com.beans.leaveapp.leavetype.model.LeaveTypeDataModel;
-import com.beans.leaveapp.leavetype.service.LeaveTypeNotFound;
 import com.beans.leaveapp.leavetype.service.LeaveTypeService;
 import com.beans.leaveapp.refresh.Refresh;
 import com.beans.leaveapp.web.bean.BaseMgmtBean;

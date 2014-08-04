@@ -134,19 +134,16 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 		String name = "%" + employeeName.trim() + "%";
 		String leaveName = "%" + leaveType.trim() + "%";
 		List<YearlyEntitlement> yearlyEntitlementList = new LinkedList<YearlyEntitlement>();
-		if (!employeeName.trim().equals("") && (!leaveType.trim().equals(""))) {
-			yearlyEntitlementList = yearlyEntitleRepository
-					.findByEmployeeAndLeaveTypeLike(name, leaveName);
+		if (!employeeName.trim().equals("") && !leaveType.trim().equals("")) {
+			yearlyEntitlementList = yearlyEntitleRepository.findByEmployeeAndLeaveTypeLike(name, leaveName);
 
 			// yearlyEntitlementList =
 			// yearlyEntitleRepository.findByEmployeeOrLeaveTypeLike(employeeName,leaveType);
 
 		} else if (!employeeName.trim().equals("")) {
-			yearlyEntitlementList = yearlyEntitleRepository
-					.findByEmployeeLike(name);
-		} else if (leaveType.trim() != null || !leaveType.trim().equals("")) {
-			yearlyEntitlementList = yearlyEntitleRepository
-					.findByLeaveTypeLike(leaveName);
+			yearlyEntitlementList = yearlyEntitleRepository.findByEmployeeLike(name);
+		} else if (leaveType!=null && (leaveType.trim() != null || !leaveType.trim().equals(""))) {
+			yearlyEntitlementList = yearlyEntitleRepository.findByLeaveTypeLike(leaveName);
 		}
 		return yearlyEntitlementList;
 	}
@@ -258,7 +255,7 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 		for(Leave leaveType : Leave.values()){
 			
 			if(!(leaveType.equalsName(Leave.ANNUAL.toString()) || leaveType.equalsName(Leave.UNPAID.toString()))){
-			if( (newlyRegisteredEmployee.getGender().equals("M")&& leaveType.equalsName(Leave.MATERNITY.toString())) || (newlyRegisteredEmployee.getGender().equals("F")&& leaveType.equalsName(Leave.PATERNITY.toString())))
+			if( newlyRegisteredEmployee.getGender().equals("M")&& leaveType.equalsName(Leave.MATERNITY.toString()) || newlyRegisteredEmployee.getGender().equals("F")&& leaveType.equalsName(Leave.PATERNITY.toString()))
 				continue;
 			leaveTypeBean = leaveTypeRepository.getLeaveTypeByName(leaveType.toString(),newlyRegisteredEmployee.getEmployeeType().getId());
 			if(leaveTypeBean!=null){
@@ -282,8 +279,8 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 				int joinedMonth = newlyRegisteredEmployee.getJoinDate().getMonth();
 				if(joinedDate>15){
 					leaveEntitlement.setcurrentLeaveBalance(-1);
-					leaveEntitlement.setEntitlement(12-(joinedMonth+1));
-					leaveEntitlement.setYearlyLeaveBalance(12-(joinedMonth+1));
+					leaveEntitlement.setEntitlement(12-joinedMonth+1);
+					leaveEntitlement.setYearlyLeaveBalance(12-joinedMonth+1);
 				}
 				else{
 					leaveEntitlement.setcurrentLeaveBalance(0);
@@ -308,8 +305,8 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 			int joinedMonth = newlyRegisteredEmployee.getJoinDate().getMonth();
 			if(joinedDate>15){
 				leaveEntitlement.setcurrentLeaveBalance(-1);
-				leaveEntitlement.setEntitlement(12-(joinedMonth+1));
-				leaveEntitlement.setYearlyLeaveBalance(12-(joinedMonth+1));
+				leaveEntitlement.setEntitlement(12-joinedMonth+1);
+				leaveEntitlement.setYearlyLeaveBalance(12-joinedMonth+1);
 			}
 			else{
 				leaveEntitlement.setcurrentLeaveBalance(0);

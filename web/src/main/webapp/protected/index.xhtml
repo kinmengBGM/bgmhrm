@@ -14,7 +14,7 @@
 
 <ui:define name="title">Beans Leave Application</ui:define>
 	<ui:define name="content">
-	<h:form id="employeeEntitlementForm" rendered="#{authenticationBean.hasAccess('EmployeeHomePage')}">
+	<h:form id="employeeEntitlementForm" rendered="#{!authenticationBean.hasAccess('DirectorHomePage')}">
 	<p:messages  autoUpdate="true"></p:messages>
 	 <p:dataTable id="employeeEntitlementTable" widgetVar="employeeEntitlement" var="employeeEntitlement0" value="#{yearlyEntitlementMgmtBean.employeeYearlyEntitlementDataModel}" rowKey="#{employeeEntitlement0.id}">
           <p:column id="descHeader"><f:facet name="header"> Leave Type </f:facet><h:outputText value="#{employeeEntitlement0.leaveType.name}" /></p:column>
@@ -25,17 +25,16 @@
   		 <h3>Upcoming Leave(s)</h3>
 	<p:dataTable id="employeeFutureLeaveTable" widgetVar="employeeFutureLeaveTable" var="employeeFutureLeave" value="#{leaveApprovalBean.leaveApprovalDataModelFutureLeaves}" rowKey="#{employeeFutureLeave.taskId}">
 				<p:column id="leaveTypeHEader"><f:facet name="header"> Leave Type </f:facet><h:outputText value="#{employeeFutureLeave.leaveType.name}" /></p:column>
-				<p:column id="startDateHeader"><f:facet name="header"> Start Date </f:facet><h:outputText value="#{employeeFutureLeave.startDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /> </h:outputText></p:column>
-				<p:column id="endDateHeader"><f:facet name="header"> End Date </f:facet><h:outputText value="#{employeeFutureLeave.endDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />  </h:outputText></p:column>
+				<p:column id="startDateHeader"><f:facet name="header"> Start Date </f:facet><h:outputText value="#{employeeFutureLeave.startDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy" /> </h:outputText></p:column>
+				<p:column id="endDateHeader"><f:facet name="header"> End Date </f:facet><h:outputText value="#{employeeFutureLeave.endDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy" />  </h:outputText></p:column>
 				<p:column id="noOfDaysHeader"><f:facet name="header"> Number of Days </f:facet><h:outputText value="#{employeeFutureLeave.numberOfDays}" /></p:column>
 				<p:column id="reasonHeader"><f:facet name="header"> Reason </f:facet><h:outputText value="#{employeeFutureLeave.reason}"/></p:column>
 				<p:column id="statusHEader"><f:facet name="header"> Status </f:facet><h:outputText value="#{employeeFutureLeave.status}" /></p:column>
 	</p:dataTable>
    </h:form>  
-	<h:form  rendered="#{!authenticationBean.hasAccess('EmployeeHomePage')}" id="dir_form">
-		<h3>Please click the following link to go to Leave Approval Page</h3>
-		<h:commandLink action="#{authenticationBean.doGoLeaveApprovalPage()}"  value="Click Here"></h:commandLink>
-	</h:form>     
+   <p:panel rendered="#{authenticationBean.hasAccess('DirectorHomePage')}">
+   <ui:include src="/protected/applyleave/approvetasklist_include.xhtml" ></ui:include>
+   </p:panel>
   </ui:define>
 </ui:composition>	
 </h:body>

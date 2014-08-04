@@ -1,17 +1,12 @@
 package com.beans.leaveapp.registeredemployeeemail.service;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.Date;
 
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
-import org.apache.commons.mail.ImageHtmlEmail;
-import org.apache.log4j.chainsaw.Main;
 
 import com.beans.leaveapp.employee.model.RegisteredEmployee;
 import com.beans.util.email.EmailSender;

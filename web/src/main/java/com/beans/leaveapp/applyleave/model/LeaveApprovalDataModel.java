@@ -6,7 +6,6 @@ import javax.faces.model.ListDataModel;
 
 import org.primefaces.model.SelectableDataModel;
 
-import com.beans.leaveapp.employee.model.RegisteredEmployee;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 
 public class LeaveApprovalDataModel extends ListDataModel<LeaveTransaction> implements SelectableDataModel<LeaveTransaction> {

@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.beans.common.security.accessrights.model.AccessRights;
 import com.beans.common.security.accessrights.repository.AccessRightsRepository;
-import com.beans.common.security.role.service.RoleNotFound;
 import com.beans.exceptions.BSLException;
 
 @Service
@@ -74,7 +73,7 @@ public class AccessRightsServiceImpl implements AccessRightsService{
 		accessRightsToBeUpdated.setAccessRights(accessRights.getAccessRights());
 		accessRightsToBeUpdated.setDescription(accessRights.getDescription());
 		accessRightsToBeUpdated.setLastModifiedBy(accessRights.getLastModifiedBy());
-		accessRightsToBeUpdated.setLastModifiedTime(new java.util.Date());
+		accessRightsToBeUpdated.setLastModifiedTime(new Date());
 		accessRightsRepository.save(accessRightsToBeUpdated);		   
 		}
 		return accessRightsToBeUpdated;

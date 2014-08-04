@@ -2,15 +2,12 @@ package com.beans.leaveapp.employee.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -56,9 +53,9 @@ public class Employee implements Serializable {
 	private boolean isDeleted;
 	private boolean isResigned;
 	private String createdBy;
-	private java.util.Date creationTime;
+	private Date creationTime;
 	private String lastModifiedBy;
-	private java.util.Date lastModifiedTime;
+	private Date lastModifiedTime;
 	
 	@Id
 	@GeneratedValue
@@ -246,13 +243,13 @@ public class Employee implements Serializable {
 	public void setResigned(boolean isResigned) {
 		this.isResigned = isResigned;
 	}
-	public void setCreationTime(java.util.Date creationTime) {
+	public void setCreationTime(Date creationTime) {
 		this.creationTime = creationTime;
 	}
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-	public void setLastModifiedTime(java.util.Date lastModifiedTime) {
+	public void setLastModifiedTime(Date lastModifiedTime) {
 		this.lastModifiedTime = lastModifiedTime;
 	}
 	public void setLastModifiedBy(String lastModifiedBy) {
@@ -261,7 +258,7 @@ public class Employee implements Serializable {
 			
 	@Column(name="creationTime",nullable=true)
 	@Temporal(TemporalType.TIMESTAMP)
-	public java.util.Date getCreationTime() {
+	public Date getCreationTime() {
 		return creationTime;
 	}
 	@Column(name="createdBy",nullable=true)
@@ -270,7 +267,7 @@ public class Employee implements Serializable {
 	}
 	@Column(name="lastModifiedTime",nullable=true)
 	@Temporal(TemporalType.TIMESTAMP)
-	public java.util.Date getLastModifiedTime() {
+	public Date getLastModifiedTime() {
 		return lastModifiedTime;
 	}
 	@Column(name="lastModifiedBy",nullable=true)

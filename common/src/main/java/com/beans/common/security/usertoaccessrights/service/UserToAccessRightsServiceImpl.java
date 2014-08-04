@@ -1,12 +1,10 @@
 package com.beans.common.security.usertoaccessrights.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-
 
 import com.beans.common.security.accessrights.model.AccessRights;
 import com.beans.common.security.accessrights.repository.AccessRightsRepository;

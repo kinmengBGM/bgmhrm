@@ -100,7 +100,7 @@ public class EmployeeRegistrationServiceImpl implements
 	public void approveRegistration(RegisteredEmployee registeredEmployee,
 			String actorId) {
 		HashMap<String, Object> resultMap = getContentMapFromRegisteredEmployee(registeredEmployee);
-		resultMap.put("isApproved", new Boolean(true));
+		resultMap.put("isApproved", Boolean.TRUE);
 		long taskId = registeredEmployee.getTaskId();
 		employeeRegistrationRuntime.submitTask(actorId, taskId, resultMap);
 		
@@ -110,7 +110,7 @@ public class EmployeeRegistrationServiceImpl implements
 	public void rejectRegistration(RegisteredEmployee registeredEmployee,
 			String actorId) {
 		HashMap<String, Object> resultMap = getContentMapFromRegisteredEmployee(registeredEmployee);
-		resultMap.put("isApproved", new Boolean(false));
+		resultMap.put("isApproved", Boolean.FALSE);
 		long taskId = registeredEmployee.getTaskId();
 		employeeRegistrationRuntime.submitTask(actorId, taskId, resultMap);
 		

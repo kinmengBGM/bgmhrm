@@ -80,7 +80,7 @@ public class RoleServiceImpl implements RoleService{
 		roleToBeUpdated.setRole(role.getRole());
 		roleToBeUpdated.setDescription(role.getDescription());
 		roleToBeUpdated.setLastModifiedBy(role.getLastModifiedBy());
-		roleToBeUpdated.setLastModifiedTime(new java.util.Date());
+		roleToBeUpdated.setLastModifiedTime(new Date());
 		Set<AccessRights> accessRightsSet = new HashSet<AccessRights>();
 		accessRightsSet.addAll(role.getAccessRights());
 		roleToBeUpdated.setAccessRights(accessRightsSet);

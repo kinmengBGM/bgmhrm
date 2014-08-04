@@ -6,7 +6,6 @@ import javax.faces.model.ListDataModel;
 
 import org.primefaces.model.SelectableDataModel;
 
-import com.beans.common.security.users.model.Users;
 import com.beans.common.security.usertoaccessrights.model.UserToAccessRights;
 
 

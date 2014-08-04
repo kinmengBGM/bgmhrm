@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
@@ -178,7 +177,7 @@ public class EmployeeProfileManagementBean implements Serializable{
 	}
 	
 	public AddressDataModel getAddressDataModel() {
-		if(addressDataModel == null || (insertDeleteAddress == true && isEmployeeCreation == false) ) {
+		if(addressDataModel == null || insertDeleteAddress == true && isEmployeeCreation == false ) {
 			if(selectedEmployee != null && (existingAddressList == null || existingAddressList.size() == 0)) {
 				existingAddressList = addressService.findByEmployeeId(this.selectedEmployee.getId());
 			}

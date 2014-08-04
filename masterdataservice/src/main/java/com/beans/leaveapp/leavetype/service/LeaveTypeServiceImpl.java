@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.beans.exceptions.BSLException;
 import com.beans.leaveapp.employeetype.model.EmployeeType;
@@ -57,7 +56,6 @@ public class LeaveTypeServiceImpl implements LeaveTypeService {
 	@Override
 	public List<LeaveType> findAll() {
 		List<LeaveType> resultList = leaveTypeRepository.findByisDeleted(0);
-		List<LeaveType> list = new LinkedList<LeaveType>();
 		/*for(LeaveType leaveType: resultList){
 			//EmployeeType e = employeeTypeRepository.findOne();
 			// String employeeTypeName = e.getName();

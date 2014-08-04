@@ -1,20 +1,15 @@
 package com.beans.leaveapp.employee.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.beans.common.audit.service.AuditTrail;
-import com.beans.common.audit.service.SystemAuditTrailActivity;
-import com.beans.common.audit.service.SystemAuditTrailLevel;
 import com.beans.common.security.users.model.Users;
 import com.beans.common.security.users.service.UsersNotFound;
 import com.beans.common.security.users.service.UsersService;
@@ -37,7 +32,6 @@ import com.beans.leaveapp.employeetype.service.EmployeeTypeService;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 	@Resource
 	EmployeeRepository employeeRepository;
 	
@@ -216,14 +210,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 				
 			}
 			
-			if(existingAddressList != null) {
-				if(existingAddressList.size() > 0) {
+			if(existingAddressList != null && existingAddressList.size() > 0) {
 					Iterator<Address> existingAddressIterator = existingAddressList.iterator();
 					while(existingAddressIterator.hasNext()) {
 						Address currentAddress = existingAddressIterator.next();
 						addressService.update(currentAddress);
 					}
-				}
 			}
 			if(users!=null) {
 				users.setLastModifiedBy(employee.getLastModifiedBy());

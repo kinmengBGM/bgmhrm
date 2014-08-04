@@ -8,25 +8,25 @@ import com.beans.leaveapp.address.model.Address;
 import com.beans.leaveapp.employee.model.Employee;
 
 public interface EmployeeService {
-	public Employee create(Employee employee);
-	public Employee delete(int id) throws EmployeeNotFound;
+	 Employee create(Employee employee);
+	 Employee delete(int id) throws EmployeeNotFound;
 	
-	public List<Employee> findAll();
-	public Employee update(Employee employee) throws EmployeeNotFound;
-	public Employee findById(int id) throws EmployeeNotFound;
+	 List<Employee> findAll();
+	 Employee update(Employee employee) throws EmployeeNotFound;
+	 Employee findById(int id) throws EmployeeNotFound;
 	
-	public Employee createEmployee(Employee employee, int employeeGradeId, int employeeTypeId, int departmentId, Users users, HashMap<Integer, Address> newAddressMap);
-	public Employee updateEmployee(Employee employee, int employeeGradeId, int employeeTypeId, int departmentId, Users users, List<Address> existingAddressList, HashMap<Integer, Address> newAddressMap);
-	public Employee findByUsername(String username) throws EmployeeNotFound;
+	 Employee createEmployee(Employee employee, int employeeGradeId, int employeeTypeId, int departmentId, Users users, HashMap<Integer, Address> newAddressMap);
+	 Employee updateEmployee(Employee employee, int employeeGradeId, int employeeTypeId, int departmentId, Users users, List<Address> existingAddressList, HashMap<Integer, Address> newAddressMap);
+	 Employee findByUsername(String username) throws EmployeeNotFound;
 	
-	public List<Employee> findEmployeeByNameOrEmployeeNumberOrBoth(String name, String employeeNumber);
-	public Employee findByEmployee(String employeeName);
-	public List<Employee> findByEmployeeTypePermAndCont();
-	public List<Employee> findByEmployeeTypePerm();
+	 List<Employee> findEmployeeByNameOrEmployeeNumberOrBoth(String name, String employeeNumber);
+	 Employee findByEmployee(String employeeName);
+	 List<Employee> findByEmployeeTypePermAndCont();
+	 List<Employee> findByEmployeeTypePerm();
 
-	List<Employee> findAllEmployeesByRole(String role);
+	 List<Employee> findAllEmployeesByRole(String role);
 	
-	String getFullNameOfEmployee(String userName);
+	 String getFullNameOfEmployee(String userName);
 	
 	
 }

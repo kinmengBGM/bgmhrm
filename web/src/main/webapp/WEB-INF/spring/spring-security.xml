@@ -9,7 +9,7 @@
 	<http auto-config="true">
 		<intercept-url pattern="/protected/*" access="ROLE_USER" />
 		<intercept-url pattern="/protected/*/*" access="ROLE_USER" />
-		<form-login login-page="/login.jsf" default-target-url="/protected/index.jsf" authentication-failure-url="/login.jsf" authentication-success-handler-ref="myAuthenticationSuccessHandler"/>
+		<form-login login-page="/login.jsf" default-target-url="/protected/index.jsf" authentication-failure-url="/login.jsf"/>
 		<logout logout-success-url="/login.jsf" />			
 	</http>	
  

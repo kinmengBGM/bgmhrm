@@ -12,8 +12,6 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
 
-import com.beans.common.security.role.model.Role;
-
 @Entity
 @Table(name="AccessRights")
 public class AccessRights implements Serializable{	
@@ -26,9 +24,9 @@ public class AccessRights implements Serializable{
 	private String accessRights;
 	private String description;    	
 	private String createdBy;
-	private java.util.Date creationTime;
+	private Date creationTime;
 	private String lastModifiedBy;
-	private java.util.Date lastModifiedTime;
+	private Date lastModifiedTime;
 	private boolean isDeleted = false;   
 	   
 
@@ -90,13 +88,13 @@ public class AccessRights implements Serializable{
 		this.isDeleted = isDeleted;
 	}		
 	
-	public void setCreationTime(java.util.Date creationTime) {
+	public void setCreationTime(Date creationTime) {
 		this.creationTime = creationTime;
 	}
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-	public void setLastModifiedTime(java.util.Date lastModifiedTime) {
+	public void setLastModifiedTime(Date lastModifiedTime) {
 		this.lastModifiedTime = lastModifiedTime;
 	}
 	public void setLastModifiedBy(String lastModifiedBy) {
@@ -105,7 +103,7 @@ public class AccessRights implements Serializable{
 			
 	@Column(name="creationTime",nullable=true)
 	@Temporal(TemporalType.TIMESTAMP)
-	public java.util.Date getCreationTime() {
+	public Date getCreationTime() {
 		return creationTime;
 	}
 	@Column(name="createdBy",nullable=true)
@@ -114,7 +112,7 @@ public class AccessRights implements Serializable{
 	}
 	@Column(name="lastModifiedTime",nullable=true)
 	@Temporal(TemporalType.TIMESTAMP)
-	public java.util.Date getLastModifiedTime() {
+	public Date getLastModifiedTime() {
 		return lastModifiedTime;
 	}
 	@Column(name="lastModifiedBy",nullable=true)

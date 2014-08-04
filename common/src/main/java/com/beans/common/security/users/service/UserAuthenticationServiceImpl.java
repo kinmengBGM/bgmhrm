@@ -15,7 +15,7 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService,
 			throws UsernameNotFoundException {
 		Users user = null;
 		try {
-			user = (username != null && !username.equals("")) ? userService.findByUsername(username) : null;
+			user = username != null && !username.equals("") ? userService.findByUsername(username) : null;
 	        if (user == null || user.getPassword() == null) {
 	            throw new UsernameNotFoundException("No such user: " + username);
 	        }

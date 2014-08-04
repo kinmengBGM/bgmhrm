@@ -6,10 +6,10 @@ import com.beans.leaveapp.department.model.Department;
 
 
 public interface DepartmentService {
-	public Department create(Department department);
-	public Department delete(int id);
+	 Department create(Department department);
+	 Department delete(int id);
 	
-	public List<Department> findAll();
-	public Department update(Department department);
-	public Department findById(int id) throws DepartmentNotFound;
+	 List<Department> findAll();
+	 Department update(Department department);
+	 Department findById(int id) throws DepartmentNotFound;
 }

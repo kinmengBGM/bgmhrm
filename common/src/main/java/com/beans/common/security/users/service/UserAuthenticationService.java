@@ -5,5 +5,5 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public interface UserAuthenticationService {
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException;
+	UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException;
 }

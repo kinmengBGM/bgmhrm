@@ -6,10 +6,10 @@ import com.beans.leaveapp.address.model.Address;
 
 
 public interface AddressService {
-	public Address create(Address address);
-	public Address delete(int id) throws AddressNotFound;
-	public Address update(Address address) throws AddressNotFound;
-	public List<Address> findAll();
-	public Address findById(int id) throws AddressNotFound;
-	public List<Address> findByEmployeeId(int employeeId);
+	 Address create(Address address);
+	 Address delete(int id) throws AddressNotFound;
+	 Address update(Address address) throws AddressNotFound;
+	 List<Address> findAll();
+	 Address findById(int id) throws AddressNotFound;
+	 List<Address> findByEmployeeId(int employeeId);
 }

@@ -8,14 +8,14 @@ import com.beans.common.security.accessrights.model.AccessRights;
 public interface AccessRightsService {
 
 	
-	public AccessRights create(AccessRights accessRights);
-	public AccessRights delete(int id);
-	public List<AccessRights> findAll();
-	public AccessRights update(AccessRights accessRights);
-	public AccessRights findById(int id) throws AccessRightsNotFound;	
-	public Set<AccessRights> findAllInSet();
-	public List<AccessRights> findAccessRightsByAccessRight(String accessRight);
-	public AccessRights findAccessRights(String accessRight);
+	 AccessRights create(AccessRights accessRights);
+	 AccessRights delete(int id);
+	 List<AccessRights> findAll();
+	 AccessRights update(AccessRights accessRights);
+	 AccessRights findById(int id) throws AccessRightsNotFound;	
+	 Set<AccessRights> findAllInSet();
+	 List<AccessRights> findAccessRightsByAccessRight(String accessRight);
+	 AccessRights findAccessRights(String accessRight);
 	
 }
 

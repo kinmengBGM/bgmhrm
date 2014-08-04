@@ -31,13 +31,13 @@ public class EmployeeRegistrationWorker {
 		employee.setWorkEmailAddress(registeredEmployee.getWorkEmailAddress());
 		employee.setJoinDate(registeredEmployee.getJoinDate());
 		employee.setCreatedBy(employee.getName());
-		employee.setCreationTime(new java.util.Date());
+		employee.setCreationTime(new Date());
 		Users user = new Users();
 		user.setUsername(registeredEmployee.getUsername());
 		user.setPassword(registeredEmployee.getPassword());
 		user.setEnabled(true);
 		user.setCreatedBy(employee.getName());
-		user.setCreationTime(new java.util.Date());
+		user.setCreationTime(new Date());
 		
 		
 		employeeService.createEmployee(employee, registeredEmployee.getEmployeeGradeId(), registeredEmployee.getEmployeeTypeId(), registeredEmployee.getDepartmentId(), user, new HashMap<Integer, Address>());

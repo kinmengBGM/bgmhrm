@@ -7,13 +7,12 @@ import com.beans.common.audit.model.SystemAuditTrail;
 
 public interface SystemAuditTrailRecordService {
 
-	public SystemAuditTrail create(SystemAuditTrail systemAuditTrail);
-	public SystemAuditTrail delete(int id) throws Exception;
-	
-	public List<SystemAuditTrail> findAll();
-	public SystemAuditTrail update(SystemAuditTrail systemAuditTrail) throws Exception;
-	public SystemAuditTrail findById(int id) throws Exception;
-	public List<SystemAuditTrail> findSelectedDates(Date date1,Date date2,String activity);
+	 SystemAuditTrail create(SystemAuditTrail systemAuditTrail);
+	 SystemAuditTrail delete(int id) throws Exception;
+	 List<SystemAuditTrail> findAll();
+	 SystemAuditTrail update(SystemAuditTrail systemAuditTrail) throws Exception;
+	 SystemAuditTrail findById(int id) throws Exception;
+	 List<SystemAuditTrail> findSelectedDates(Date date1,Date date2,String activity);
 		
 }
 

@@ -2,7 +2,6 @@ package com.beans.leaveapp.applyleave.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,6 @@ import com.beans.exceptions.BSLException;
 import com.beans.leaveapp.applyleave.model.ApprovalLevelModel;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.jbpm6.util.JBPM6Runtime;
-import com.beans.leaveapp.leaveapplicationcomment.model.LeaveApplicationComment;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.beans.leaveapp.leavetransaction.service.LeaveTransactionService;
 import com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement;
@@ -226,23 +224,7 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 		
 	}
 
-	private HashMap<String,Object> getContentMapFromSelectedLeaveRequest(LeaveTransaction leaveTransaction) throws RoleNotFound
-	{
-		Set<Role> userRoles = leaveTransaction.getEmployee().getUsers().getUserRoles();
-		
-		if(!isEmployee(userRoles)) {
-			throw new RoleNotFound("You are not an employee.");
-		}
-		Role assignedRoleInLeaveFlow = getHighestRoleOfEmployee(userRoles);
-		ApprovalLevelModel approvalLevelModel = new ApprovalLevelModel();
-		approvalLevelModel.setRole(assignedRoleInLeaveFlow.getRole());
-		
-		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
-		parameterMap.put("leaveTransaction", leaveTransaction);
-		parameterMap.put("isApproverApproved", Boolean.TRUE);
-		
-		return parameterMap;
-	}
+	
 	@Override
 	public void rejectLeaveOfEmployee(LeaveTransaction leaveTransaction, String actorId) {
 		try{

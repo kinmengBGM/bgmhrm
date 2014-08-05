@@ -14,7 +14,7 @@
 
 <ui:define name="title">Beans Leave Application</ui:define>
 	<ui:define name="content">
-	<h:form id="employeeEntitlementForm" rendered="#{!authenticationBean.hasAccess('DirectorHomePage')}">
+	<h:form id="employeeEntitlementForm" rendered="#{!authenticationBean.hasAccess('DirectorHomePage') and !authenticationBean.hasAccess('AdminFunctions') }">
 	<p:messages  autoUpdate="true"></p:messages>
 	 <p:dataTable id="employeeEntitlementTable" widgetVar="employeeEntitlement" var="employeeEntitlement0" value="#{yearlyEntitlementMgmtBean.employeeYearlyEntitlementDataModel}" rowKey="#{employeeEntitlement0.id}">
           <p:column id="descHeader"><f:facet name="header"> Leave Type </f:facet><h:outputText value="#{employeeEntitlement0.leaveType.name}" /></p:column>
@@ -32,7 +32,7 @@
 				<p:column id="statusHEader"><f:facet name="header"> Status </f:facet><h:outputText value="#{employeeFutureLeave.status}" /></p:column>
 	</p:dataTable>
    </h:form>  
-   <p:panel rendered="#{authenticationBean.hasAccess('DirectorHomePage')}">
+   <p:panel rendered="#{authenticationBean.hasAccess('DirectorHomePage') and !authenticationBean.hasAccess('AdminFunctions') }">
    <ui:include src="/protected/applyleave/approvetasklist_include.xhtml" ></ui:include>
    </p:panel>
   </ui:define>

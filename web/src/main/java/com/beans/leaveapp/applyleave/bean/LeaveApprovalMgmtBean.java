@@ -47,7 +47,6 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	private LeaveTransaction selectedLeaveRequest;
 	private YearlyEntitlementService yearlyEntitlementService;
 	private Double currentLeaveBalance;
-	private boolean dialogBoxRendered;
 	private String param;
 	private SendMonthlyLeaveReportService monthlyLeaveReportService;
 	
@@ -266,7 +265,6 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	public void showDialogBox(){
 		if(param != null){
 		int leaveTransactionId = Integer.parseInt(param);
-	//	int leaveTransactionId = 1;
 		LeaveTransaction leaveTransaction = leaveTransactionService.findById(leaveTransactionId);
 		
 		if(leaveTransaction != null && "Pending".equalsIgnoreCase(leaveTransaction.getStatus())){
@@ -277,15 +275,8 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		RequestContext.getCurrentInstance().execute("leaveRequestDialogVar.show();");
 		}
 		}	
-		}
-	
-	public boolean isDialogBoxRendered() {
-		return dialogBoxRendered;
-	}
+		}	
 
-	public void setDialogBoxRendered(boolean dialogBoxRendered) {
-		this.dialogBoxRendered = dialogBoxRendered;
-	}
 
 	public LeaveTransactionService getLeaveTransactionService() {
 		return leaveTransactionService;

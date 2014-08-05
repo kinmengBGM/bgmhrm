@@ -23,6 +23,10 @@
 				<p:column id="reasonHeader"><f:facet name="header"> Reason </f:facet><h:outputText value="#{approveLeave0.reason}"/></p:column>
 			</p:dataTable>
 		</h:form>
+		
+	<h:form>
+		<p:remoteCommand name="showDialog" action="#{leaveApprovalBean.showDialogBox}" autoRun="true" update=":leaveRequestDialogForm"></p:remoteCommand>
+	</h:form>
 	
           <p:dialog header="Approve Leave Request" styleClass="dlgCSS" widgetVar="leaveRequestDialogVar" resizable="false" id="leaveRequestDialog" modal ="true">
                <h:form id="leaveRequestDialogForm">

@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.persistence.EntityManagerFactory;
 
 import org.jbpm.services.task.utils.ContentMarshallerHelper;
@@ -47,7 +49,7 @@ public class JBPM6Runtime {
 		runtimeEnvironmentBuilder.entityManagerFactory(entityManagerFactory);
 		runtimeEnvironmentBuilder.userGroupCallback(userGroupCallback);
 		RuntimeEnvironment runtimeEnvironment = runtimeEnvironmentBuilder.get();
-		manager = RuntimeManagerFactory.Factory.get().newPerProcessInstanceRuntimeManager(runtimeEnvironment, identifier);
+		manager = RuntimeManagerFactory.Factory.get().newSingletonRuntimeManager(runtimeEnvironment, identifier);
 		
 	}	
 	

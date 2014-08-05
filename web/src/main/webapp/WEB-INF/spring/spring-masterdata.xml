@@ -58,7 +58,7 @@
 	<bean id="annualLeaveReport" class="com.beans.leaveapp.monthlyreport.model.AnnualLeaveReport"/>
 	<bean id="annualLeaveReportService" class="com.beans.leaveapp.monthlyreport.service.AnnualLeaveReportServiceImpl"></bean>
 	<bean id="monthlyLeaveReport" class="com.beans.leaveapp.monthlyreport.model.MonthlyLeaveReport"/>
-	<bean id="monthlyLeaveReportService" class="com.beans.leaveapp.monthlyreport.service.MonthlyLeaveReportPrePreparationImpl"/>
+	<bean id="monthlyLeaveReportService" class="com.beans.leaveapp.monthlyreport.service.SendMonthlyLeaveReportServiceImpl"/>
 
 </beans>
 

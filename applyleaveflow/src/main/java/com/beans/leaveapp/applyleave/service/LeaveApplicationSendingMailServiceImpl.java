@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
@@ -93,21 +96,18 @@ public class LeaveApplicationSendingMailServiceImpl {
 		} catch (EmailException e2) {
 			e2.printStackTrace();
 		}
-
 		// send the email
-			EmailSender.sendEmail(email);
+			LeaveApplicationSendingMailServiceImpl.sendEMail(email);
 			System.out.println("Email has been sent successfully to Leave Applicant");
-		
 		}catch(Exception e){
 			e.printStackTrace();
 			throw new BSLException("err.leave.emailSendFailToApplicant");
 		}
-
 	}
 
 	
 public void sendEmailNotificationToLeaveApprover(LeaveTransaction leaveTransaction,ApprovalLevelModel approvalBean) {
-		try{
+	try{
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("leaveApproverMailTemplate.html");
 		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 		BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -172,14 +172,9 @@ public void sendEmailNotificationToLeaveApprover(LeaveTransaction leaveTransacti
 		} catch (EmailException e2) {
 			e2.printStackTrace();
 		}
-
 		// send the email
-		try {
-			EmailSender.sendEmail(email);
+			LeaveApplicationSendingMailServiceImpl.sendEMail(email);
 			System.out.println("Email has been sent successfully to Leave Approver");
-		} catch (EmailException e) {
-			e.printStackTrace();
-		}
 		}catch(Exception e){
 			e.printStackTrace();
 			throw new BSLException("err.leave.emailSendFailToApprover");
@@ -253,19 +248,97 @@ public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,Boolean 
 	} catch (EmailException e2) {
 		e2.printStackTrace();
 	}
-
 	// send the email
-	try {
-		EmailSender.sendEmail(email);
+		LeaveApplicationSendingMailServiceImpl.sendEMail(email);
 		System.out.println("Email has been sent successfully to HR");
-	} catch (EmailException e) {
-		e.printStackTrace();
-	}
 	}catch(Exception e){
 		e.printStackTrace();
 		throw new BSLException("err.leave.emailSendFailToHR");
 	}
 }
+
+public void sendEmailNotificationForCancelLeave(LeaveTransaction leaveTransaction,String hrName) {
+	try {
+	InputStream inputStream = getClass().getClassLoader().getResourceAsStream("leaveCancelMailTemplate.html");
+	InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+	BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+	// read file into string
+	String line = null;
+
+	StringBuilder responseData = new StringBuilder();
+	try {
+		while ((line = bufferedReader.readLine()) != null) {
+			responseData.append(line);
+		}
+	} catch (IOException e3) {
+		e3.printStackTrace();
+	}
+	// load your HTML email template
+	String htmlEmailTemplate = responseData.toString();
+	
+	// create the email message
+	HtmlEmail email = new HtmlEmail();
+
+	// replacing the employee details in HTML
+	htmlEmailTemplate = htmlEmailTemplate.replaceAll("##employeeName##",leaveTransaction.getEmployee().getName());
+	htmlEmailTemplate = htmlEmailTemplate.replace("##leaveType##",leaveTransaction.getLeaveType().getDescription());
+	htmlEmailTemplate = htmlEmailTemplate.replace("##startDate##",leaveTransaction.fetchStartTimeStr());
+	htmlEmailTemplate = htmlEmailTemplate.replace("##endDate##",leaveTransaction.fetchEndTimeStr());
+	htmlEmailTemplate = htmlEmailTemplate.replace("##numberOfDays##",leaveTransaction.getNumberOfDays().toString());
+	htmlEmailTemplate = htmlEmailTemplate.replace("##reason##",leaveTransaction.getReason());
+	if(!"Unpaid".equalsIgnoreCase(leaveTransaction.getLeaveType().getName()))
+			htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##",leaveTransaction.getYearlyLeaveBalance().toString());
+	else 
+		htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##","N/A for Unpaid Leave");
+	
+	
+		htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<br/> Leave is cancelled by <b>"+getEmployeeService().getFullNameOfEmployee(hrName)+"</b> due to <b>"+leaveTransaction.getRejectReason()+"</b>. Details of cancelled leave application are as shown below:");
+		// set email subject
+		email.setSubject("Reg : Leave Application Cancelled");
+	// add reciepiant email address
+	try {
+		if(leaveTransaction.getEmployee().getWorkEmailAddress()!=null && !leaveTransaction.getEmployee().getWorkEmailAddress().equals(""))
+		email.addTo(leaveTransaction.getEmployee().getWorkEmailAddress(), leaveTransaction.getEmployee().getName());
+		
+	} catch (EmailException e) {
+		e.printStackTrace();
+	}
+	
+	// Get all users with role ROLE_TEAMLEAD
+	List<Employee> hrEmpolyeeList = getEmployeeService().findAllEmployeesByRole("ROLE_HR");
+	
+	List<String> emailList = new ArrayList<String>();
+	// add reciepiant email address
+	for (Employee employee : hrEmpolyeeList) {
+		emailList.add(employee.getWorkEmailAddress());
+	}
+	try {
+		email.addTo( emailList.toArray(new String[emailList.size()]));
+	} catch (EmailException e) {
+		e.printStackTrace();
+	}
+	
+	
+	
+	// set the html message
+	try {
+		email.setHtmlMsg(htmlEmailTemplate);
+	} catch (EmailException e2) {
+		e2.printStackTrace();
+	}
+	// send the email
+		LeaveApplicationSendingMailServiceImpl.sendEMail(email);
+		System.out.println("Email has been sent successfully to Leave Applicant and HRs");
+	}catch(Exception e){
+		e.printStackTrace();
+		throw new BSLException("err.leave.emailSendFailToApplicant");
+	}
+}
+
+
+
+
 
 	private EmployeeService getEmployeeService()
 	{
@@ -287,5 +360,18 @@ public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,Boolean 
 		service.sendEmailNotificationToLeaveApprover(leave, approvalBean);
 		service.sendEmailNotificationToHR(leave, null, "xx");
 	}
-	
+
+	private static void  sendEMail(final HtmlEmail email){
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
+		executorService.execute(new Runnable() {
+		    public void run() {
+		        try {
+					EmailSender.sendEmail(email);
+				} catch (EmailException e) {
+					e.printStackTrace();
+				}
+		    }
+		});
+		executorService.shutdown();
+	}
 }

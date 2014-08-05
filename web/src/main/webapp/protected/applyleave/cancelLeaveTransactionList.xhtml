@@ -50,7 +50,7 @@
 			<ui:insert name="content" >
 				  <h1>Approved Leave Request(s)</h1>
 					<h:form id="approvedLeaveForm">
-						<p:messages autoUpdate="true"  showDetail="true" severity="info"/>
+						<p:messages autoUpdate="true"  severity="info"/>
 						<p:dataTable id="approvedLeaveTable" widgetVar="approvedLeaveTableVar" var="approvedLeave" value="#{leaveApprovalBean.leaveApprovalDataModelApprovedLeaves}" 
 													selection="#{leaveApprovalBean.selectedLeaveRequest}" selectionMode="single" rowKey="#{approvedLeave.taskId}"
 													 rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">

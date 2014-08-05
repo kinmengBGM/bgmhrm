@@ -84,6 +84,7 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 		}
 		RequestContext.getCurrentInstance().addCallbackParam("currentBalance", yearlyEntitlement.getCurrentLeaveBalance());
 		RequestContext.getCurrentInstance().addCallbackParam("leaveType", leaveType);
+		RequestContext.getCurrentInstance().addCallbackParam("isOneYearOver", isEmployeeFinishedOneYear());
 	}
 	
 	

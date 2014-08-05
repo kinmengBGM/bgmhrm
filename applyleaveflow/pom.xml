@@ -107,16 +107,6 @@
       <artifactId>seam-transaction</artifactId>
       <version>3.1.0.Final</version>
     </dependency>
-    
-    
-    <dependency>
-		<groupId>jboss</groupId>
-		<artifactId>jboss-client</artifactId>
-		<version>6.2</version>
-		<scope>system</scope>
-		<systemPath>/opt/EAP-6.2.0/jboss-eap-6.2/bin/client/jboss-client.jar</systemPath>
-	</dependency>
-    
   </dependencies>
 <distributionManagement>
   <repository>

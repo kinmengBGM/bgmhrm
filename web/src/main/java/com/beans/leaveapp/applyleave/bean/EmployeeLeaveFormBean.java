@@ -196,12 +196,6 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 		}
 		else
 		{
-		if(numberOfDays<0.5){
-			FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.applyleave.numberofdays"), "Leave error message");  
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-	        FacesContext.getCurrentInstance().addMessage(null, msg);  
-	        return "";
-		}
 		// validating applied leaves is in the range of current balance - applied leaves > = -3
 		if("Annual".equalsIgnoreCase(leaveType)&& StringUtils.isNotBlank(leaveType) && StringUtils.isNotEmpty(leaveType)){
 			
@@ -219,6 +213,12 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 		        FacesContext.getCurrentInstance().addMessage(null, msg);  
 		        return "";
 		}
+		}
+		if(numberOfDays<0.5){
+			FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.applyleave.numberofdays"), "Leave error message");  
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+	        FacesContext.getCurrentInstance().addMessage(null, msg);  
+	        return "";
 		}
 		// checking unpaid leaves allowing only maximum 30 days.
 		if(Leave.UNPAID.equalsName(leaveType) && numberOfDays>30){

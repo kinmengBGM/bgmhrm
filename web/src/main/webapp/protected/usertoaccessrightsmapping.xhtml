@@ -64,7 +64,7 @@
           <p:column id="assignedAccessRightsHeader"  headerText="Assigned Access Right">
             <h:outputText value="#{userToAccessRights0.accessRights.accessRights}" />
           </p:column>      
-        	<p:column id="disabledHeader"  headerText="Disable" >
+        	<p:column id="disabledHeader"  headerText="Enabled" >
             <p:selectBooleanCheckbox value="#{userToAccessRights0.enabled}">
             <f:ajax listener="#{userToAccessRightsMgmtBean.myListener()}"/>
             </p:selectBooleanCheckbox>

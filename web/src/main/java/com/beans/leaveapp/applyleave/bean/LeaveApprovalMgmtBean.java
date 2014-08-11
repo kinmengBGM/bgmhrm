@@ -53,10 +53,19 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	public LeaveApprovalDataModel getLeaveApprovalDataModel() {
 		FacesContext f = FacesContext.getCurrentInstance();
 		Map<String, String> parameterMap = (Map<String, String>) f.getExternalContext().getRequestParameterMap();
-		param = parameterMap.get("id");		
 		if(LeaveApprovalDataModel == null || insertDeleted == true) {
 			LeaveApprovalDataModel = new LeaveApprovalDataModel(getLeaveRequestApprovalList());
 		}
+		param = parameterMap.get("id");		
+		if(param!=null){
+			for (LeaveTransaction leaveTransaction : leaveRequestList) {
+				if(leaveTransaction.getId()==Integer.parseInt(param)){
+					selectedLeaveRequest = leaveTransaction;
+				}
+			}
+		}
+		
+		
 		return LeaveApprovalDataModel;
 	}
 	
@@ -263,17 +272,11 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
     }
 	
 	public void showDialogBox(){
-		if(param != null){
-		int leaveTransactionId = Integer.parseInt(param);
-		LeaveTransaction leaveTransaction = leaveTransactionService.findById(leaveTransactionId);
-		
-		if(leaveTransaction != null && "Pending".equalsIgnoreCase(leaveTransaction.getStatus())){
-		setSelectedLeaveRequest(leaveTransaction); 
-		YearlyEntitlement entitlement = yearlyEntitlementService.findYearlyEntitlementById(leaveTransaction.getEmployee().getId(), leaveTransaction.getLeaveType().getId());
+		if(selectedLeaveRequest != null){
+		YearlyEntitlement entitlement = yearlyEntitlementService.findYearlyEntitlementById(selectedLeaveRequest.getEmployee().getId(), selectedLeaveRequest.getLeaveType().getId());
 		currentLeaveBalance = entitlement.getCurrentLeaveBalance();
-		RequestContext.getCurrentInstance().addCallbackParam("leaveType", leaveTransaction.getLeaveType().getName());
+		RequestContext.getCurrentInstance().addCallbackParam("leaveType", selectedLeaveRequest.getLeaveType().getName());
 		RequestContext.getCurrentInstance().execute("leaveRequestDialogVar.show();");
-		}
 		}	
 		}	
 

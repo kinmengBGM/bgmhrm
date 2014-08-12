@@ -137,7 +137,6 @@ public void sendEmailNotificationToLeaveApprover(LeaveTransaction leaveTransacti
 		htmlEmailTemplate = htmlEmailTemplate.replace("##endDate##",leaveTransaction.fetchEndTimeStr());
 		htmlEmailTemplate = htmlEmailTemplate.replace("##numberOfDays##",leaveTransaction.getNumberOfDays().toString());
 		htmlEmailTemplate = htmlEmailTemplate.replace("##reason##",leaveTransaction.getReason());
-		htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##",leaveTransaction.getYearlyLeaveBalance().toString());
 		htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalanceLabel##"," Current Yearly Balance");
 		if(!"Unpaid".equalsIgnoreCase(leaveTransaction.getLeaveType().getName()))
 			htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##",leaveTransaction.getYearlyLeaveBalance().toString());

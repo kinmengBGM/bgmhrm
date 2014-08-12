@@ -45,7 +45,7 @@
 				<h:outputText value="" />
 				
 				<h:outputText value="Number of Day(s)*" />
-				<h:inputText label="Number of Day(s)" value="#{employeeLeaveFormMgmtBean.numberOfDays}" required="true" requiredMessage="Please enter number of day(s)"></h:inputText>			
+				<h:inputText label="Number of Day(s)" value="#{employeeLeaveFormMgmtBean.numberOfDays}" required="true" requiredMessage="Please enter number of day(s)" maxlength="4" converterMessage="Invalid Number of Days. Please enter numerical value.">  </h:inputText>			
 				<h:outputText value="(#{employeeLeaveFormMgmtBean.allowedMaximumLeaves} leaves are allowed to apply maximum ) " > </h:outputText> 
 
 				<h:outputText value="Reason*" />
@@ -85,7 +85,7 @@
       function handleShowDialogRequest(xhr, status, args) { 
       if( args.notValid || args.validationFailed )  
               return;
-        if((args.currentBalance ==-3.0) &amp;&amp; (args.leaveType=='Annual'))
+        if((args.currentBalance ==-3.0) &amp;&amp; (args.leaveType=='Annual') &amp;&amp; !(args.isOneYearOver))
        { 
          noLeaveBalanceDialog.show();
          return;

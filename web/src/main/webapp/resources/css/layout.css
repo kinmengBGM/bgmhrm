@@ -217,12 +217,18 @@ table.ui-panelgrid.ui-widget > tbody > tr.ui-widget-content > td {
 
 /* Setting for input fields */
 .ui-widget input, .ui-inputfield.hasDatePicker {
-    border: 1px solid gray;
+    border: 1px solid gray !important;
     border-radius: 5px;
     font-family: 'PT Sans', sans-serif;
     width: 150px;
     padding: 1px 0.5em;
     margin: auto 3px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.18) !important;
+}
+
+.ui-widget textarea {
+	border: 1px solid gray !important;
+	box-shadow: inset 0 1px 2px rgba(0,0,0,0.18) !important;
 }
 
 /* Setting for selectonemenu field in form */
@@ -232,6 +238,7 @@ table.ui-panelgrid.ui-widget > tbody > tr.ui-widget-content > td {
     text-align: left;
     text-transform: capitalize;
     width: 165px !important;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.18) !important;
 }
 
 /* Setting for selectonemenu trigger */
@@ -441,4 +448,19 @@ tr.ui-widget-content > td {
 .req:before {
     content: "* ";
     color: orangered;
+}
+
+.ui-icon-check {
+    background-image: none !important;
+    background-image: url("/hrm/javax.faces.resource/images/ui-icons_333333_256x240.png.jsf?ln=primefaces-bootstrap") !important; 
+}
+
+.ui-menuitem-link > .ui-icon-triangle-1-s {
+    background-image: none !important;
+    background-image: url("/hrm/javax.faces.resource/images/ui-icons_ffffff_256x240.png.jsf?ln=primefaces-bootstrap") !important;
+}
+
+.ui-icon-triangle-1-e {
+    background-image: none !important;
+    background-image: url("/hrm/javax.faces.resource/images/ui-icons_ffffff_256x240.png.jsf?ln=primefaces-bootstrap") !important;
 }

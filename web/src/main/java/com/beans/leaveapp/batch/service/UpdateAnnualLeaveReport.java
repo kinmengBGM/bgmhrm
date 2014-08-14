@@ -68,18 +68,27 @@ public void UpdatingAnnualLeaveReport(){
 				List<AnnualLeaveReport> annualLeaveReportList = annualLeaveReportService.findAnnualLeaveReportByEmployeeId(employee.getId(), sortingMonthId, currentDateYear);
 				ArrayList<AnnualLeaveReport> annualLeaveToBeUpdatedList = new ArrayList<AnnualLeaveReport>();				
 					AnnualLeaveReport annualLeaveReportCurrentMonth =	annualLeaveReportList.get(0);				
-					double currentBalance = annualLeaveReportCurrentMonth.getCurrentLeaveBalance();
-					double currentBalanceWithAddedLeave = currentBalance+yearBalanceRemaining+1.0;
-					annualLeaveReportCurrentMonth.setCurrentLeaveBalance(currentBalanceWithAddedLeave);
-					annualLeaveReportCurrentMonth.setBalanceBroughtForward(leavesBroughtForward);
+					
+					annualLeaveReportCurrentMonth.setBalanceBroughtForward(leavesBroughtForward);					
 				if(yearBalanceRemaining <= 4){
 					noOfLeavesCredited = yearBalanceRemaining+1.0;
 					annualLeaveReportCurrentMonth.setLeavesCredited(noOfLeavesCredited);
+					double currentBalance = annualLeaveReportCurrentMonth.getCurrentLeaveBalance();
+					double currentBalanceWithAddedLeave = currentBalance+yearBalanceRemaining+1.0;
+					double yearlyLeaveBalance = currentBalance+yearBalanceRemaining+12.0;
+					annualLeaveReportCurrentMonth.setCurrentLeaveBalance(currentBalanceWithAddedLeave);
+					annualLeaveReportCurrentMonth.setYearlyLeaveBalance(yearlyLeaveBalance);
 				}
 				else
 				{
 					noOfLeavesCredited = 4.0+1.0;
 					annualLeaveReportCurrentMonth.setLeavesCredited(noOfLeavesCredited);
+					double currentBalance = annualLeaveReportCurrentMonth.getCurrentLeaveBalance();
+					double currentBalanceWithAddedLeave = currentBalance+4.0+1.0;
+					double yearlyLeaveBalance = currentBalance+4.0+12.0;
+					annualLeaveReportCurrentMonth.setCurrentLeaveBalance(currentBalanceWithAddedLeave);
+					annualLeaveReportCurrentMonth.setYearlyLeaveBalance(yearlyLeaveBalance);
+					
 				}
 					annualLeaveToBeUpdatedList.add(annualLeaveReportCurrentMonth);
 					AnnualLeaveReport annualLeaveReportTotal =	annualLeaveReportList.get(1);
@@ -97,17 +106,21 @@ public void UpdatingAnnualLeaveReport(){
 				
 				AnnualLeaveReport annualLeaveReportCurrentMonth =	annualLeaveReportList.get(0);
 				
-				double currentBalance = annualLeaveReportCurrentMonth.getCurrentLeaveBalance();
-				double currentBalanceWithAddedLeave = currentBalance+yearBalanceRemaining+1.0;
-				annualLeaveReportCurrentMonth.setCurrentLeaveBalance(currentBalanceWithAddedLeave);
+				
 				if(yearBalanceRemaining <= 4){
 					noOfLeavesCredited = yearBalanceRemaining+1.0;
 					annualLeaveReportCurrentMonth.setLeavesCredited(noOfLeavesCredited);
+					double currentBalance = annualLeaveReportCurrentMonth.getCurrentLeaveBalance();
+					double currentBalanceWithAddedLeave = currentBalance+yearBalanceRemaining+1.0;
+					annualLeaveReportCurrentMonth.setCurrentLeaveBalance(currentBalanceWithAddedLeave);
 				}
 				else
 				{
 					noOfLeavesCredited = 4.0+1.0;
 					annualLeaveReportCurrentMonth.setLeavesCredited(noOfLeavesCredited);
+					double currentBalance = annualLeaveReportCurrentMonth.getCurrentLeaveBalance();
+					double currentBalanceWithAddedLeave = currentBalance+4.0+1.0;
+					annualLeaveReportCurrentMonth.setCurrentLeaveBalance(currentBalanceWithAddedLeave);
 				}
 					annualLeaveToBeUpdatedList.add(annualLeaveReportCurrentMonth);
 					AnnualLeaveReport annualLeaveReportTotal =	annualLeaveReportList.get(1);
@@ -132,7 +145,9 @@ public void UpdatingAnnualLeaveReport(){
 				AnnualLeaveReport annualLeaveReportCurrentMonth =	annualLeaveReportList.get(0);
 				double currentBalance = annualLeaveReportCurrentMonth.getCurrentLeaveBalance();
 				double currentBalanceWithAddedLeave = currentBalance+1.0;
-				annualLeaveReportCurrentMonth.setCurrentLeaveBalance(currentBalanceWithAddedLeave);			
+				annualLeaveReportCurrentMonth.setCurrentLeaveBalance(currentBalanceWithAddedLeave);
+				double yearlyLeaveBalance = currentBalance+yearBalanceRemaining+12.0;
+				annualLeaveReportCurrentMonth.setYearlyLeaveBalance(yearlyLeaveBalance);
 				noOfLeavesCredited = 1.0;
 				annualLeaveReportCurrentMonth.setLeavesCredited(noOfLeavesCredited);
 				annualLeaveReportCurrentMonth.setBalanceBroughtForward(leavesBroughtForward);

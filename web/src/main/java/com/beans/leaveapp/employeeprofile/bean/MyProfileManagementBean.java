@@ -215,4 +215,9 @@ public class MyProfileManagementBean implements Serializable{
 	public void setAuditTrail(AuditTrail auditTrail) {
 		this.auditTrail = auditTrail;
 	}
+	
+	public String doReturn(){
+		return "/protected/index.xhtml?faces-redirect=true";
+	}
+	
 }

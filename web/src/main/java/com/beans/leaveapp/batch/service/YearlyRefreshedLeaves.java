@@ -51,6 +51,8 @@ public class YearlyRefreshedLeaves implements Serializable{
 						if (yearBalanceRemaining <= 4) {
 							double carryForwardDays = yearlyEntitlement.getCurrentLeaveBalance();
 							double yearlyBalance = carryForwardDays + yearBalanceRemaining + 12.0;
+							double entitlement = yearBalanceRemaining + 12.0;
+							yearlyEntitlement.setEntitlement(entitlement);
 							yearlyEntitlement.setYearlyLeaveBalance(yearlyBalance);
 							yearlyEntitlementService.update(yearlyEntitlement);
 							} 
@@ -58,6 +60,8 @@ public class YearlyRefreshedLeaves implements Serializable{
 							{
 							double carryForwardDays = yearlyEntitlement.getCurrentLeaveBalance();
 							double yearlyBalance = carryForwardDays + 4.0 + 12.0;
+							double entitlement = yearBalanceRemaining + 12.0;
+							yearlyEntitlement.setEntitlement(entitlement);
 							yearlyEntitlement.setYearlyLeaveBalance(yearlyBalance);
 							yearlyEntitlementService.update(yearlyEntitlement);
 							}
@@ -65,6 +69,8 @@ public class YearlyRefreshedLeaves implements Serializable{
 					else if (yearlyEntitlement.getLeaveType().getId() == 2) {
 						double carryForwardDays = yearlyEntitlement.getCurrentLeaveBalance();
 						double yearlyBalance = carryForwardDays + 12.0;
+						double entitlement = 12.0;
+						yearlyEntitlement.setEntitlement(entitlement);
 						yearlyEntitlement.setYearlyLeaveBalance(yearlyBalance);
 						yearlyEntitlementService.update(yearlyEntitlement);
 					} 

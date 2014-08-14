@@ -288,9 +288,9 @@
   <p:confirmDialog id="updatedCD" message="Profile updated." header="Message" widgetVar="updatedcd" severity="info">	
 			<h:form>
 			
-			<p:commandButton value="OK" onclick="PF('updatedcd').hide();" update=":myProfileForm" type="button" />
+			<p:commandButton value="OK" action="${myProfileMgmtBean.doReturn}"/>
 			</h:form>
-
+<!-- update=":myProfileForm" -->
 			</p:confirmDialog>	
     
 

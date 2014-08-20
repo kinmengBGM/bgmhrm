@@ -5,6 +5,7 @@ import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import com.beans.leaveapp.batch.service.YearlyRefreshedLeaves;
+import com.beans.leaveapp.leavetype.service.LeaveTypeNotFound;
 import com.beans.leaveapp.montlhyreport.LeaveReportWorker;
 
 public class YearlyRefreshedLeavesJob extends QuartzJobBean {
@@ -18,12 +19,12 @@ public class YearlyRefreshedLeavesJob extends QuartzJobBean {
 		try {
 			LeaveReportWorker.doInsertEmployeeYearlyData();
 			yearlyRefreshedLeaves.YearlyrefreshedLeaves();			
-		} catch (Exception e) {
+		} catch (LeaveTypeNotFound e) {
 			e.printStackTrace();
-		}
-		
-	}
-
-	
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}	
 	
 }

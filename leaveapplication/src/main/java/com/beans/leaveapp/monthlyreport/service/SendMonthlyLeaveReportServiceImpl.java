@@ -23,8 +23,10 @@ import com.beans.leaveapp.leavetransaction.repository.LeaveTransactionRepository
 import com.beans.leaveapp.leavetype.model.LeaveType;
 import com.beans.leaveapp.leavetype.repository.LeaveTypeRepository;
 import com.beans.leaveapp.monthlyreport.model.AnnualLeaveReport;
+import com.beans.leaveapp.monthlyreport.model.LeaveDeductHistory;
 import com.beans.leaveapp.monthlyreport.model.MonthlyLeaveReport;
 import com.beans.leaveapp.monthlyreport.repository.AnnualLeaveReportRepository;
+import com.beans.leaveapp.monthlyreport.repository.LeaveDeductHistoryRepository;
 import com.beans.leaveapp.monthlyreport.repository.MonthlyLeaveReportRepository;
 import com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement;
 import com.beans.leaveapp.yearlyentitlement.repository.YearlyEntitlementRepository;
@@ -52,6 +54,9 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 	@Resource
 	LeaveTypeRepository leaveTypeRepository;
 	
+	@Resource
+	LeaveDeductHistoryRepository leaveDeductRepository;
+	
 	@Override
 	public void sendMonthlyLeaveReportToEmployees() {
 		try{
@@ -65,9 +70,18 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 					/* Send monthly leave report to Permanent Employees only*/
 					
 					StringBuffer monthlyLeaveReportBuffer = new StringBuffer();
+					
+					// finding number of leaves to be deducted in Feb month only for Annual Leave Report
+					if(Calendar.getInstance().get(Calendar.MONTH)==1)
+						calculateAndUpdateLeavesDeduction(employee);
+					
 					// Now time for Annual Leaves
 					monthlyLeaveReportBuffer = getAnnualLeaveYearlyReport(employee);
 					
+					// Get leave deduction message only in feb month
+					if(Calendar.getInstance().get(Calendar.MONTH)==1)
+					monthlyLeaveReportBuffer = monthlyLeaveReportBuffer.append(getLeaveDeductionMessage(employee));
+						
 					// Now time for Marriage Leaves
 					monthlyLeaveReportBuffer = monthlyLeaveReportBuffer.append(getSickLeaveYearlyReport(employee));
 					
@@ -109,8 +123,17 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 					/* Send monthly leave report to Contract Employees only*/
 					
 					StringBuffer monthlyLeaveReportBuffer = new StringBuffer();
+					
+					// finding number of leaves to be deducted in Feb month only for Annual Leave Report
+					if(Calendar.getInstance().get(Calendar.MONTH)==1)
+						calculateAndUpdateLeavesDeduction(employee);
+					
 					// Now time for Annual Leaves
 					monthlyLeaveReportBuffer = getAnnualLeaveYearlyReport(employee);
+					
+					// Get leave deduction message only in feb month
+					if(Calendar.getInstance().get(Calendar.MONTH)==1)
+					monthlyLeaveReportBuffer = monthlyLeaveReportBuffer.append(getLeaveDeductionMessage(employee));
 					
 					// Now time for Unpaid Leaves
 					monthlyLeaveReportBuffer = monthlyLeaveReportBuffer.append(getUnpaidLeaveYearlyReport(employee));
@@ -225,7 +248,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 							for (Employee employee : employeeList) {
 								if(EmployeeTypes.INTERNSHIP.equalsName(employeeRepository.findByEmployeeId(employee.getId()))){
 									/* Prepare monthly leave report of Internship Employees only*/
-									monthlyLeaveReportBuffer.append("<table border='0px' width='600px'><tr><td align='center' style='color:blue;font-size:1.2em;'><u><b>"+employee.getName()+"</b></u></td></tr></table><br/><br/>");
+									monthlyLeaveReportBuffer.append("<table border='0px' width='800px'><tr><td align='center' style='color:blue;font-size:1.2em;'><u><b>"+employee.getName()+"</b></u></td></tr></table><br/><br/>");
 									
 									monthlyLeaveReportBuffer = monthlyLeaveReportBuffer.append(getTimeInLieuYearlyReportForInternship(employee));
 									
@@ -242,10 +265,14 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 						
 								else if(EmployeeTypes.CONTRACT.equalsName(employeeRepository.findByEmployeeId(employee.getId()))){
 									/* Prepare monthly leave report of Contract Employees only*/
-									monthlyLeaveReportBuffer.append("<table border='0px' width='600px'><tr><td align='center' style='color:blue;font-size:1.2em;'><u><b>"+employee.getName()+"</b></u></td></tr></table><br/><br/>");
+									monthlyLeaveReportBuffer.append("<table border='0px' width='800px'><tr><td align='center' style='color:blue;font-size:1.2em;'><u><b>"+employee.getName()+"</b></u></td></tr></table><br/><br/>");
 									
 									// Now time for Annual Leaves
 									monthlyLeaveReportBuffer = monthlyLeaveReportBuffer.append(getAnnualLeaveYearlyReport(employee));
+									
+									// Get leave deduction message only in feb month
+									if(Calendar.getInstance().get(Calendar.MONTH)==1)
+									monthlyLeaveReportBuffer = monthlyLeaveReportBuffer.append(getLeaveDeductionMessage(employee));
 									
 									// Now time for Unpaid Leaves
 									monthlyLeaveReportBuffer = monthlyLeaveReportBuffer.append(getUnpaidLeaveYearlyReport(employee));
@@ -259,10 +286,14 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 								}
 								else if(EmployeeTypes.PERMANENT.equalsName(employeeRepository.findByEmployeeId(employee.getId()))){
 									/* Send monthly leave report to Permanent Employees only*/
-									monthlyLeaveReportBuffer.append("<table border='0px' width='600px'><tr><td align='center' style='color:blue;font-size:1.2em;'><u><b>"+employee.getName()+"</b></u></td></tr></table><br/>");
+									monthlyLeaveReportBuffer.append("<table border='0px' width='800px'><tr><td align='center' style='color:blue;font-size:1.2em;'><u><b>"+employee.getName()+"</b></u></td></tr></table><br/>");
 									
 									// Now time for Annual Leaves
 									monthlyLeaveReportBuffer = monthlyLeaveReportBuffer.append(getAnnualLeaveYearlyReport(employee));
+									
+									// Get leave deduction message only in feb month
+									if(Calendar.getInstance().get(Calendar.MONTH)==1)
+									monthlyLeaveReportBuffer = monthlyLeaveReportBuffer.append(getLeaveDeductionMessage(employee));
 									
 									// Now time for Marriage Leaves
 									monthlyLeaveReportBuffer = monthlyLeaveReportBuffer.append(getSickLeaveYearlyReport(employee));
@@ -393,8 +424,8 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		if(annualEntitlementList!=null && annualEntitlementList.size()>0){
 			YearlyEntitlement	annualYearlyEntitlementBean = annualEntitlementList.get(0);
 			// preparation of Table headers with styles
-			leaveReportBuffer.append("<table border='0px' width='600px'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Annual Leave </b></td><td align='right'><b> Entitlement </b> = "+annualYearlyEntitlementBean.getEntitlement()+" days</td></tr></table>");
-			leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Month</td><td align='center'>Balance Brought Forward</td><td align='center'>Leave Auto-Credited</td><td align='center'>Annual Leave Taken</td><td align='center'>Time-In-Lieu Credited</td><td align='center'>Current Leave Balance</td><td align='center'>Yearly Leave Balance</td></tr>");
+			leaveReportBuffer.append("<table border='0px' width='800px'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Annual Leave </b></td><td align='right'><b> Entitlement </b> = "+annualYearlyEntitlementBean.getEntitlement()+" days</td></tr></table>");
+			leaveReportBuffer.append("<table border='1cm' width='800px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Month</td><td align='center'>Balance Brought Forward</td><td align='center'>Leave Auto-Credited</td><td align='center'>Annual Leave Taken</td><td align='center'>Time-In-Lieu Credited</td><td align='center'>Current Leave Balance</td><td align='center'>Yearly Leave Balance</td></tr>");
 			// prepartation of Table data of Annual Leaves of employee
 			List<AnnualLeaveReport>	 annualLeaveList = annualLeaveRepository.getAnnualLeaveDataOfEmployee(employee.getId(), Calendar.getInstance().get(Calendar.YEAR));
 			if(annualLeaveList!=null && annualLeaveList.size()>0){
@@ -414,7 +445,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		}
 		}catch(Exception e){
 			e.printStackTrace();
-			leaveReportBuffer = new StringBuffer("<table border='0px' width='600px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Annual Leave </b></td></tr></table><br/>");
+			leaveReportBuffer = new StringBuffer("<table border='0px' width='800px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Annual Leave </b></td></tr></table><br/>");
 		}
 		return leaveReportBuffer;
 	}
@@ -428,8 +459,8 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		if(sickEntitlementList!=null && sickEntitlementList.size()>0){
 			YearlyEntitlement	sickYearlyEntitlementBean = sickEntitlementList.get(0);
 			// preparation of Table headers with styles
-			leaveReportBuffer.append("<table border='0px' width='600px' class='bolder'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Sick Leave </b></td><td align='right'><b> Entitlement </b> = "+sickYearlyEntitlementBean.getEntitlement()+" days</td></tr></table>");
-			leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Month</td><td align='center'>Sick Leave Taken</td><td align='center'>Yearly Leave Balance</td></tr>");
+			leaveReportBuffer.append("<table border='0px' width='800px' class='bolder'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Sick Leave </b></td><td align='right'><b> Entitlement </b> = "+sickYearlyEntitlementBean.getEntitlement()+" days</td></tr></table>");
+			leaveReportBuffer.append("<table border='1cm' width='800px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Month</td><td align='center'>Sick Leave Taken</td><td align='center'>Yearly Leave Balance</td></tr>");
 			// prepartation of Table data of Sick Leaves of employee
 			List<MonthlyLeaveReport>  sickLeaveReportList =	 monthlyLeaveRepository.findAllLeaveReportsOfYearByIdAndLeaveId(employee.getId(), sickYearlyEntitlementBean.getLeaveType().getId(), Calendar.getInstance().get(Calendar.YEAR));
 				if(sickLeaveReportList!=null && sickLeaveReportList.size()>0){
@@ -444,7 +475,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		}
 		}catch(Exception e){
 			e.printStackTrace();
-			leaveReportBuffer = new StringBuffer("<table border='0px' width='600px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Sick Leave </b></td></tr></table><br/>");
+			leaveReportBuffer = new StringBuffer("<table border='0px' width='800px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Sick Leave </b></td></tr></table><br/>");
 		}
 		return leaveReportBuffer;
 	}
@@ -457,8 +488,8 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		if(marriageEntitlementList!=null && marriageEntitlementList.size()>0){
 			YearlyEntitlement	marriageYearlyEntitlementBean = marriageEntitlementList.get(0);
 			// preparation of Table headers with styles
-			leaveReportBuffer.append("<table border='0px' width='600px' class='bolder'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Marriage Leave </b></td><td align='right'><b> Entitlement </b> = "+marriageYearlyEntitlementBean.getEntitlement()+" days</td></tr></table>");
-			leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Month</td><td align='center'>Marriage Leave Taken</td><td align='center'>Yearly Leave Balance</td></tr>");
+			leaveReportBuffer.append("<table border='0px' width='800px' class='bolder'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Marriage Leave </b></td><td align='right'><b> Entitlement </b> = "+marriageYearlyEntitlementBean.getEntitlement()+" days</td></tr></table>");
+			leaveReportBuffer.append("<table border='1cm' width='800px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Month</td><td align='center'>Marriage Leave Taken</td><td align='center'>Yearly Leave Balance</td></tr>");
 			// prepartation of Table data of Marriage Leaves of employee
 			List<MonthlyLeaveReport>  marriageLeaveReportList =	 monthlyLeaveRepository.findAllLeaveReportsOfYearByIdAndLeaveId(employee.getId(), marriageYearlyEntitlementBean.getLeaveType().getId(), Calendar.getInstance().get(Calendar.YEAR));
 				if(marriageLeaveReportList!=null && marriageLeaveReportList.size()>0){
@@ -473,7 +504,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		}
 		}catch(Exception e){
 			e.printStackTrace();
-			leaveReportBuffer = new StringBuffer("<table border='0px' width='600px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Marriage Leave </b></td></tr></table><br/>");
+			leaveReportBuffer = new StringBuffer("<table border='0px' width='800px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Marriage Leave </b></td></tr></table><br/>");
 		}
 		return leaveReportBuffer;
 	}
@@ -485,8 +516,8 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		if(compassionateEntitlementList!=null && compassionateEntitlementList.size()>0){
 			YearlyEntitlement	compassionateYearlyEntitlementBean = compassionateEntitlementList.get(0);
 			// preparation of Table headers with styles
-			leaveReportBuffer.append("<table border='0px' width='600px' class='bolder'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Compassionate Leave </b></td><td align='right'><b> Entitlement </b> = "+compassionateYearlyEntitlementBean.getEntitlement()+" days</td></tr></table>");
-			leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Month</td><td align='center'>Compassionate Leave Taken</td><td align='center'>Yearly Leave Balance</td></tr>");
+			leaveReportBuffer.append("<table border='0px' width='800px' class='bolder'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Compassionate Leave </b></td><td align='right'><b> Entitlement </b> = "+compassionateYearlyEntitlementBean.getEntitlement()+" days</td></tr></table>");
+			leaveReportBuffer.append("<table border='1cm' width='800px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Month</td><td align='center'>Compassionate Leave Taken</td><td align='center'>Yearly Leave Balance</td></tr>");
 			// prepartation of Table data of Compassionate Leaves of employee
 			List<MonthlyLeaveReport>  compassionateLeaveReportList =	 monthlyLeaveRepository.findAllLeaveReportsOfYearByIdAndLeaveId(employee.getId(), compassionateYearlyEntitlementBean.getLeaveType().getId(), Calendar.getInstance().get(Calendar.YEAR));
 				if(compassionateLeaveReportList!=null && compassionateLeaveReportList.size()>0){
@@ -500,7 +531,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		}
 		}catch(Exception e){
 			e.printStackTrace();
-			leaveReportBuffer = new StringBuffer("<table border='0px' width='600px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Compassionate Leave </b></td></tr></table><br/>");
+			leaveReportBuffer = new StringBuffer("<table border='0px' width='800px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Compassionate Leave </b></td></tr></table><br/>");
 		}
 		return leaveReportBuffer;
 	}
@@ -513,8 +544,8 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		if(paternityEntitlementList!=null && paternityEntitlementList.size()>0){
 			YearlyEntitlement	paternityYearlyEntitlementBean = paternityEntitlementList.get(0);
 			// preparation of Table headers with styles
-			leaveReportBuffer.append("<table border='0px' width='600px' class='bolder'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Paternity Leave </b></td><td align='right'><b> Entitlement </b> = "+paternityYearlyEntitlementBean.getEntitlement()+" days</td></tr></table>");
-			leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Month</td><td align='center'>Paternity Leave Taken</td><td align='center'>Yearly Leave Balance</td></tr>");
+			leaveReportBuffer.append("<table border='0px' width='800px' class='bolder'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Paternity Leave </b></td><td align='right'><b> Entitlement </b> = "+paternityYearlyEntitlementBean.getEntitlement()+" days</td></tr></table>");
+			leaveReportBuffer.append("<table border='1cm' width='800px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Month</td><td align='center'>Paternity Leave Taken</td><td align='center'>Yearly Leave Balance</td></tr>");
 			// prepartation of Table data of Paternity Leaves of employee
 			List<MonthlyLeaveReport>  paternityLeaveReportList =	 monthlyLeaveRepository.findAllLeaveReportsOfYearByIdAndLeaveId(employee.getId(), paternityYearlyEntitlementBean.getLeaveType().getId(), Calendar.getInstance().get(Calendar.YEAR));
 				if(paternityLeaveReportList!=null && paternityLeaveReportList.size()>0){
@@ -528,7 +559,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		}
 		}catch(Exception e){
 			e.printStackTrace();
-			leaveReportBuffer = new StringBuffer("<table border='0px' width='600px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Paternity Leave </b></td></tr></table><br/>");
+			leaveReportBuffer = new StringBuffer("<table border='0px' width='800px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Paternity Leave </b></td></tr></table><br/>");
 		}
 		return leaveReportBuffer;
 	}
@@ -540,8 +571,8 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		if(maternityEntitlementList!=null && maternityEntitlementList.size()>0){
 			YearlyEntitlement	maternityYearlyEntitlementBean = maternityEntitlementList.get(0);
 			// preparation of Table headers with styles
-			leaveReportBuffer.append("<table border='0px' width='600px' class='bolder'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Maternity Leave </b></td><td align='right'><b> Entitlement </b> = "+maternityYearlyEntitlementBean.getEntitlement()+" days</td></tr></table>");
-			leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Month</td><td align='center'>Maternity Leave Taken</td><td align='center'>Yearly Leave Balance</td></tr>");
+			leaveReportBuffer.append("<table border='0px' width='800px' class='bolder'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Maternity Leave </b></td><td align='right'><b> Entitlement </b> = "+maternityYearlyEntitlementBean.getEntitlement()+" days</td></tr></table>");
+			leaveReportBuffer.append("<table border='1cm' width='800px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Month</td><td align='center'>Maternity Leave Taken</td><td align='center'>Yearly Leave Balance</td></tr>");
 			// prepartation of Table data of Maternity Leaves of employee
 			List<MonthlyLeaveReport>  maternityLeaveReportList =	 monthlyLeaveRepository.findAllLeaveReportsOfYearByIdAndLeaveId(employee.getId(), maternityYearlyEntitlementBean.getLeaveType().getId(), Calendar.getInstance().get(Calendar.YEAR));
 				if(maternityLeaveReportList!=null && maternityLeaveReportList.size()>0){
@@ -555,7 +586,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		}
 		}catch(Exception e){
 			e.printStackTrace();
-			leaveReportBuffer = new StringBuffer("<table border='0px' width='600px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Maternity Leave </b></td></tr></table><br/>");
+			leaveReportBuffer = new StringBuffer("<table border='0px' width='800px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Maternity Leave </b></td></tr></table><br/>");
 		}
 		return leaveReportBuffer;
 	}
@@ -568,8 +599,8 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		if(unpaidEntitlementList!=null && unpaidEntitlementList.size()>0){
 			YearlyEntitlement	unpaidYearlyEntitlementBean = unpaidEntitlementList.get(0);
 			// preparation of Table headers with styles
-			leaveReportBuffer.append("<table border='0px' width='600px' class='bolder'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Unpaid Leave </b></td></tr></table>");
-			leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Month</td><td align='center'>Unpaid Leave Taken</td></tr>");
+			leaveReportBuffer.append("<table border='0px' width='800px' class='bolder'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Unpaid Leave </b></td></tr></table>");
+			leaveReportBuffer.append("<table border='1cm' width='800px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Month</td><td align='center'>Unpaid Leave Taken</td></tr>");
 			// prepartation of Table data of Maternity Leaves of employee
 			List<MonthlyLeaveReport>  unpaidLeaveReportList =	 monthlyLeaveRepository.findAllLeaveReportsOfYearByIdAndLeaveId(employee.getId(), unpaidYearlyEntitlementBean.getLeaveType().getId(), Calendar.getInstance().get(Calendar.YEAR));
 				if(unpaidLeaveReportList!=null && unpaidLeaveReportList.size()>0){
@@ -582,7 +613,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		}
 		}catch(Exception e){
 			e.printStackTrace();
-			leaveReportBuffer = new StringBuffer("<table border='0px' width='600px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Unpaid Leave </b></td></tr></table><br/>");
+			leaveReportBuffer = new StringBuffer("<table border='0px' width='800px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Unpaid Leave </b></td></tr></table><br/>");
 		}
 		return leaveReportBuffer;
 	}
@@ -597,8 +628,8 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 				
 			List<LeaveTransaction>  allAppliedLeavesList =	leaveRepository.findAllLeavesAppliedByEmployee(employee.getId(),new java.sql.Date(firstDayOfYear.getTime().getTime()),new java.sql.Date(new Date().getTime()));
 			// preparation of Table headers with styles
-			leaveReportBuffer.append("<table border='0px' width='600px' class='bolder'><tr><td align='center' style='color:black;font-size:1.2em;'><b>List of Leave Applied and Approved up to "+getPresentMonth(Calendar.getInstance().get(Calendar.MONTH))+" </b></td></tr></table>");
-			leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Leave Type</td><td align='center'>Applied Date</td><td align='center'>Start Date</td><td align='center'>End Date</td><td align='center'>Number of Days</td><td  align='center'>Status </td></tr>");
+			leaveReportBuffer.append("<table border='0px' width='800px' class='bolder'><tr><td align='center' style='color:black;font-size:1.2em;'><b>List of Leave Applied and Approved up to "+getPresentMonth(Calendar.getInstance().get(Calendar.MONTH))+" </b></td></tr></table>");
+			leaveReportBuffer.append("<table border='1cm' width='800px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Leave Type</td><td align='center'>Applied Date</td><td align='center'>Start Date</td><td align='center'>End Date</td><td align='center'>Number of Days</td><td  align='center'>Status </td></tr>");
 			// prepartation of Table data of All Leaves applied by employee from January to Current month.
 			if(allAppliedLeavesList!=null && allAppliedLeavesList.size()>0){
 						for (LeaveTransaction appliedLeaveBean : allAppliedLeavesList) {
@@ -615,7 +646,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 				leaveReportBuffer.append("<tr><td colspan='6' align='center'><b>No records found!!!</b></td></tr></table><br/>");
 			}catch(Exception e){
 				e.printStackTrace();
-				leaveReportBuffer = new StringBuffer("<table border='0px' width='600px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Applied and Approved Leaves of Employee </b></td></tr></table><br/>");
+				leaveReportBuffer = new StringBuffer("<table border='0px' width='800px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Applied and Approved Leaves of Employee </b></td></tr></table><br/>");
 			}
 			return leaveReportBuffer;
 		
@@ -631,8 +662,8 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 			
 		List<LeaveTransaction>  allAppliedLeavesList =	leaveRepository.findAllTimeInLieuLeavesAppliedByEmployee(employee.getId(),new java.sql.Date(firstDayOfYear.getTime().getTime()),new java.sql.Date(new Date().getTime()));
 		// preparation of Table headers with styles
-		leaveReportBuffer.append("<table border='0px' width='600px' class='bolder'><tr><td align='center' style='color:black;font-size:1.2em;'><b>List of Time-In-Lieu Applied and Approved up to "+getPresentMonth(Calendar.getInstance().get(Calendar.MONTH))+" </b></td></tr></table>");
-		leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Applied Date</td><td align='center'>Start Date</td><td align='center'>End Date</td><td align='center'>Number of Days</td><td align='center'>Status</td></tr>");
+		leaveReportBuffer.append("<table border='0px' width='800px' class='bolder'><tr><td align='center' style='color:black;font-size:1.2em;'><b>List of Time-In-Lieu Applied and Approved up to "+getPresentMonth(Calendar.getInstance().get(Calendar.MONTH))+" </b></td></tr></table>");
+		leaveReportBuffer.append("<table border='1cm' width='800px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td align='center'>Applied Date</td><td align='center'>Start Date</td><td align='center'>End Date</td><td align='center'>Number of Days</td><td align='center'>Status</td></tr>");
 		// prepartation of Table data of All Leaves applied by employee from January to Current month.
 		if(allAppliedLeavesList!=null && allAppliedLeavesList.size()>0){
 					for (LeaveTransaction appliedLeaveBean : allAppliedLeavesList) {
@@ -648,22 +679,70 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 			leaveReportBuffer.append("<tr><td colspan='5' align='center'><b>No records found!!!</td></td></tr></table><br/>");
 		}catch(Exception e){
 			e.printStackTrace();
-			leaveReportBuffer = new StringBuffer("<table border='0px' width='600px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Applied and Approved Leaves of Employee </b></td></tr></table><br/>");
+			leaveReportBuffer = new StringBuffer("<table border='0px' width='800px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Applied and Approved Leaves of Employee </b></td></tr></table><br/>");
 		}
 		return leaveReportBuffer;
 	
 }
+	
+	private void calculateAndUpdateLeavesDeduction(Employee employee){
+		double deductedLeaves=0;
+		try{
+		//AnnualLeaveReport lastDecAnnualRecord =	annualLeaveRepository.getCurrentMonthAnnualLeaveRecord(employee.getId(), 12, Calendar.getInstance().get(Calendar.YEAR)-1);
+		List<AnnualLeaveReport> janAndFebAnnualRecordList = annualLeaveRepository.getRecordsOfCurrentYearJanAndFeb(employee.getId(), Calendar.getInstance().get(Calendar.YEAR));
+		if(janAndFebAnnualRecordList!=null && janAndFebAnnualRecordList.size()==2){
+			AnnualLeaveReport janReport = janAndFebAnnualRecordList.get(0);
+			AnnualLeaveReport febReport = janAndFebAnnualRecordList.get(1);
+			deductedLeaves =   janReport.getBalanceBroughtForward();
+			deductedLeaves = deductedLeaves-janReport.getLeavesTaken()-febReport.getLeavesTaken()-5;
+			if(deductedLeaves>=1){
+			// deduct this many leaves from yearly entitlement table as well as AnnualLeaveReport table.
+			List<YearlyEntitlement>	annualEntitlementList =	entitlementRepository.findByEmployeeIdAndEmployeeTypeAndLeaveTypeName(employee.getId(),Leave.ANNUAL.toString());
+			if(annualEntitlementList!=null && annualEntitlementList.size()==1){
+				YearlyEntitlement entitlementBeanToBeUpdated = annualEntitlementList.get(0);
+				entitlementBeanToBeUpdated.setcurrentLeaveBalance(entitlementBeanToBeUpdated.getCurrentLeaveBalance()-deductedLeaves);
+				entitlementBeanToBeUpdated.setYearlyLeaveBalance(entitlementBeanToBeUpdated.getYearlyLeaveBalance()-deductedLeaves);
+				entitlementRepository.save(entitlementBeanToBeUpdated);
+			}
+			// Updating in AnnualLeaveReport table
+			febReport.setCurrentLeaveBalance(febReport.getCurrentLeaveBalance()-deductedLeaves);
+			febReport.setYearlyLeaveBalance(febReport.getYearlyLeaveBalance()-deductedLeaves);
+			annualLeaveRepository.save(febReport);
+			
+			// Updating in LeaveDeductHistory table
+			LeaveDeductHistory leaveDeductBean = new LeaveDeductHistory();
+			leaveDeductBean.setEmployee(employee);
+			leaveDeductBean.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+			leaveDeductBean.setNumberOfLeavesDeducted(deductedLeaves);
+			leaveDeductRepository.save(leaveDeductBean);
+			}
+		}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	private StringBuffer getLeaveDeductionMessage(Employee employee){
+		StringBuffer leaveReportBuffer= new StringBuffer();
+		LeaveDeductHistory leaveDeductBean = leaveDeductRepository.getLeavesDeductionByIdAndYear(employee.getId(), Calendar.getInstance().get(Calendar.YEAR));
+		if(leaveDeductBean!=null && leaveDeductBean.getNumberOfLeavesDeducted()>0)
+				leaveReportBuffer.append("<table border='0px' width='800px' class='bolder'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Brought Forward Remainder Leave Deducted: "+leaveDeductBean.getNumberOfLeavesDeducted()+" Days</u></b></td></tr></table>");
+			else
+				leaveReportBuffer.append("<table border='0px' width='800px' class='bolder'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Brought Forward Remainder Leave Deducted: 0 Days</u></b></td></tr></table>");
+		return leaveReportBuffer;
+	}
+	
 	private StringBuffer getRemainderMessageInJanuary(){
 		StringBuffer leaveReportBuffer = new StringBuffer();
-		leaveReportBuffer.append("<table border='0px' width='600px' class='bolder'><tr><td align='center' style='color:red;font-size:1.2em;'><b><u>REMINDER </u></b></td></tr></table>");
-		leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td style='color:red;'>You are only allowed to carry forward 5 days to this year. If your Leave To Brought Forward is more than 5, please use up the remainder days before End of February or the remainder days will be deducted.</td></tr></table><br/>");
+		leaveReportBuffer.append("<table border='0px' width='800px' class='bolder'><tr><td align='center' style='color:red;font-size:1.2em;'><b><u>REMINDER </u></b></td></tr></table>");
+		leaveReportBuffer.append("<table border='1cm' width='800px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td style='color:red;'>You are only allowed to carry forward 5 days to this year. If your Leave To Brought Forward is more than 5, please use up the remainder days before End of February or the remainder days will be deducted.</td></tr></table><br/>");
 		return leaveReportBuffer;
 	}
 	
 	private StringBuffer getRemainderMessageInDecember(){
 		StringBuffer leaveReportBuffer = new StringBuffer();
-		leaveReportBuffer.append("<table border='0px' width='600px' class='bolder'><tr><td align='center' style='color:red;font-size:1.2em;'><b><u>REMINDER </u></b></td></tr></table>");
-		leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td style='color:red;'>You are only allowed to carry forward 5 days to next year. If your Leave To Brought Forward is more than 5, please use up the remainder days before End of February or the remainder days will be deducted.</td></tr></table><br/>");
+		leaveReportBuffer.append("<table border='0px' width='800px' class='bolder'><tr><td align='center' style='color:red;font-size:1.2em;'><b><u>REMINDER </u></b></td></tr></table>");
+		leaveReportBuffer.append("<table border='1cm' width='800px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td style='color:red;'>You are only allowed to carry forward 5 days to next year. If your Leave To Brought Forward is more than 5, please use up the remainder days before End of February or the remainder days will be deducted.</td></tr></table><br/>");
 		return leaveReportBuffer;
 	}
 	
@@ -676,8 +755,8 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		try{
 		// Firstly prepare TimeinLieu Leaves
 			// preparation of Table headers with styles
-			leaveReportBuffer.append("<table border='0px' width='600px'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Time-In-Lieu Leave </b></td></tr></table>");
-			leaveReportBuffer.append("<table border='1cm' width='600px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td>Month</td><td>Time-In-Lieu Credited</td><td>Leave Taken</td><td>Leave Balance</td></tr>");
+			leaveReportBuffer.append("<table border='0px' width='800px'><tr><td align='left' style='color:darkorange;font-size:1.2em;'><b>Time-In-Lieu Leave </b></td></tr></table>");
+			leaveReportBuffer.append("<table border='1cm' width='800px' cellpadding='1px' cellspacing='0px' class='bolder'><tr><td>Month</td><td>Time-In-Lieu Credited</td><td>Leave Taken</td><td>Leave Balance</td></tr>");
 			// prepartation of Table data of Annual Leaves of employee
 			List<AnnualLeaveReport>	 annualLeaveList = annualLeaveRepository.getAnnualLeaveDataOfEmployee(employee.getId(), Calendar.getInstance().get(Calendar.YEAR));
 			if(annualLeaveList!=null && annualLeaveList.size()>0){
@@ -693,7 +772,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 			leaveReportBuffer.append("</table><br/>");
 		}catch(Exception e){
 			e.printStackTrace();
-			leaveReportBuffer = new StringBuffer("<table border='0px' width='600px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Time-In-Lieu Leave </b></td></tr></table><br/>");
+			leaveReportBuffer = new StringBuffer("<table border='0px' width='800px'><tr><td align='left' style='color:red;font-size:1.2em;'><b>Error while generationg monthly report on Time-In-Lieu Leave </b></td></tr></table><br/>");
 		}
 		return leaveReportBuffer;
 	}
@@ -844,12 +923,14 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 				if(leaveTypeList!=null && leaveTypeList.size()>0){
 					for (LeaveType leaveType : leaveTypeList) {
 						if(currentMonth.get(Calendar.MONTH)==0){
-						MonthlyLeaveReport decemberMonthRecord = monthlyLeaveRepository.getCurrentMonthAnnualLeaveRecord(employee.getId(), 12, leaveType.getId(), currentMonth.get(Calendar.YEAR)-1);
+						//MonthlyLeaveReport decemberMonthRecord = monthlyLeaveRepository.getCurrentMonthAnnualLeaveRecord(employee.getId(), 12, leaveType.getId(), currentMonth.get(Calendar.YEAR)-1);
 						MonthlyLeaveReport januaryMonthRecord = monthlyLeaveRepository.getCurrentMonthAnnualLeaveRecord(employee.getId(), 1, leaveType.getId(), currentMonth.get(Calendar.YEAR));
+						if(januaryMonthRecord != null){
 						januaryMonthRecord.setLeavesTaken(new Double(0));
-						januaryMonthRecord.setYearlyLeaveBalance(decemberMonthRecord.getYearlyLeaveBalance());
+						januaryMonthRecord.setYearlyLeaveBalance(leaveType.getEntitlement());
 						
 						monthlyLeaveRepository.save(januaryMonthRecord);
+						}
 						}
 						else {
 							List<MonthlyLeaveReport>	monthlyLeaveList = monthlyLeaveRepository.getEmployeeMonthlyLeaveReportDataForInitialization(employee.getId(), sortingMonthList, leaveType.getId(), currentMonth.get(Calendar.YEAR));

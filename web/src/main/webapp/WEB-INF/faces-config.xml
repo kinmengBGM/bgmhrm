@@ -469,6 +469,10 @@ http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
 			<property-name>yearlyEntitlementService</property-name>
 			<value>#{yearlyEntitlementService}</value>	
 	</managed-property>
+	<managed-property>
+			<property-name>leaveTypeService</property-name>
+			<value>#{leaveTypeService}</value>
+	</managed-property>
 	</managed-bean>
 	
 	<managed-bean>
@@ -511,7 +515,7 @@ http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
 		</managed-property>
 		<managed-property>
 				<property-name>monthlyLeaveReportService</property-name>
-				<value>#{monthlyLeaveReportService}</value>
+				<value>#{sendLeaveReportService}</value>
 			</managed-property>
 		</managed-bean>
 </faces-config>

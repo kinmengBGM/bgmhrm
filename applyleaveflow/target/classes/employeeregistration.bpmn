@@ -53,6 +53,7 @@
         <bpmn2:dataInput id="UserTask_1_idNumberInput" name="idNumber"/>
         <bpmn2:dataInput id="UserTask_1_GroupIdInput" name="GroupId"/>
         <bpmn2:dataInput id="UserTask_1_NodeNameInput" name="NodeName"/>
+        <bpmn2:dataInput id="DataInput_1" name="TaskName"/>
         <bpmn2:dataOutput id="UserTask_1_positionOutput" name="position"/>
         <bpmn2:dataOutput id="UserTask_1_employeeTypeIdOutput" name="employeeTypeId"/>
         <bpmn2:dataOutput id="UserTask_1_reasonOutput" name="reason"/>
@@ -91,6 +92,7 @@
           <bpmn2:dataInputRefs>UserTask_1_idNumberInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>UserTask_1_GroupIdInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>UserTask_1_NodeNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
         </bpmn2:inputSet>
         <bpmn2:outputSet id="OutputSet_1">
           <bpmn2:dataOutputRefs>UserTask_1_positionOutput</bpmn2:dataOutputRefs>
@@ -198,6 +200,13 @@
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_4">UserTask_1_NodeNameInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_21">
+        <bpmn2:targetRef>DataInput_1</bpmn2:targetRef>
+        <bpmn2:assignment id="Assignment_3">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="FormalExpression_8">HR Approval</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_7">DataInput_1</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
         <bpmn2:sourceRef>UserTask_1_positionOutput</bpmn2:sourceRef>
         <bpmn2:targetRef>position</bpmn2:targetRef>
@@ -297,7 +306,7 @@
     <bpmn2:endEvent id="EndEvent_1" name="">
       <bpmn2:incoming>ScriptTask_2-EndEvent_1</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:startEvent id="StartEvent_1" name="">
+    <bpmn2:startEvent id="StartEvent_1" name="Start">
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
     </bpmn2:startEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_1" tns:priority="1" name="" sourceRef="StartEvent_1" targetRef="UserTask_1"/>

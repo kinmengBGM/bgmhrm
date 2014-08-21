@@ -16,6 +16,7 @@ public class EmployeeRegistrationBean implements Serializable{
 	private String gender;
 	private String idNumber;
 	private String passportNumber;
+	private String maritalStatus;
 	
 	private EmployeeRegistrationService employeeRegistrationService;
 	
@@ -29,12 +30,20 @@ public class EmployeeRegistrationBean implements Serializable{
 		parameterMap.put("gender", gender);
 		parameterMap.put("idNumber", idNumber);
 		parameterMap.put("passportNumber", passportNumber);
+		parameterMap.put("maritalStatus", maritalStatus);
 		
 		employeeRegistrationService.submitRegistration(parameterMap);
 		return "/thankyou.xhtml";
 	}
 	
 	
+	
+	public String getMaritalStatus() {
+		return maritalStatus;
+	}
+	public void setMaritalStatus(String maritalStatus) {
+		this.maritalStatus = maritalStatus;
+	}
 	public String getUsername() {
 		return username;
 	}

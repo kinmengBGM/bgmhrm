@@ -117,6 +117,15 @@
 						<f:selectItem itemLabel="Male" itemValue="M" />
 						<f:selectItem itemLabel="Female" itemValue="F" />
 					</p:selectOneMenu>
+					
+					<h:outputText value="Marital Status" class="req"/>
+					<p:selectOneMenu
+						value="#{employeeRegistrationApprovalMgmtBean.selectedRegisteredEmployee.maritalStatus}"
+						effect="fade" required="true" requiredMessage="Please select Marital Status">
+						<f:selectItem itemLabel="Select one" itemValue=""/>
+						<f:selectItem itemLabel="Single" itemValue="Single" />
+						<f:selectItem itemLabel="Married" itemValue="Married" />
+					</p:selectOneMenu>
 
 					<h:outputText value="Grade" class="req" />
 					<p:selectOneMenu

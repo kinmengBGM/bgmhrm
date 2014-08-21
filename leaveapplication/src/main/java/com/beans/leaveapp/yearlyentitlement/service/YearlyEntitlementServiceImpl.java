@@ -246,7 +246,7 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 	@Override
 	public void addAllEntitlementsToNewEmployee(Employee newlyRegisteredEmployee) {
 		// Add full entitlement for all kinds of leaves except Annual and Unpaid leaves
-		
+		final String married="Married";
 		try{
 		LeaveType leaveTypeBean = null;
 		YearlyEntitlement  leaveEntitlement = null;
@@ -255,20 +255,40 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 		for(Leave leaveType : Leave.values()){
 			
 			if(!(leaveType.equalsName(Leave.ANNUAL.toString()) || leaveType.equalsName(Leave.UNPAID.toString()))){
-			if( newlyRegisteredEmployee.getGender().equals("M")&& leaveType.equalsName(Leave.MATERNITY.toString()) || newlyRegisteredEmployee.getGender().equals("F")&& leaveType.equalsName(Leave.PATERNITY.toString()) || "Married".equalsIgnoreCase(newlyRegisteredEmployee.getMaritalStatus()))
-				continue;
-			leaveTypeBean = leaveTypeRepository.getLeaveTypeByName(leaveType.toString(),newlyRegisteredEmployee.getEmployeeType().getId());
-			if(leaveTypeBean!=null){
-			leaveEntitlement = new YearlyEntitlement();
-			leaveEntitlement.setCreatedBy(leaveTypeBean.getCreatedBy());
-			leaveEntitlement.setCreationTime(new Date());
-			leaveEntitlement.setcurrentLeaveBalance(leaveTypeBean.getEntitlement());
-			leaveEntitlement.setYearlyLeaveBalance(leaveTypeBean.getEntitlement());
-			leaveEntitlement.setEntitlement(leaveTypeBean.getEntitlement());
-			leaveEntitlement.setEmployee(newlyRegisteredEmployee);
-			leaveEntitlement.setDeleted(false);
-			leaveEntitlement.setLeaveType(leaveTypeBean);
-			yearlyEntitleRepository.save(leaveEntitlement);
+			// Checking whether the employee is Married or single to add Marriage Leaves
+				if(married.equalsIgnoreCase(newlyRegisteredEmployee.getMaritalStatus())){
+				if( newlyRegisteredEmployee.getGender().equals("M")&& leaveType.equalsName(Leave.MATERNITY.toString()) || newlyRegisteredEmployee.getGender().equals("F")&& leaveType.equalsName(Leave.PATERNITY.toString()) || leaveType.equalsName(Leave.MARRIAGE.toString()))
+					continue;
+				leaveTypeBean = leaveTypeRepository.getLeaveTypeByName(leaveType.toString(),newlyRegisteredEmployee.getEmployeeType().getId());
+				if(leaveTypeBean!=null){
+				leaveEntitlement = new YearlyEntitlement();
+				leaveEntitlement.setCreatedBy(leaveTypeBean.getCreatedBy());
+				leaveEntitlement.setCreationTime(new Date());
+				leaveEntitlement.setcurrentLeaveBalance(leaveTypeBean.getEntitlement());
+				leaveEntitlement.setYearlyLeaveBalance(leaveTypeBean.getEntitlement());
+				leaveEntitlement.setEntitlement(leaveTypeBean.getEntitlement());
+				leaveEntitlement.setEmployee(newlyRegisteredEmployee);
+				leaveEntitlement.setDeleted(false);
+				leaveEntitlement.setLeaveType(leaveTypeBean);
+				yearlyEntitleRepository.save(leaveEntitlement);
+				}
+			}else{
+				if( leaveType.equalsName(Leave.PATERNITY.toString()) || leaveType.equalsName(Leave.MATERNITY.toString()))
+				 continue;
+				leaveTypeBean = leaveTypeRepository.getLeaveTypeByName(leaveType.toString(),newlyRegisteredEmployee.getEmployeeType().getId());
+				if(leaveTypeBean!=null){
+				leaveEntitlement = new YearlyEntitlement();
+				leaveEntitlement.setCreatedBy(leaveTypeBean.getCreatedBy());
+				leaveEntitlement.setCreationTime(new Date());
+				leaveEntitlement.setcurrentLeaveBalance(leaveTypeBean.getEntitlement());
+				leaveEntitlement.setYearlyLeaveBalance(leaveTypeBean.getEntitlement());
+				leaveEntitlement.setEntitlement(leaveTypeBean.getEntitlement());
+				leaveEntitlement.setEmployee(newlyRegisteredEmployee);
+				leaveEntitlement.setDeleted(false);
+				leaveEntitlement.setLeaveType(leaveTypeBean);
+				yearlyEntitleRepository.save(leaveEntitlement);
+				}
+				
 			}
 		}
 			if(leaveType.equalsName(Leave.ANNUAL.toString())){

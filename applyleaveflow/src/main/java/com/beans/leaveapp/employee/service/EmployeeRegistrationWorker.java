@@ -32,6 +32,7 @@ public class EmployeeRegistrationWorker {
 		employee.setJoinDate(registeredEmployee.getJoinDate());
 		employee.setCreatedBy(employee.getName());
 		employee.setCreationTime(new Date());
+		employee.setMaritalStatus(registeredEmployee.getMaritalStatus());
 		Users user = new Users();
 		user.setUsername(registeredEmployee.getUsername());
 		user.setPassword(registeredEmployee.getPassword());

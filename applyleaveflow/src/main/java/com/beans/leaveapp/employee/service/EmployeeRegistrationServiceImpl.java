@@ -68,6 +68,9 @@ public class EmployeeRegistrationServiceImpl implements
 			String idNumber = (String) contentMap.get("idNumber");
 			registeredEmployee.setIdNumber(idNumber);
 			
+			String maritalStatus = (String) contentMap.get("maritalStatus");
+			registeredEmployee.setMaritalStatus(maritalStatus);
+			
 		}
 		
 		return registeredEmployee;
@@ -90,6 +93,7 @@ public class EmployeeRegistrationServiceImpl implements
 		resultMap.put("position", registeredEmployee.getPosition());
 		resultMap.put("reason", registeredEmployee.getReason());
 		resultMap.put("joinDate", registeredEmployee.getJoinDate());
+		resultMap.put("maritalStatus", registeredEmployee.getMaritalStatus());
 		resultMap.put("registeredEmployee", registeredEmployee);
 		return resultMap;
 	}

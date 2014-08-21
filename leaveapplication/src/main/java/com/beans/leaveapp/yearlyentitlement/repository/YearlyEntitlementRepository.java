@@ -41,10 +41,10 @@ public interface YearlyEntitlementRepository extends
 			@Param("leaveTypeName") String leaveTypeName);
 	
 
-	@Query("select y from YearlyEntitlement y where y.employee.id =? and y.leaveType.id IN (2,3) and isDeleted = 0 ")
+	@Query("select y from YearlyEntitlement y where y.employee.id =? and y.leaveType.id IN (1,2) and isDeleted = 0 ")
 	 YearlyEntitlement findByEmployeeIdPermAndCont(int employeeId);
 	
-	@Query("select y from YearlyEntitlement y where y.employee.id = ? and y.leaveType.id = 3 and isDeleted = 0")
+	@Query("select y from YearlyEntitlement y where y.employee.id = ? and y.leaveType.id = 1 and isDeleted = 0")
 	 YearlyEntitlement findByEmployeeIdPerm(int employeeId);
 
 	@Query("select y from YearlyEntitlement y where y.employee.id = ? and isDeleted = 0")

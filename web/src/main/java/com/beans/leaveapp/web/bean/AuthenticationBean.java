@@ -20,9 +20,14 @@ import com.beans.common.audit.service.SystemAuditTrailLevel;
 import com.beans.common.security.users.model.Users;
 import com.beans.common.security.users.service.UsersNotFound;
 import com.beans.common.security.users.service.UsersService;
+import com.beans.leaveapp.batch.service.MonthlyAddedLeave;
+import com.beans.leaveapp.batch.service.UpdateAnnualLeaveReport;
+import com.beans.leaveapp.batch.service.YearlyRefreshedLeaves;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.employee.service.EmployeeNotFound;
 import com.beans.leaveapp.employee.service.EmployeeService;
+import com.beans.leaveapp.leavetype.service.LeaveTypeNotFound;
+import com.beans.leaveapp.montlhyreport.LeaveReportWorker;
 
 
 public class AuthenticationBean implements Serializable{
@@ -148,5 +153,6 @@ public class AuthenticationBean implements Serializable{
 	}
 	public void setAuditTrail(AuditTrail auditTrail) {
 		this.auditTrail = auditTrail;
-	}	
+	}		
+	
 }

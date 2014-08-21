@@ -152,13 +152,18 @@ public class UsersServiceImpl implements UsersService {
 		while(userToAccessRightIterator.hasNext()) {
 			UserToAccessRights currentUserToAccessRights = userToAccessRightIterator.next();
 			AccessRights currentAccessRights = currentUserToAccessRights.getAccessRights();
-			if(!currentUserToAccessRights.isEnabled() && accessRightsSet.contains(currentAccessRights.getAccessRights())) {
-				accessRightsSet.remove(currentAccessRights.getAccessRights());
-			} else {
+			if(accessRightsSet.contains(currentAccessRights.getAccessRights())) {
+				if(currentUserToAccessRights.isEnabled() == true){
 				accessRightsSet.add(currentAccessRights.getAccessRights());
+			} else if(currentUserToAccessRights.isEnabled() == false) {
+				accessRightsSet.remove(currentAccessRights.getAccessRights());
 			}
+		}else {
+			if(currentUserToAccessRights.isEnabled() == true){
+				accessRightsSet.add(currentAccessRights.getAccessRights());
+			} 
 		}
-		
+		}
 		return accessRightsSet;
 	}
 	

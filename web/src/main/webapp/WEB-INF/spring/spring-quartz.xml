@@ -11,7 +11,8 @@
 	
 	<bean id="monthlyAddedLeaveJob" class="com.beans.leaveapp.quartzjobs.MonthlyAddedLeaveJob"></bean>
 	<bean id="yearlyAddedLeaveJob" class="com.beans.leaveapp.quartzjobs.UpdateAnnualLeaveReportJob"></bean>
-	<bean id="yearlyRefreshedLeavesJob" class="com.beans.leaveapp.quartzjobs.YearlyRefreshedLeavesJob"></bean> 
+	<bean id="yearlyRefreshedLeavesJob" class="com.beans.leaveapp.quartzjobs.YearlyRefreshedLeavesJob"></bean>
+	<bean id="initializeCurrentMonthJob" class="com.beans.leaveapp.quartzjobs.InitializeCurrentMonthJob"></bean> 
 	
 	
 	<bean name="MonthlyAddedLeaveJob" class="org.springframework.scheduling.quartz.JobDetailBean">
@@ -26,6 +27,10 @@
 			<property name="jobClass" value="com.beans.leaveapp.quartzjobs.YearlyRefreshedLeavesJob"></property>
 	</bean>
 	
+	<bean name="InitializeCurrentMonthJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+			<property name="jobClass" value="com.beans.leaveapp.quartzjobs.InitializeCurrentMonthJob"></property>
+	</bean>
+	
 	<bean id="cronTriggerMonthlyAddedLeaveJob" class="org.springframework.scheduling.quartz.CronTriggerBean">
 			<property name="jobDetail" ref="MonthlyAddedLeaveJob"></property>
 			<property name="cronExpression" value="0 0 21 L * ?"></property>	
@@ -34,19 +39,25 @@
 	<bean id="cronTriggerUpdateAnnualLeaveReportJob" class="org.springframework.scheduling.quartz.CronTriggerBean">
 			<property name="jobDetail" ref="UpdateAnnualLeaveReportJob"></property>
 			<property name="cronExpression" value="0 0 22 L * ?"></property>
-	</bean> 
+	</bean>
 	
-	<bean id="cronTriggerYearlyRefreshedLeavesJob" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<bean id="cronTriggerYearlyRefreshedLeavesJob" class="org.springframework.scheduling.quartz.CronTriggerBean">
 			<property name="jobDetail" ref="YearlyRefreshedLeavesJob"></property>
 			<property name="cronExpression" value="0 0 1 * 1 ?"></property>
-	</bean>
+	</bean> 
+	
+	<bean id="cronTriggerInitializeCurrentMonthJob" class="org.springframework.scheduling.quartz.CronTriggerBean">
+			<property name="jobDetail" ref="InitializeCurrentMonthJob"></property>
+			<property name="cronExpression" value="0 30 1 1 * ?"></property>
+	</bean>	
 	
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 			<property name="triggers">
 				<list>
 					<ref bean="cronTriggerMonthlyAddedLeaveJob" />
 					<ref bean="cronTriggerUpdateAnnualLeaveReportJob"/>
-					<ref bean="cronTriggerYearlyRefreshedLeavesJob"/>
+					<ref bean="cronTriggerInitializeCurrentMonthJob"/>
+					<ref bean="cronTriggerYearlyRefreshedLeavesJob"/>					
 				</list>			
 			</property>
 	</bean>

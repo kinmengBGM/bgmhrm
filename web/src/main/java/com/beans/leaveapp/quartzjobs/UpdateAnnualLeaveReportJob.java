@@ -5,6 +5,7 @@ import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import com.beans.leaveapp.batch.service.UpdateAnnualLeaveReport;
+import com.beans.leaveapp.montlhyreport.LeaveReportWorker;
 
 public class UpdateAnnualLeaveReportJob extends QuartzJobBean{
 
@@ -17,6 +18,7 @@ public class UpdateAnnualLeaveReportJob extends QuartzJobBean{
 		
 		try {
 			updateAnnualLeaveReport.UpdatingAnnualLeaveReport();
+			LeaveReportWorker.doSendLeaveReport();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		

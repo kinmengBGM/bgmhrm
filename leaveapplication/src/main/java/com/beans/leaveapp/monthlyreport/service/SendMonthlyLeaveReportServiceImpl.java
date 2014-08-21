@@ -923,12 +923,14 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 				if(leaveTypeList!=null && leaveTypeList.size()>0){
 					for (LeaveType leaveType : leaveTypeList) {
 						if(currentMonth.get(Calendar.MONTH)==0){
-						MonthlyLeaveReport decemberMonthRecord = monthlyLeaveRepository.getCurrentMonthAnnualLeaveRecord(employee.getId(), 12, leaveType.getId(), currentMonth.get(Calendar.YEAR)-1);
+						//MonthlyLeaveReport decemberMonthRecord = monthlyLeaveRepository.getCurrentMonthAnnualLeaveRecord(employee.getId(), 12, leaveType.getId(), currentMonth.get(Calendar.YEAR)-1);
 						MonthlyLeaveReport januaryMonthRecord = monthlyLeaveRepository.getCurrentMonthAnnualLeaveRecord(employee.getId(), 1, leaveType.getId(), currentMonth.get(Calendar.YEAR));
+						if(januaryMonthRecord != null){
 						januaryMonthRecord.setLeavesTaken(new Double(0));
-						januaryMonthRecord.setYearlyLeaveBalance(decemberMonthRecord.getYearlyLeaveBalance());
+						januaryMonthRecord.setYearlyLeaveBalance(leaveType.getEntitlement());
 						
 						monthlyLeaveRepository.save(januaryMonthRecord);
+						}
 						}
 						else {
 							List<MonthlyLeaveReport>	monthlyLeaveList = monthlyLeaveRepository.getEmployeeMonthlyLeaveReportDataForInitialization(employee.getId(), sortingMonthList, leaveType.getId(), currentMonth.get(Calendar.YEAR));

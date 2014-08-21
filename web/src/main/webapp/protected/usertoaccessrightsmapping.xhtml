@@ -56,15 +56,12 @@
           <h3>Map Access Rights to User #{userToAccessRightsMgmtBean.selectedUsers.username}</h3>        
           <h:form id="assignedAccessRightsTableForm">
         <p:dataTable id="assignedAccessRightsTable" var="userToAccessRights0" value="#{userToAccessRightsMgmtBean.userToAssignedAccessRightsDataModel}"  rowKey="#{userToAccessRights0.id}"
-                 paginator="true" rows="10" scrollable="true" emptyMessage="No data found with given criteria" >
-    
-        
-          <!-- <p:ajax event="rowSelect" listener="#{userToAccessRightsMgmtBean.onAssignedAccessRightsSelect}" update=":assignedAccessRightsTableForm"/> -->
+                 paginator="true" rows="10" scrollable="true" emptyMessage="No data found with given criteria" >         
           
           <p:column id="assignedAccessRightsHeader"  headerText="Assigned Access Right">
             <h:outputText value="#{userToAccessRights0.accessRights.accessRights}" />
           </p:column>      
-        	<p:column id="disabledHeader"  headerText="Disable" >
+        	<p:column id="disabledHeader"  headerText="Enabled" >
             <p:selectBooleanCheckbox value="#{userToAccessRights0.enabled}">
             <f:ajax listener="#{userToAccessRightsMgmtBean.myListener()}"/>
             </p:selectBooleanCheckbox>
@@ -79,9 +76,7 @@
 			      <h:form>
 			            <p:messages autoUpdate="true" showDetail="true"/>			      		
 			     		<p:dataTable id="unAssignedAccessRightsTable" var="accessRights0" value="#{userToAccessRightsMgmtBean.accessRightsDataModel}" rowKey="#{accessRights0.id}" rendered="#{userToAccessRightsMgmtBean.renderAccessRights == true}"
-		               widgetVar="dia" 	 paginator="true" rows="20" scrollable="true" selection="#{userToAccessRightsMgmtBean.selectedAccessRightsList}" emptyMessage="No data found with given criteria">
-					     	
-					     <!-- <p:ajax event="rowSelect" listener="#{userToAccessRightsMgmtBean.onUnAssignedAccessRightsSelect}" update=":assignedAccessRightsTableForm" oncomplete="PF('addAccessRightsDialog').show()"/>  -->
+		               widgetVar="dia" 	 paginator="true" rows="20" scrollable="true" selection="#{userToAccessRightsMgmtBean.selectedAccessRightsList}" emptyMessage="No data found with given criteria">					     
 					     	
 					     	 <p:column selectionMode="multiple" style="width:160px;text-align:center"/>
 					     	<p:column id="unAssignedAccessRightsHeader"  headerText="Un Assigned Access Rights" sortBy="accessRights">

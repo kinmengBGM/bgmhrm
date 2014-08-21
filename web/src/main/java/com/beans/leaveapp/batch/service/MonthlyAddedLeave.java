@@ -55,7 +55,7 @@ public class MonthlyAddedLeave implements Serializable{
 					yearlyEntitlement.setcurrentLeaveBalance(currentLeaveBalaceWithAddedLeave);
 					yearlyEntitlementService.update(yearlyEntitlement);
 				}			
-				if(employee.getEmployeeType().getId() == 3 && yearlyEntitlement != null){
+				if(employee.getEmployeeType().getName().equals("PERM") && yearlyEntitlement != null){
 					if(yearlyEntitlement.getEntitlement() < 16){						
 						if(currentDateMonth == joinDateMonth && currentDateYear != joinDateYear){
 							double entitlement =yearlyEntitlement.getEntitlement();

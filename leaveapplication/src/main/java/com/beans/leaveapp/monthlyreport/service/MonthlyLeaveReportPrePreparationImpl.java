@@ -143,7 +143,8 @@ public class MonthlyLeaveReportPrePreparationImpl implements MonthlyLeaveReportP
 		if(employeeLeaveList!=null && employeeLeaveList.size()>0){
 			for (LeaveType leaveType : employeeLeaveList) {
 				// Discard inserting data for Leave Type Maternity but Gender is F and vice versa
-				if(Leave.MATERNITY.equalsName(leaveType.getName())&& "M".equalsIgnoreCase(employee.getGender()) || Leave.PATERNITY.equalsName(leaveType.getName())&& "F".equalsIgnoreCase(employee.getGender()))
+				if(employee.getMaritalStatus().equals("Married")){
+				if(Leave.MATERNITY.equalsName(leaveType.getName()) && "M".equalsIgnoreCase(employee.getGender()) || (Leave.PATERNITY.equalsName(leaveType.getName()) && "F".equalsIgnoreCase(employee.getGender())) || (Leave.MARRIAGE.equalsName(leaveType.getName())))
 					continue;
 				List<MonthlyLeaveReport> yearlyLeaveReportList = new ArrayList<MonthlyLeaveReport>();
 				
@@ -253,6 +254,118 @@ public class MonthlyLeaveReportPrePreparationImpl implements MonthlyLeaveReportP
 				
 				// Saving all the 13 beans of specific Employee
 				monthlyLeaveReportRepository.save(yearlyLeaveReportList);
+				} else {
+					if(Leave.MATERNITY.equalsName(leaveType.getName()) || Leave.PATERNITY.equalsName(leaveType.getName()))
+						continue;
+					List<MonthlyLeaveReport> yearlyLeaveReportList = new ArrayList<MonthlyLeaveReport>();
+					
+					MonthlyLeaveReport yearlyLeaveReportForJan = new MonthlyLeaveReport();
+					yearlyLeaveReportForJan.setSortingMonthId(1);
+					yearlyLeaveReportForJan.setMonthOfYear("January");
+					yearlyLeaveReportForJan.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+					yearlyLeaveReportForJan.setEmployee(employee);
+					yearlyLeaveReportForJan.setLeaveType(leaveType);
+					yearlyLeaveReportList.add(yearlyLeaveReportForJan);
+					
+					MonthlyLeaveReport yearlyLeaveReportForFeb = new MonthlyLeaveReport();
+					yearlyLeaveReportForFeb.setSortingMonthId(2);
+					yearlyLeaveReportForFeb.setMonthOfYear("February");
+					yearlyLeaveReportForFeb.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+					yearlyLeaveReportForFeb.setEmployee(employee);
+					yearlyLeaveReportForFeb.setLeaveType(leaveType);
+					yearlyLeaveReportList.add(yearlyLeaveReportForFeb);
+					
+					MonthlyLeaveReport yearlyLeaveReportForMar = new MonthlyLeaveReport();
+					yearlyLeaveReportForMar.setSortingMonthId(3);
+					yearlyLeaveReportForMar.setMonthOfYear("March");
+					yearlyLeaveReportForMar.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+					yearlyLeaveReportForMar.setEmployee(employee);
+					yearlyLeaveReportForMar.setLeaveType(leaveType);
+					yearlyLeaveReportList.add(yearlyLeaveReportForMar);
+					
+					MonthlyLeaveReport yearlyLeaveReportForApr = new MonthlyLeaveReport();
+					yearlyLeaveReportForApr.setSortingMonthId(4);
+					yearlyLeaveReportForApr.setMonthOfYear("April");
+					yearlyLeaveReportForApr.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+					yearlyLeaveReportForApr.setEmployee(employee);
+					yearlyLeaveReportForApr.setLeaveType(leaveType);
+					yearlyLeaveReportList.add(yearlyLeaveReportForApr);
+					
+					MonthlyLeaveReport yearlyLeaveReportForMay = new MonthlyLeaveReport();
+					yearlyLeaveReportForMay.setSortingMonthId(5);
+					yearlyLeaveReportForMay.setMonthOfYear("May");
+					yearlyLeaveReportForMay.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+					yearlyLeaveReportForMay.setEmployee(employee);
+					yearlyLeaveReportForMay.setLeaveType(leaveType);
+					yearlyLeaveReportList.add(yearlyLeaveReportForMay);
+					
+					MonthlyLeaveReport yearlyLeaveReportForJun = new MonthlyLeaveReport();
+					yearlyLeaveReportForJun.setSortingMonthId(6);
+					yearlyLeaveReportForJun.setMonthOfYear("June");
+					yearlyLeaveReportForJun.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+					yearlyLeaveReportForJun.setEmployee(employee);
+					yearlyLeaveReportForJun.setLeaveType(leaveType);
+					yearlyLeaveReportList.add(yearlyLeaveReportForJun);
+					
+					MonthlyLeaveReport yearlyLeaveReportForJul = new MonthlyLeaveReport();
+					yearlyLeaveReportForJul.setSortingMonthId(7);
+					yearlyLeaveReportForJul.setMonthOfYear("July");
+					yearlyLeaveReportForJul.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+					yearlyLeaveReportForJul.setEmployee(employee);
+					yearlyLeaveReportForJul.setLeaveType(leaveType);
+					yearlyLeaveReportList.add(yearlyLeaveReportForJul);
+					
+					MonthlyLeaveReport yearlyLeaveReportForAug = new MonthlyLeaveReport();
+					yearlyLeaveReportForAug.setSortingMonthId(8);
+					yearlyLeaveReportForAug.setMonthOfYear("August");
+					yearlyLeaveReportForAug.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+					yearlyLeaveReportForAug.setEmployee(employee);
+					yearlyLeaveReportForAug.setLeaveType(leaveType);
+					yearlyLeaveReportList.add(yearlyLeaveReportForAug);
+					
+					MonthlyLeaveReport yearlyLeaveReportForSep = new MonthlyLeaveReport();
+					yearlyLeaveReportForSep.setSortingMonthId(9);
+					yearlyLeaveReportForSep.setMonthOfYear("September");
+					yearlyLeaveReportForSep.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+					yearlyLeaveReportForSep.setEmployee(employee);
+					yearlyLeaveReportForSep.setLeaveType(leaveType);
+					yearlyLeaveReportList.add(yearlyLeaveReportForSep);
+					
+					MonthlyLeaveReport yearlyLeaveReportForOct = new MonthlyLeaveReport();
+					yearlyLeaveReportForOct.setSortingMonthId(10);
+					yearlyLeaveReportForOct.setMonthOfYear("October");
+					yearlyLeaveReportForOct.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+					yearlyLeaveReportForOct.setEmployee(employee);
+					yearlyLeaveReportForOct.setLeaveType(leaveType);
+					yearlyLeaveReportList.add(yearlyLeaveReportForOct);
+					
+					MonthlyLeaveReport yearlyLeaveReportForNov = new MonthlyLeaveReport();
+					yearlyLeaveReportForNov.setSortingMonthId(11);
+					yearlyLeaveReportForNov.setMonthOfYear("November");
+					yearlyLeaveReportForNov.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+					yearlyLeaveReportForNov.setEmployee(employee);
+					yearlyLeaveReportForNov.setLeaveType(leaveType);
+					yearlyLeaveReportList.add(yearlyLeaveReportForNov);
+					
+					MonthlyLeaveReport yearlyLeaveReportForDec = new MonthlyLeaveReport();
+					yearlyLeaveReportForDec.setSortingMonthId(12);
+					yearlyLeaveReportForDec.setMonthOfYear("December");
+					yearlyLeaveReportForDec.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+					yearlyLeaveReportForDec.setEmployee(employee);
+					yearlyLeaveReportForDec.setLeaveType(leaveType);
+					yearlyLeaveReportList.add(yearlyLeaveReportForDec);
+					
+					MonthlyLeaveReport yearlyLeaveReportForTot = new MonthlyLeaveReport();
+					yearlyLeaveReportForTot.setSortingMonthId(13);
+					yearlyLeaveReportForTot.setMonthOfYear("Total");
+					yearlyLeaveReportForTot.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+					yearlyLeaveReportForTot.setEmployee(employee);
+					yearlyLeaveReportForTot.setLeaveType(leaveType);
+					yearlyLeaveReportList.add(yearlyLeaveReportForTot);
+					
+					// Saving all the 13 beans of specific Employee
+					monthlyLeaveReportRepository.save(yearlyLeaveReportList);
+				}	
 			}
 		
 		}

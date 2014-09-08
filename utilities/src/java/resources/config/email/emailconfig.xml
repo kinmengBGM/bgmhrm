@@ -8,8 +8,8 @@
             <ssl>true</ssl>
             <auth>true</auth>
             <sender>
-            	<username>jenkinsbeans@gmail.com</username>
-            	<address>jenkinsbeans@gmail.com</address>
+            	<username>beanshrm@gmail.com</username>
+            	<address>beanshrm@gmail.com</address>
         		<password>1700819819</password>
         	</sender>    	
         </smtp>

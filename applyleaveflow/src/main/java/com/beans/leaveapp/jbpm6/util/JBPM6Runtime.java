@@ -49,7 +49,7 @@ public class JBPM6Runtime {
 		runtimeEnvironmentBuilder.entityManagerFactory(entityManagerFactory);
 		runtimeEnvironmentBuilder.userGroupCallback(userGroupCallback);
 		RuntimeEnvironment runtimeEnvironment = runtimeEnvironmentBuilder.get();
-		manager = RuntimeManagerFactory.Factory.get().newSingletonRuntimeManager(runtimeEnvironment, identifier);
+		manager = RuntimeManagerFactory.Factory.get().newPerProcessInstanceRuntimeManager(runtimeEnvironment, identifier);
 		
 	}	
 	

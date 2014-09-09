@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.beans</groupId>
@@ -255,38 +256,74 @@
 		</dependency>
 
 		<!-- Common Collection Jar -->
-		 <dependency>
+		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
-		</dependency> 
+		</dependency>
 
-		<!-- Quartz Jar -->		
-  		<dependency>
-  			<groupId>org.quartz-scheduler</groupId>	
-  			<artifactId>quartz</artifactId>
-  			<version>1.8.6</version>
-  		</dependency> 
-  		<!-- QuartzJobBean in spring-context-support -->
-  		<dependency>
+		<!-- Quartz Jar -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>1.8.6</version>
+		</dependency>
+		<!-- QuartzJobBean in spring-context-support -->
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 			<version>3.1.2.RELEASE</version>
 		</dependency>
- 
+
 		<!-- Spring + Quartz need transaction -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
 			<version>3.1.2.RELEASE</version>
 		</dependency>
-  		
+
 
 
 	</dependencies>
+	<profiles>
+		<profile>
+			<id>deploy-eap</id>
+			<activation>
+				<property>
+					<name>deployToEAP</name>
+				</property>
+			</activation>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jboss.as.plugins</groupId>
+						<artifactId>jboss-as-maven-plugin</artifactId>
+						<version>7.5.Final</version>
+						<configuration>
+							<hostname>${hostname}</hostname>
+							<port>${port}</port>
+							<username>${username}</username>
+							<password>${password}</password>
+
+						</configuration>
+						<executions>
+							<execution>
+								<phase>install</phase>
+								<goals>
+									<goal>deploy</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+
+		</profile>
+	</profiles>
 	<build>
 		<finalName>hrm</finalName>
-		<plugins>
+		<!-- <plugins>
 			<plugin>
 				<groupId>org.jboss.as.plugins</groupId>
 				<artifactId>jboss-as-maven-plugin</artifactId>
@@ -308,18 +345,19 @@
 				</executions>
 			</plugin>
 		</plugins>
+ -->
 	</build>
 
-<distributionManagement>
-  <repository>
-     <id>beans-releases</id>
-     <name>Internal Releases</name>
-     <url>http://beans-my.dyndns.biz:8081/nexus/content/repositories/beans_releases/</url>
-  </repository>
-  <snapshotRepository>
-     <id>beans-releases</id>
-     <name>Internal Releases</name>
-     <url>http://beans-my.dyndns.biz:8081/nexus/content/repositories/beans_snapshots/</url>
-  </snapshotRepository>
-</distributionManagement>
+	<distributionManagement>
+		<repository>
+			<id>beans-releases</id>
+			<name>Internal Releases</name>
+			<url>http://beans-my.dyndns.biz:8081/nexus/content/repositories/beans_releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>beans-releases</id>
+			<name>Internal Releases</name>
+			<url>http://beans-my.dyndns.biz:8081/nexus/content/repositories/beans_snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>

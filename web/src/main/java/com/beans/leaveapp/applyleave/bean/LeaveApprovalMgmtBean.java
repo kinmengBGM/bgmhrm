@@ -23,6 +23,7 @@ import com.beans.exceptions.BSLException;
 import com.beans.leaveapp.applyleave.model.LeaveApprovalDataModel;
 import com.beans.leaveapp.applyleave.service.LeaveApplicationService;
 import com.beans.leaveapp.applyleave.service.LeaveApplicationWorker;
+import com.beans.leaveapp.calendar.service.CalendarEventService;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.beans.leaveapp.leavetransaction.service.LeaveTransactionService;
 import com.beans.leaveapp.monthlyreport.service.SendMonthlyLeaveReportService;
@@ -160,16 +161,8 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	}
 
 	public List<LeaveTransaction> getLeaveRequestApprovalList() {
-		if(leaveRequestList == null || insertDeleted == true) {
-			 try {
-				 leaveRequestList =   getLeaveApplicationService().getPendingLeaveRequestsList(actorUsers.getUsername());
-			} catch (Throwable e) {
-				e.printStackTrace();
-			}
+			return    getLeaveApplicationService().getPendingLeaveRequestsList(actorUsers.getUsername());
 			
-		}
-		
-		return leaveRequestList;
 	}
 	
 	public List<LeaveTransaction> getLeaveRequestFutureLeaveList() {
@@ -199,12 +192,16 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 				roleSet.add(role.getRole());
 			}
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info : "+getExcptnMesProperty("info.leave.approve.dir"),"Leave Approved"));
+			CalendarEventService.createEventForApprovedLeave(selectedLeaveRequest);
 		}catch(BSLException e){
 			FacesMessage msg = new FacesMessage("Error : "+getExcptnMesProperty(e.getMessage()),"Leave approve error");  
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			msg.setSeverity(FacesMessage.SEVERITY_INFO);
 	        FacesContext.getCurrentInstance().addMessage(null, msg); 
 		}catch(Exception e) {
 			log.error("Error while approving leave by "+getActorUsers().getUsername(), e);
+			FacesMessage msg = new FacesMessage("Error : "+getExcptnMesProperty(e.getMessage()),"Leave approve error");  
+			msg.setSeverity(FacesMessage.SEVERITY_INFO);
+	        FacesContext.getCurrentInstance().addMessage(null, msg);
 		}
 	}
 	
@@ -226,10 +223,13 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info : "+getExcptnMesProperty("info.leave.reject"),"Leave Rejected"));
 			}catch(BSLException e){
 				FacesMessage msg = new FacesMessage("Error : "+getExcptnMesProperty(e.getMessage()),"Leave Reject Error");  
-				msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+				msg.setSeverity(FacesMessage.SEVERITY_INFO);
 		        FacesContext.getCurrentInstance().addMessage(null, msg); 
 			}catch(Exception e) {
 				log.error("Error while approving leave by "+getActorUsers().getUsername(), e);
+				FacesMessage msg = new FacesMessage("Error : "+getExcptnMesProperty(e.getMessage()),"Leave approve error");  
+				msg.setSeverity(FacesMessage.SEVERITY_INFO);
+		        FacesContext.getCurrentInstance().addMessage(null, msg);
 			}
 		}
 

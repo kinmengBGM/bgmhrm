@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.persistence.EntityManagerFactory;
 
 import org.jbpm.services.task.utils.ContentMarshallerHelper;
@@ -29,6 +27,8 @@ import org.kie.api.task.model.Task;
 import org.kie.api.task.model.TaskSummary;
 import org.kie.internal.runtime.manager.context.ProcessInstanceIdContext;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
+
+import com.beans.exceptions.BSLException;
 
 
 public class JBPM6Runtime {
@@ -161,21 +161,21 @@ public class JBPM6Runtime {
 	
 	public void submitTask(String username, long taskId, HashMap<String, Object> parameterMap) {
 		TaskService taskService=null;
-		try{
 		RuntimeEngine runtimeEngine = manager.getRuntimeEngine(ProcessInstanceIdContext.get());
 		
 		taskService = runtimeEngine.getTaskService();
 		
 		taskService.start(taskId, username);
 		taskService.complete(taskId, username, parameterMap);
-		}catch(Exception e){
-			e.printStackTrace();
-			/*if(taskService!=null){
-				taskService.exit(taskId, username);
-				throw new BSLException("error.leaveapp.terminate");
-			}*/
+	}
+	
+	public void terminateTask(long taskId,String username){
+		TaskService taskService=null;
+		RuntimeEngine runtimeEngine = manager.getRuntimeEngine(ProcessInstanceIdContext.get());
+		taskService = runtimeEngine.getTaskService();
+		if(taskService!=null){
+			taskService.exit(taskId, username);
 		}
-		
 	}
 	
 	@SuppressWarnings("unchecked")

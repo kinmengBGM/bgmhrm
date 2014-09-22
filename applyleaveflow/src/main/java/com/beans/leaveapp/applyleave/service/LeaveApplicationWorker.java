@@ -1,5 +1,6 @@
 package com.beans.leaveapp.applyleave.service;
 
+import java.io.IOException;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -28,7 +29,12 @@ public class LeaveApplicationWorker {
 		else{
 			sendMailService.sendEmailNotificationToLeaveApplicant(leaveTransaction, isApproverApproved,approverName);
 			sendMailService.sendEmailNotificationToHR(leaveTransaction, isApproverApproved,approverName);
-		}
+		/*	try {
+				//CalendarEventService.createEventForApprovedLeave(leaveTransaction);
+			} catch (IOException e) {
+				log.error("Error while creating event in the calendar after approval for Employee : "+leaveTransaction.getEmployee().getName(), e);
+			}
+		*/}
 		}catch(BSLException e)
 		{
 			log.error("Error in LeaveApplicationWorker sending mail :",  e);
@@ -41,6 +47,12 @@ public class LeaveApplicationWorker {
 		LeaveApplicationSendingMailServiceImpl sendMailService = new LeaveApplicationSendingMailServiceImpl();
 		sendMailService.sendEmailNotificationForCancelLeave(leaveTransaction, hrName);
 	}
+	
+	public static void sendTerminateMail(String leaveApplicant,String emailId){
+		LeaveApplicationSendingMailServiceImpl sendMailService = new LeaveApplicationSendingMailServiceImpl();
+		sendMailService.sendLeaveTerminateMailToApplicant(leaveApplicant, emailId);
+	}
+	
 	
 	public static void updateLeaveBalanceAfterApproval(LeaveTransaction leaveTransaction,Boolean isApproverApproved){
 		log.info("Data coming from process is  leaveTransaction : "+leaveTransaction+" and isApproverApproved :"+isApproverApproved);

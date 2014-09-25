@@ -76,14 +76,19 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	}
 
 	public LeaveApprovalDataModel getLeaveApprovalDataModelApprovedLeaves() {
-		return new LeaveApprovalDataModel(getLeaveTransactionService().getAllApprovedLeavesAppliedByEmployee());
+		if(LeaveApprovalDataModel == null || insertDeleted == true) {
+			LeaveApprovalDataModel = new LeaveApprovalDataModel(getLeaveTransactionService().getAllApprovedLeavesAppliedByEmployee());
+		}
+		return LeaveApprovalDataModel;
 		
 	}
 	
 	
 	public LeaveApprovalDataModel getLeaveApprovalDataModelAllLeaves() {
-		return new LeaveApprovalDataModel(getLeaveTransactionService().getAllLeavesAppliedByEmployee(actorUsers.getId()));
-		
+		if(LeaveApprovalDataModel == null || insertDeleted == true) {
+			LeaveApprovalDataModel = new LeaveApprovalDataModel(getLeaveTransactionService().getAllLeavesAppliedByEmployee(actorUsers.getId()));
+		}
+		return LeaveApprovalDataModel;
 	}	
 
 

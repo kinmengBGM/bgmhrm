@@ -25,6 +25,7 @@ import com.beans.leaveapp.applyleave.service.LeaveApplicationService;
 import com.beans.leaveapp.applyleave.service.LeaveApplicationWorker;
 import com.beans.leaveapp.calendar.service.CalendarEventService;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
+import com.beans.leaveapp.leavetransaction.model.LeaveTransactionsDataModel;
 import com.beans.leaveapp.leavetransaction.service.LeaveTransactionService;
 import com.beans.leaveapp.monthlyreport.service.SendMonthlyLeaveReportService;
 import com.beans.leaveapp.web.bean.BaseMgmtBean;
@@ -39,6 +40,7 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private Logger log = Logger.getLogger(this.getClass());
 	List<LeaveTransaction>  leaveRequestList;
+	List<LeaveTransaction>  pendingLeaveRequestList;
 	private boolean insertDeleted = false;
 	private Users actorUsers;
 	private AuditTrail auditTrail;
@@ -59,7 +61,8 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		}
 		param = parameterMap.get("id");		
 		if(param!=null){
-			for (LeaveTransaction leaveTransaction : leaveRequestList) {
+			    pendingLeaveRequestList = getLeaveRequestApprovalList();
+			for (LeaveTransaction leaveTransaction : pendingLeaveRequestList) {
 				if(leaveTransaction.getId()==Integer.parseInt(param)){
 					selectedLeaveRequest = leaveTransaction;
 				}
@@ -126,8 +129,16 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	}
 	public void setLeaveRequestList(List<LeaveTransaction> leaveRequestList) {
 		this.leaveRequestList = leaveRequestList;
+	}	
+
+	public List<LeaveTransaction> getPendingLeaveRequestList() {
+		return pendingLeaveRequestList;
 	}
-	
+
+	public void setPendingLeaveRequestList(
+			List<LeaveTransaction> pendingLeaveRequestList) {
+		this.pendingLeaveRequestList = pendingLeaveRequestList;
+	}
  	
 	public LeaveTransaction getSelectedLeaveRequest() {
 		return selectedLeaveRequest;
@@ -166,7 +177,10 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	}
 
 	public List<LeaveTransaction> getLeaveRequestApprovalList() {
-			return    getLeaveApplicationService().getPendingLeaveRequestsList(actorUsers.getUsername());
+		if(pendingLeaveRequestList==null || insertDeleted==true){
+			return getLeaveApplicationService().getPendingLeaveRequestsList(actorUsers.getUsername());
+		}
+			return  pendingLeaveRequestList;
 			
 	}
 	

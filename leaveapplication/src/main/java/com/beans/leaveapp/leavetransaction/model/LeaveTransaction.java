@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -22,6 +23,7 @@ import org.hibernate.annotations.Type;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.leaveapplicationcomment.model.LeaveApplicationComment;
 import com.beans.leaveapp.leavetype.model.LeaveType;
+import com.mysql.jdbc.Blob;
 
 @Entity
 @Table(name="LeaveTransaction")
@@ -49,6 +51,10 @@ public class LeaveTransaction implements Serializable{
 	private Date lastModifiedTime;
 	private String status;
 	private String rejectReason;
+	private String timings;
+	
+	@Lob
+	private byte[] sickLeaveAttachment;
 	
 	public LeaveTransaction(int id, Date applicationDate,
 			Date startDateTime, Date endDateTime,
@@ -242,6 +248,26 @@ public class LeaveTransaction implements Serializable{
 	public void setRejectReason(String rejectReason) {
 		this.rejectReason = rejectReason;
 	}
+
+	
+	@Column(name="sickLeaveAttachment",nullable=true)
+	public byte[] getSickLeaveAttachment() {
+		return sickLeaveAttachment;
+	}
+	public void setSickLeaveAttachment(byte[] sickLeaveAttachment) {
+		this.sickLeaveAttachment = sickLeaveAttachment;
+	}
+
+	
+	@Column(name="timings",nullable=true)
+	public String getTimings() {
+		return timings;
+	}
+	public void setTimings(String timings) {
+		this.timings = timings;
+	}
+	
+	
 	
 	
 }

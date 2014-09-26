@@ -153,6 +153,12 @@ public class AuthenticationBean implements Serializable{
 	}
 	public void setAuditTrail(AuditTrail auditTrail) {
 		this.auditTrail = auditTrail;
-	}		
+	}			
+	
+	public void updateAnnual(){
+		UpdateAnnualLeaveReport annualLeaveReport = new UpdateAnnualLeaveReport();
+		annualLeaveReport.UpdatingAnnualLeaveReport();
+	}
+	
 	
 }

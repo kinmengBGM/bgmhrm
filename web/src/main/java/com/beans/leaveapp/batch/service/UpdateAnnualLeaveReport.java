@@ -67,8 +67,7 @@ public void UpdatingAnnualLeaveReport(){
 				leavesBroughtForward = annualLeaveReportDec.getCurrentLeaveBalance();
 				List<AnnualLeaveReport> annualLeaveReportList = annualLeaveReportService.findAnnualLeaveReportByEmployeeId(employee.getId(), sortingMonthId, currentDateYear);
 				ArrayList<AnnualLeaveReport> annualLeaveToBeUpdatedList = new ArrayList<AnnualLeaveReport>();				
-					AnnualLeaveReport annualLeaveReportCurrentMonth =	annualLeaveReportList.get(0);				
-					
+					AnnualLeaveReport annualLeaveReportCurrentMonth =	annualLeaveReportList.get(0);
 					annualLeaveReportCurrentMonth.setBalanceBroughtForward(leavesBroughtForward);
 				if(employee.getEmployeeType().getName().equals("PERM")){	
 				if(yearBalanceRemaining <= 4){
@@ -94,7 +93,9 @@ public void UpdatingAnnualLeaveReport(){
 					
 					annualLeaveToBeUpdatedList.add(annualLeaveReportCurrentMonth);
 					AnnualLeaveReport annualLeaveReportTotal =	annualLeaveReportList.get(1);
-					annualLeaveReportTotal.setLeavesCredited(noOfLeavesCredited);
+					double noOfLeavesCreditTotal = annualLeaveReportTotal.getLeavesCredited();
+					double leavesCreditedTotal = noOfLeavesCredited + noOfLeavesCreditTotal;
+					annualLeaveReportTotal.setLeavesCredited(leavesCreditedTotal);
 					annualLeaveReportTotal.setBalanceBroughtForward(leavesBroughtForward);
 					annualLeaveToBeUpdatedList.add(annualLeaveReportTotal);
 					
@@ -112,7 +113,9 @@ public void UpdatingAnnualLeaveReport(){
 					annualLeaveReportCurrentMonth.setYearlyLeaveBalance(yearlyLeaveBalance);
 					annualLeaveToBeUpdatedList.add(annualLeaveReportCurrentMonth);
 					AnnualLeaveReport annualLeaveReportTotal =	annualLeaveReportList.get(1);
-					annualLeaveReportTotal.setLeavesCredited(noOfLeavesCredited);
+					double noOfLeavesCreditTotal = annualLeaveReportTotal.getLeavesCredited();
+					double leavesCreditedTotal = noOfLeavesCredited + noOfLeavesCreditTotal;
+					annualLeaveReportTotal.setLeavesCredited(leavesCreditedTotal);
 					annualLeaveReportTotal.setBalanceBroughtForward(leavesBroughtForward);
 					annualLeaveToBeUpdatedList.add(annualLeaveReportTotal);
 					for(AnnualLeaveReport annualLeaveReport : annualLeaveToBeUpdatedList){
@@ -126,8 +129,7 @@ public void UpdatingAnnualLeaveReport(){
 				List<AnnualLeaveReport> annualLeaveReportList = annualLeaveReportService.findAnnualLeaveReportByEmployeeId(employee.getId(), sortingMonthId, currentDateYear);
 				ArrayList<AnnualLeaveReport> annualLeaveToBeUpdatedList = new ArrayList<AnnualLeaveReport>();
 				
-				AnnualLeaveReport annualLeaveReportCurrentMonth =	annualLeaveReportList.get(0);
-				
+				AnnualLeaveReport annualLeaveReportCurrentMonth =	annualLeaveReportList.get(0);				
 				if(employee.getEmployeeType().getName().equals("PERM")){
 				if(yearBalanceRemaining <= 4){
 					noOfLeavesCredited = yearBalanceRemaining+1.0;
@@ -146,7 +148,9 @@ public void UpdatingAnnualLeaveReport(){
 				}
 					annualLeaveToBeUpdatedList.add(annualLeaveReportCurrentMonth);
 					AnnualLeaveReport annualLeaveReportTotal =	annualLeaveReportList.get(1);
-					annualLeaveReportTotal.setLeavesCredited(noOfLeavesCredited);
+					double noOfLeavesCreditTotal = annualLeaveReportTotal.getLeavesCredited();
+					double leavesCreditedTotal = noOfLeavesCredited + noOfLeavesCreditTotal;
+					annualLeaveReportTotal.setLeavesCredited(leavesCreditedTotal);
 					annualLeaveToBeUpdatedList.add(annualLeaveReportTotal);
 					for(AnnualLeaveReport annualLeaveReport : annualLeaveToBeUpdatedList){
 						annualLeaveReportService.update(annualLeaveReport);
@@ -160,7 +164,9 @@ public void UpdatingAnnualLeaveReport(){
 					annualLeaveReportCurrentMonth.setCurrentLeaveBalance(currentBalanceWithAddedLeave);
 					annualLeaveToBeUpdatedList.add(annualLeaveReportCurrentMonth);
 					AnnualLeaveReport annualLeaveReportTotal =	annualLeaveReportList.get(1);
-					annualLeaveReportTotal.setLeavesCredited(noOfLeavesCredited);
+					double noOfLeavesCreditTotal = annualLeaveReportTotal.getLeavesCredited();
+					double leavesCreditedTotal = noOfLeavesCredited + noOfLeavesCreditTotal;
+					annualLeaveReportTotal.setLeavesCredited(leavesCreditedTotal);
 					annualLeaveToBeUpdatedList.add(annualLeaveReportTotal);
 					for(AnnualLeaveReport annualLeaveReport : annualLeaveToBeUpdatedList){
 						annualLeaveReportService.update(annualLeaveReport);
@@ -180,8 +186,7 @@ public void UpdatingAnnualLeaveReport(){
 				List<AnnualLeaveReport> annualLeaveReportList = annualLeaveReportService.findAnnualLeaveReportByEmployeeId(employee.getId(), sortingMonthId, currentDateYear);
 				ArrayList<AnnualLeaveReport> annualLeaveToBeUpdatedList = new ArrayList<AnnualLeaveReport>();
 				
-				AnnualLeaveReport annualLeaveReportCurrentMonth =	annualLeaveReportList.get(0);
-
+				AnnualLeaveReport annualLeaveReportCurrentMonth =	annualLeaveReportList.get(0);				
 				annualLeaveReportCurrentMonth.setBalanceBroughtForward(leavesBroughtForward);
 				if(employee.getEmployeeType().getName().equals("PERM")){
 				if(yearBalanceRemaining <= 4){
@@ -206,7 +211,9 @@ public void UpdatingAnnualLeaveReport(){
 				}			
 				annualLeaveToBeUpdatedList.add(annualLeaveReportCurrentMonth);
 				AnnualLeaveReport annualLeaveReportTotal =	annualLeaveReportList.get(1);
-				annualLeaveReportTotal.setLeavesCredited(noOfLeavesCredited);
+				double noOfLeavesCreditTotal = annualLeaveReportTotal.getLeavesCredited();
+				double leavesCreditedTotal = noOfLeavesCredited + noOfLeavesCreditTotal;
+				annualLeaveReportTotal.setLeavesCredited(leavesCreditedTotal);
 				annualLeaveReportTotal.setBalanceBroughtForward(leavesBroughtForward);
 				annualLeaveToBeUpdatedList.add(annualLeaveReportTotal);
 				for(AnnualLeaveReport annualLeaveReport : annualLeaveToBeUpdatedList){
@@ -222,7 +229,9 @@ public void UpdatingAnnualLeaveReport(){
 				annualLeaveReportCurrentMonth.setYearlyLeaveBalance(yearlyLeaveBalance);
 				annualLeaveToBeUpdatedList.add(annualLeaveReportCurrentMonth);
 				AnnualLeaveReport annualLeaveReportTotal =	annualLeaveReportList.get(1);
-				annualLeaveReportTotal.setLeavesCredited(noOfLeavesCredited);
+				double noOfLeavesCreditTotal = annualLeaveReportTotal.getLeavesCredited();
+				double leavesCreditedTotal = noOfLeavesCredited + noOfLeavesCreditTotal;
+				annualLeaveReportTotal.setLeavesCredited(leavesCreditedTotal);
 				annualLeaveReportTotal.setBalanceBroughtForward(leavesBroughtForward);
 				annualLeaveToBeUpdatedList.add(annualLeaveReportTotal);
 				for(AnnualLeaveReport annualLeaveReport : annualLeaveToBeUpdatedList){
@@ -235,7 +244,7 @@ public void UpdatingAnnualLeaveReport(){
 			List<AnnualLeaveReport> annualLeaveReportList = annualLeaveReportService.findAnnualLeaveReportByEmployeeId(employee.getId(), sortingMonthId, currentDateYear);
 			ArrayList<AnnualLeaveReport> annualLeaveToBeUpdatedList = new ArrayList<AnnualLeaveReport>();
 			
-			AnnualLeaveReport annualLeaveReportCurrentMonth =	annualLeaveReportList.get(0);
+			AnnualLeaveReport annualLeaveReportCurrentMonth =	annualLeaveReportList.get(0);			
 			double currentBalance = annualLeaveReportCurrentMonth.getCurrentLeaveBalance();
 			double currentBalanceWithAddedLeave = currentBalance+1.0;
 			annualLeaveReportCurrentMonth.setCurrentLeaveBalance(currentBalanceWithAddedLeave);			
@@ -243,7 +252,9 @@ public void UpdatingAnnualLeaveReport(){
 			annualLeaveReportCurrentMonth.setLeavesCredited(noOfLeavesCredited);
 			annualLeaveToBeUpdatedList.add(annualLeaveReportCurrentMonth);
 			AnnualLeaveReport annualLeaveReportTotal =	annualLeaveReportList.get(1);
-			annualLeaveReportTotal.setLeavesCredited(noOfLeavesCredited);
+			double noOfLeavesCreditTotal = annualLeaveReportTotal.getLeavesCredited();
+			double leavesCreditedTotal = noOfLeavesCredited + noOfLeavesCreditTotal;
+			annualLeaveReportTotal.setLeavesCredited(leavesCreditedTotal);
 			annualLeaveToBeUpdatedList.add(annualLeaveReportTotal);
 			for(AnnualLeaveReport annualLeaveReport : annualLeaveToBeUpdatedList){
 				annualLeaveReportService.update(annualLeaveReport);

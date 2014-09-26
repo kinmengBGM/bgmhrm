@@ -1,5 +1,6 @@
 package com.beans.leaveapp.applyleave.bean;
 
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -13,6 +14,8 @@ import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 import com.beans.common.audit.service.AuditTrail;
 import com.beans.common.audit.service.SystemAuditTrailActivity;
@@ -49,6 +52,7 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	private Double currentLeaveBalance;
 	private String param;
 	private SendMonthlyLeaveReportService monthlyLeaveReportService;
+	private StreamedContent sickLeaveAttachment;
 	
 	public LeaveApprovalDataModel getLeaveApprovalDataModel() {
 		FacesContext f = FacesContext.getCurrentInstance();
@@ -278,8 +282,22 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		RequestContext.getCurrentInstance().addCallbackParam("leaveType", selectedLeaveRequest.getLeaveType().getName());
 		RequestContext.getCurrentInstance().execute("leaveRequestDialogVar.show();");
 		}	
-		}	
+		}		
+	
 
+	public StreamedContent getSickLeaveAttachment() {
+		int id;
+		id = selectedLeaveRequest.getId();
+		LeaveTransaction sickLeaveTransaction = leaveTransactionService.findById(id);
+		byte[] data = sickLeaveTransaction.getSickLeaveAttachment();
+		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
+		sickLeaveAttachment = new DefaultStreamedContent(byteArrayInputStream);		
+		return sickLeaveAttachment;
+	}
+
+	public void setSickLeaveAttachment(StreamedContent sickLeaveAttachment) {
+		this.sickLeaveAttachment = sickLeaveAttachment;
+	}
 
 	public LeaveTransactionService getLeaveTransactionService() {
 		return leaveTransactionService;

@@ -27,7 +27,7 @@
 				<p:column id="leaveTypeHEader"><f:facet name="header"> Leave Type </f:facet><h:outputText value="#{employeeFutureLeave.leaveType.name}" /></p:column>
 				<p:column id="startDateHeader"><f:facet name="header"> Start Date </f:facet><h:outputText value="#{employeeFutureLeave.startDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy" /> </h:outputText></p:column>
 				<p:column id="endDateHeader"><f:facet name="header"> End Date </f:facet><h:outputText value="#{employeeFutureLeave.endDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy" />  </h:outputText></p:column>
-				<p:column id="noOfDaysHeader"><f:facet name="header"> Number of Days </f:facet><h:outputText value="#{employeeFutureLeave.numberOfDays}" /></p:column>
+				<p:column id="noOfDaysHeader"><f:facet name="header"> Number of Days </f:facet><h:outputText value="#{employeeFutureLeave.numberOfDays} #{employeeFutureLeave.timings}" /></p:column>
 				<p:column id="reasonHeader"><f:facet name="header"> Reason </f:facet><h:outputText value="#{employeeFutureLeave.reason}"/></p:column>
 				<p:column id="statusHEader"><f:facet name="header"> Status </f:facet><h:outputText value="#{employeeFutureLeave.status}" /></p:column>
 	</p:dataTable>

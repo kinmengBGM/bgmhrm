@@ -871,6 +871,38 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		}
 		
 	}
+	
+	// Update Annual leaves of employee when Time-In-Lieu leave application is approved
+	@Override
+	public void updateEmployeeAnnualLeavesAfterLeaveApproval(LeaveTransaction leaveTransaction,Date applicationDate) {
+		try{
+		Calendar leaveApplicationDate = Calendar.getInstance();
+		leaveApplicationDate.setTime(applicationDate);
+		AnnualLeaveReport annualLeaveCurrentMonth=null;
+			if(leaveApplicationDate.get(Calendar.MONTH)+1 == Calendar.getInstance().get(Calendar.MONTH)+1)
+				annualLeaveCurrentMonth = annualLeaveRepository.getCurrentMonthAnnualLeaveRecord(leaveTransaction.getEmployee().getId(), leaveApplicationDate.get(Calendar.MONTH)+1, leaveApplicationDate.get(Calendar.YEAR));
+			else
+				annualLeaveCurrentMonth = annualLeaveRepository.getCurrentMonthAnnualLeaveRecord(leaveTransaction.getEmployee().getId(), Calendar.getInstance().get(Calendar.MONTH)+1, Calendar.getInstance().get(Calendar.YEAR));
+				
+				if(annualLeaveCurrentMonth!=null){
+				ArrayList<AnnualLeaveReport> annualLeaveToBeUpdatedList = new ArrayList<AnnualLeaveReport>();
+				if(annualLeaveCurrentMonth.getCurrentLeaveBalance()!=null)
+					annualLeaveCurrentMonth.setCurrentLeaveBalance(annualLeaveCurrentMonth.getCurrentLeaveBalance()+leaveTransaction.getNumberOfDays());
+				if(annualLeaveCurrentMonth.getYearlyLeaveBalance()!=null)
+					annualLeaveCurrentMonth.setYearlyLeaveBalance(annualLeaveCurrentMonth.getYearlyLeaveBalance()+leaveTransaction.getNumberOfDays());
+				annualLeaveCurrentMonth.setTimeInLieuCredited(annualLeaveCurrentMonth.getTimeInLieuCredited()+leaveTransaction.getNumberOfDays());
+				annualLeaveToBeUpdatedList.add(annualLeaveCurrentMonth);
+				annualLeaveRepository.save(annualLeaveToBeUpdatedList);
+			}
+		
+		}catch(Exception e){
+			System.out.println("Error while updating leaves balance after approval for employee : "+leaveTransaction.getEmployee().getName());
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
 
 	@Override
 	public void initializeMonthlyLeaveReportWithDefaultValues() {

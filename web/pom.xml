@@ -25,8 +25,8 @@
 		<spring.version>4.0.0.RELEASE</spring.version>
 		<spring.data.jpa.version>1.4.3.RELEASE</spring.data.jpa.version>
 		<spring.security.version>3.2.0.RELEASE</spring.security.version>
+		<hibernate.version>4.2.7.SP1</hibernate.version>
 		<project.groupid>com.beans</project.groupid>
-		<hibernate.version>4.1.1.Final</hibernate.version>
 		<jbpm.version>6.0.1.Final</jbpm.version>
 		<hostname>localhost</hostname>  <!-- Where to deploy. -->
 		<port>9999</port>
@@ -187,6 +187,12 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>${hibernate.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-c3p0</artifactId>
+			<version>4.2.7.SP1</version>
 		</dependency>
 
 		<dependency>

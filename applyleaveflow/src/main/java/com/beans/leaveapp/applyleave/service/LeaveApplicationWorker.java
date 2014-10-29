@@ -1,6 +1,5 @@
 package com.beans.leaveapp.applyleave.service;
 
-import java.io.IOException;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -8,33 +7,33 @@ import org.springframework.context.ApplicationContext;
 
 import com.beans.exceptions.BSLException;
 import com.beans.leaveapp.applyleave.model.ApprovalLevelModel;
+import com.beans.leaveapp.applyleave.model.TimeInLieuBean;
 import com.beans.leaveapp.jbpm6.util.ApplicationContextProvider;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.beans.leaveapp.leavetransaction.service.LeaveTransactionService;
 import com.beans.leaveapp.monthlyreport.service.SendMonthlyLeaveReportService;
 import com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementService;
+import com.beans.util.enums.Leave;
 
 public class LeaveApplicationWorker {
 	private static Logger log = Logger.getLogger(LeaveApplicationWorker.class);
 	
-	public static void sendingIntimationEmail(LeaveTransaction leaveTransaction,ApprovalLevelModel approvalBean,Boolean isApproverApproved,String approverName)
+	public static void sendingIntimationEmail(LeaveTransaction leaveTransaction,ApprovalLevelModel approvalBean,TimeInLieuBean timeInLieuBean)
 	{   
 		try{
 		LeaveApplicationSendingMailServiceImpl sendMailService = new LeaveApplicationSendingMailServiceImpl();
 		log.info("Data coming from process is assignedRoleInLeaveFlow :");
-		if(isApproverApproved==null){
-			sendMailService.sendEmailNotificationToLeaveApplicant(leaveTransaction, isApproverApproved,approverName);
-			sendMailService.sendEmailNotificationToLeaveApprover(leaveTransaction, approvalBean);
+		if(timeInLieuBean.getIsFirstApproverApproved()==null){
+			sendMailService.sendEmailNotificationToLeaveApplicant(leaveTransaction, timeInLieuBean);
+			sendMailService.sendEmailNotificationToLeaveApprover(leaveTransaction, approvalBean,timeInLieuBean);
+		}
+		else if (timeInLieuBean.getIsFirstApproverApproved()!=null && timeInLieuBean.getIsFirstApproverApproved() && Leave.TIMEINLIEU.equalsName(leaveTransaction.getLeaveType().getName()) && timeInLieuBean.getIsSecondApproverApproved()==null ){
+			sendMailService.sendEmailNotificationToLeaveApprover(leaveTransaction, approvalBean,timeInLieuBean);
 		}
 		else{
-			sendMailService.sendEmailNotificationToLeaveApplicant(leaveTransaction, isApproverApproved,approverName);
-			sendMailService.sendEmailNotificationToHR(leaveTransaction, isApproverApproved,approverName);
-		/*	try {
-				//CalendarEventService.createEventForApprovedLeave(leaveTransaction);
-			} catch (IOException e) {
-				log.error("Error while creating event in the calendar after approval for Employee : "+leaveTransaction.getEmployee().getName(), e);
-			}
-		*/}
+			sendMailService.sendEmailNotificationToLeaveApplicant(leaveTransaction, timeInLieuBean);
+			sendMailService.sendEmailNotificationToHR(leaveTransaction, timeInLieuBean);
+		}
 		}catch(BSLException e)
 		{
 			log.error("Error in LeaveApplicationWorker sending mail :",  e);
@@ -67,23 +66,58 @@ public class LeaveApplicationWorker {
 		}
 	}
 	
-	public static void updateLeaveApplicationStatus(LeaveTransaction leaveTransaction,String approverName,Boolean isApproverApproved){
+	public static void updateToAnnualLeaveBalanceAfterApproval(LeaveTransaction leaveTransaction,TimeInLieuBean timeInLieuBean){
+		log.info("Data coming from process is  leaveTransaction : "+leaveTransaction+" and approval bean :"+timeInLieuBean);
+		if(leaveTransaction!=null && timeInLieuBean!=null && timeInLieuBean.getIsSecondApproverApproved())
+		{
+			ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
+			YearlyEntitlementService yearlyEntitlementService = (YearlyEntitlementService) applicationContext.getBean("yearlyEntitlementService");
+			yearlyEntitlementService.updateAnnualLeaveBalanceAfterApproval(leaveTransaction.getEmployee().getId(), leaveTransaction.getLeaveType().getId(), leaveTransaction.getNumberOfDays());
+			SendMonthlyLeaveReportService annualLeaveService = (SendMonthlyLeaveReportService) applicationContext.getBean("sendLeaveReportService");
+			annualLeaveService.updateEmployeeAnnualLeavesAfterLeaveApproval(leaveTransaction, leaveTransaction.getApplicationDate());
+			
+		}
+	}
+	
+	// This method used for 2 level approval and updating the annual leave
+	public static void updateLeaveBalanceAfterApproval(LeaveTransaction leaveTransaction,TimeInLieuBean timeInLieuBean){
+		System.out.println("Updating Yearly entitlement and Annual Leave report : "+leaveTransaction.getYearlyLeaveBalance());
+	}
+	
+	public static void updateLeaveApplicationStatusForLeaves(LeaveTransaction leaveTransaction,TimeInLieuBean timeInLieuBean){
 		
 		ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
 		LeaveTransactionService leaveTransactionService = (LeaveTransactionService) applicationContext.getBean("leaveTransactionService");
-		if(!isApproverApproved){
-			leaveTransaction.setStatus("Rejected");
-		}
-		else{
+		if(timeInLieuBean!=null && timeInLieuBean.getIsFirstApproverApproved())
 			leaveTransaction.setStatus("Approved");
-		}
-		if(isApproverApproved)
+		else
+			leaveTransaction.setStatus("Rejected");
+		if(timeInLieuBean!=null && timeInLieuBean.getIsFirstApproverApproved())
 			leaveTransaction.setYearlyLeaveBalance(leaveTransaction.getYearlyLeaveBalance()-leaveTransaction.getNumberOfDays());
 		
-			leaveTransaction.setLastModifiedBy(approverName);
+			leaveTransaction.setLastModifiedBy(timeInLieuBean!=null?timeInLieuBean.getFirstApprover():"Admin");
 			leaveTransaction.setLastModifiedTime(new Date());
 		leaveTransactionService.updateLeaveApplicationStatus(leaveTransaction);
 	}
 	
 
+	// This method used for 2 level approval and updating the leave Transaction table
+	public static void updateLeaveApplicationStatusForTimeInLieu(LeaveTransaction leaveTransaction,TimeInLieuBean timeInLieuBean){
+		System.out.println("Updated Leave Transaction : "+timeInLieuBean.getIsSecondApproverApproved());
+		ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
+		LeaveTransactionService leaveTransactionService = (LeaveTransactionService) applicationContext.getBean("leaveTransactionService");
+		if(timeInLieuBean!=null && timeInLieuBean.getIsSecondApproverApproved())
+			leaveTransaction.setStatus("Approved");
+		else
+			leaveTransaction.setStatus("Rejected");
+		if(timeInLieuBean!=null && timeInLieuBean.getIsSecondApproverApproved())
+			leaveTransaction.setYearlyLeaveBalance(leaveTransaction.getYearlyLeaveBalance()+leaveTransaction.getNumberOfDays());
+		
+			leaveTransaction.setLastModifiedBy(timeInLieuBean!=null?timeInLieuBean.getSecondApprover():"Admin");
+			leaveTransaction.setLastModifiedTime(new Date());
+		leaveTransactionService.updateLeaveApplicationStatus(leaveTransaction);
+	}
+	
+	
+	
 }

@@ -28,8 +28,6 @@ import org.kie.api.task.model.TaskSummary;
 import org.kie.internal.runtime.manager.context.ProcessInstanceIdContext;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
-import com.beans.exceptions.BSLException;
-
 
 public class JBPM6Runtime {
 	private RuntimeManager manager;
@@ -167,6 +165,7 @@ public class JBPM6Runtime {
 		
 		taskService.start(taskId, username);
 		taskService.complete(taskId, username, parameterMap);
+		manager.disposeRuntimeEngine(runtimeEngine);
 	}
 	
 	public void terminateTask(long taskId,String username){

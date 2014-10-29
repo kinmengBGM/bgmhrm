@@ -10,16 +10,19 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.kie.api.task.model.Task;
 import org.kie.api.task.model.TaskSummary;
+import org.springframework.data.domain.Auditable;
 
 import com.beans.common.security.role.model.Role;
 import com.beans.common.security.role.service.RoleNotFound;
 import com.beans.exceptions.BSLException;
 import com.beans.leaveapp.applyleave.model.ApprovalLevelModel;
+import com.beans.leaveapp.applyleave.model.TimeInLieuBean;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.jbpm6.util.JBPM6Runtime;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.beans.leaveapp.leavetransaction.service.LeaveTransactionService;
 import com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement;
+import com.beans.util.enums.Leave;
 
 public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 
@@ -44,8 +47,7 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
 		parameterMap.put("approvalLevelModel", approvalLevelModel);
 		parameterMap.put("leaveTransaction", leaveTransaction);
-		parameterMap.put("approverName", null);
-		parameterMap.put("isApproverApproved", null);
+		parameterMap.put("timeInLieuBean", null);
 		long processInstanceId = applyLeaveRuntime.startProcessWithInitialParametersAndFireBusinessRules(PROCESS_NAME, parameterMap);
 		
 		List<Long> taskIdList = applyLeaveRuntime.getTaskIdsByProcessInstanceId(processInstanceId);
@@ -207,19 +209,30 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 	}
 	
 	@Override
-	public void approveLeaveOfEmployee(LeaveTransaction leaveTransaction, String actorId) {
+	public void approveLeaveOfEmployee(LeaveTransaction leaveTransaction, String actorId,String level) {
 		long taskId = 0;
 		try{
-		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
-		
+			HashMap<String, Object> parameterMap = new HashMap<String, Object>();
+			TimeInLieuBean timeInLieu = null;
 			Task currentTask = applyLeaveRuntime.getTaskById(leaveTransaction.getTaskId());
 			Map<String, Object> contentMap = applyLeaveRuntime.getContentForTask(currentTask);
 			ApprovalLevelModel approvalLevelModel =(ApprovalLevelModel) contentMap.get("approvalLevelModel");
+			
+			if("FIRST".equalsIgnoreCase(level)){
+				timeInLieu = new TimeInLieuBean();
+				timeInLieu.setFirstApprover(actorId);
+				timeInLieu.setIsFirstApproverApproved(Boolean.TRUE);
+				if(Leave.TIMEINLIEU.equalsName(leaveTransaction.getLeaveType().getName()))
+					timeInLieu.setIsTwoLeveApproval(Boolean.TRUE);
+			}
+			else{
+				timeInLieu = (TimeInLieuBean) contentMap.get("timeInLieuBean");
+				timeInLieu.setSecondApprover(actorId);
+				timeInLieu.setIsSecondApproverApproved(Boolean.TRUE);
+			}
 			parameterMap.put("approvalLevelModel", approvalLevelModel);
 			parameterMap.put("leaveTransaction", leaveTransaction);
-			parameterMap.put("isApproverApproved",Boolean.TRUE);
-			parameterMap.put("approverName", actorId);
-		
+			parameterMap.put("timeInLieuBean", timeInLieu);
 		 taskId = leaveTransaction.getTaskId();
 		applyLeaveRuntime.submitTask(actorId, taskId, parameterMap);
 		}catch(Exception e){
@@ -241,11 +254,23 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 		long taskId=0;
 		try{
 			HashMap<String, Object> parameterMap = new HashMap<String, Object>();
-			
-			parameterMap.put("isApproverApproved",Boolean.FALSE);
-			parameterMap.put("approverName", actorId);
+			Task currentTask = applyLeaveRuntime.getTaskById(leaveTransaction.getTaskId());
+			Map<String, Object> contentMap = applyLeaveRuntime.getContentForTask(currentTask);
+			TimeInLieuBean timeInLieuBean =(TimeInLieuBean) contentMap.get("timeInLieuBean");
+			ApprovalLevelModel approvalLevelModel =(ApprovalLevelModel) contentMap.get("approvalLevelModel");
+			if(timeInLieuBean!=null){
+				timeInLieuBean.setIsSecondApproverApproved(Boolean.FALSE);
+				timeInLieuBean.setSecondApprover(actorId);
+			}
+			else
+			{
+				timeInLieuBean = new TimeInLieuBean();
+				timeInLieuBean.setIsFirstApproverApproved(Boolean.FALSE);
+				timeInLieuBean.setFirstApprover(actorId);
+			}
 			parameterMap.put("leaveTransaction", leaveTransaction);
-			
+			parameterMap.put("timeInLieuBean", timeInLieuBean);
+			parameterMap.put("approvalLevelModel", approvalLevelModel);
 		taskId = leaveTransaction.getTaskId();
 		applyLeaveRuntime.submitTask(actorId, taskId, parameterMap);
 		}catch(Exception e){
@@ -259,6 +284,13 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 			throw new BSLException("error.leaveapp.terminate");
 		}
 	}
+	
+	@Override
+	public Map<String, Object> getContentMapDataByTaskId(long taskId){
+		Task currentTask = applyLeaveRuntime.getTaskById(taskId);
+		return applyLeaveRuntime.getContentForTask(currentTask);
+	}
 
-
+	
+	
 }

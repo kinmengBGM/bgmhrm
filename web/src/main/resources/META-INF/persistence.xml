@@ -8,7 +8,7 @@
 	<!--Persistence Unit for Mysql database -->
 	<persistence-unit name="masterDataMysql" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<non-jta-data-source>java:jboss/datasources/mysqlDS</non-jta-data-source>
+		<!-- <non-jta-data-source>java:jboss/datasources/mysqlDS</non-jta-data-source> -->
 		<class>com.beans.leaveapp.leavetype.model.LeaveType</class>
 		<class>com.beans.leaveapp.employeegrade.model.EmployeeGrade</class>
 		<class>com.beans.leaveapp.employeetype.model.EmployeeType</class>

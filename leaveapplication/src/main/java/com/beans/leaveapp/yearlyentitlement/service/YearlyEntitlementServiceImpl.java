@@ -221,6 +221,7 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 		yearlyEntitleRepository.save(yearlyEntitlement);
 		System.out.println("After updating, no'of leaves left is :"+yearlyEntitlement.getCurrentLeaveBalance());
 	}
+	
 
 	@Override
 	@Transactional
@@ -363,4 +364,28 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 			
 		}
 	}
+
+	@Override
+	@Transactional
+	public void updateAnnualLeaveBalanceAfterApproval(int employeeId,int leaveTypeId,double numberOfDaysLeaveApproved) {
+		System.out.println("Input parameters values in updateLeaveBalanceAfterApproval() employeeId: "+employeeId+" leaveTypeId :"+leaveTypeId);
+		List<YearlyEntitlement> yearlyEntitlementList =	(List<YearlyEntitlement>) yearlyEntitleRepository.findByEmployeeIdAndEmployeeTypeAndLeaveTypeName(employeeId, Leave.ANNUAL.toString());
+		if(yearlyEntitlementList!=null && yearlyEntitlementList.size()>0){
+			yearlyEntitlement = yearlyEntitlementList.get(0);
+		yearlyEntitlement.setcurrentLeaveBalance(yearlyEntitlement.getCurrentLeaveBalance()+numberOfDaysLeaveApproved);
+		yearlyEntitlement.setYearlyLeaveBalance(yearlyEntitlement.getYearlyLeaveBalance()+numberOfDaysLeaveApproved);
+		yearlyEntitleRepository.save(yearlyEntitlement);
+		System.out.println("After Adding Leaves, no'of leaves left is :"+yearlyEntitlement.getCurrentLeaveBalance());
+		}
+	}
+
+	@Override
+	public YearlyEntitlement findAnnualYearlyEntitlementOfEmployee(int employeeId) {
+		List<YearlyEntitlement> yearlyEntitlementList =	(List<YearlyEntitlement>) yearlyEntitleRepository.findByEmployeeIdAndEmployeeTypeAndLeaveTypeName(employeeId, Leave.ANNUAL.toString());
+		if(yearlyEntitlementList!=null && yearlyEntitlementList.size()>0){
+			yearlyEntitlement = yearlyEntitlementList.get(0);
+		}
+		return yearlyEntitlement;
+	}
+	
 }

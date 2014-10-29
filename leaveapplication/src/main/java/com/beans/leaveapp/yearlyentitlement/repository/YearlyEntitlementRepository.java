@@ -14,10 +14,10 @@ public interface YearlyEntitlementRepository extends
 	@Query("select y from YearlyEntitlement y where isDeleted =?")
 	 List<YearlyEntitlement> findByIsDeleted(int isDeleted);
 
-	@Query("select y from YearlyEntitlement y where  employee.id =:employeeId and leaveType.name not in ('TimeInLieu') ")
+	@Query("select y from YearlyEntitlement y where  employee.id =:employeeId and isDeleted =0")
 	 List<YearlyEntitlement> findByEmployeeId(@Param("employeeId") int employeeId);
 	
-	@Query("select y from YearlyEntitlement y where  employee.id =:employeeId and leaveType.name not in ('Unpaid','TimeInLieu') ")
+	@Query("select y from YearlyEntitlement y where  employee.id =:employeeId and leaveType.name not in ('Unpaid','Time-In-Lieu') ")
 	 List<YearlyEntitlement> findByEmployeeIdNotIncludeUnpaid(@Param("employeeId")int employeeId);
 
 	@Query("select y from  YearlyEntitlement y where leaveTypeId =? and isDeleted = 0")

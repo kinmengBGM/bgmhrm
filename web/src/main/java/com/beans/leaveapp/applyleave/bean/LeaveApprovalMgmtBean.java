@@ -29,6 +29,7 @@ import com.beans.leaveapp.applyleave.service.LeaveApplicationService;
 import com.beans.leaveapp.applyleave.service.LeaveApplicationWorker;
 import com.beans.leaveapp.calendar.service.CalendarEventService;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
+import com.beans.leaveapp.leavetransaction.model.LeaveTransactionsDataModel;
 import com.beans.leaveapp.leavetransaction.service.LeaveTransactionService;
 import com.beans.leaveapp.monthlyreport.service.SendMonthlyLeaveReportService;
 import com.beans.leaveapp.web.bean.BaseMgmtBean;
@@ -90,14 +91,19 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	}
 
 	public LeaveApprovalDataModel getLeaveApprovalDataModelApprovedLeaves() {
-		return new LeaveApprovalDataModel(getLeaveTransactionService().getAllApprovedLeavesAppliedByEmployee());
+		if(LeaveApprovalDataModel == null || insertDeleted == true) {
+			LeaveApprovalDataModel = new LeaveApprovalDataModel(getLeaveTransactionService().getAllApprovedLeavesAppliedByEmployee());
+		}
+		return LeaveApprovalDataModel;
 		
 	}
 	
 	
 	public LeaveApprovalDataModel getLeaveApprovalDataModelAllLeaves() {
-		return new LeaveApprovalDataModel(getLeaveTransactionService().getAllLeavesAppliedByEmployee(actorUsers.getId()));
-		
+		if(LeaveApprovalDataModel == null || insertDeleted == true) {
+			LeaveApprovalDataModel = new LeaveApprovalDataModel(getLeaveTransactionService().getAllLeavesAppliedByEmployee(actorUsers.getId()));
+		}
+		return LeaveApprovalDataModel;
 	}	
 
 	public List<LeaveTransaction> getPendingLeaveRequestList() {
@@ -139,7 +145,7 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	public void setAuditTrail(AuditTrail auditTrail) {
 		this.auditTrail = auditTrail;
 	} 	
-	
+
 	public LeaveTransaction getSelectedLeaveRequest() {
 		return selectedLeaveRequest;
 	}
@@ -177,7 +183,10 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	}
 
 	public List<LeaveTransaction> getLeaveRequestApprovalList() {
-			return    getLeaveApplicationService().getPendingLeaveRequestsList(actorUsers.getUsername());
+		if(pendingLeaveRequestList==null || insertDeleted==true){
+			return getLeaveApplicationService().getPendingLeaveRequestsList(actorUsers.getUsername());
+		}
+			return  pendingLeaveRequestList;
 			
 	}
 	

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<f:metadata>
+    	<f:event type="preRenderView" listener="#{authenticationBean.hasPageAccess('CancelLeave')}" />
+</f:metadata>
+<h:head>
+	<title><ui:insert name="title">Pending Leave Request(s)</ui:insert></title>
+	<h:outputStylesheet library="css" name="layout.css" />
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'/>
+    <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/resources/images/favicon.ico"/>  
+</h:head>
+<h:body>
+	<p:ajaxStatus style="width:64px;height:64px;position:fixed;right:5px;bottom:5px">  
+    <f:facet name="start">  
+        <p:graphicImage name="loading.gif" library="images"></p:graphicImage>
+    </f:facet>  
+    <f:facet name="complete">  
+        <h:outputText value="" />  
+    </f:facet>  
+</p:ajaxStatus>
+
+<div id="wrapper">
+	<div id="header row">
+		<ui:insert name="header">
+			<ui:include src="/templates/header.xhtml" />
+		</ui:insert>
+	</div>
+
+	<div id="menubar row">
+		<ui:insert name="menu">
+			<ui:include src="/templates/menu.xhtml" />
+		</ui:insert>
+	</div>
+
+	<div id="container">
+		<div id="content">
+			<ui:insert name="content" >
+				  <h1>Pending Leave Request(s)</h1>
+					<h:form id="approvedLeaveForm">
+						<p:messages autoUpdate="true"  severity="info"/>
+						<p:dataTable id="approvedLeaveTable" widgetVar="approvedLeaveTableVar" var="approvedLeave" value="#{leaveApprovalBean.leaveApprovalDataModelApprovedLeaves}" 
+													selection="#{leaveApprovalBean.selectedLeaveRequest}" selectionMode="single" rowKey="#{approvedLeave.taskId}"
+													 rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+							<f:facet name="header"><p:outputPanel style="text-align:right;"> <h:outputText value="Search all fields:" /> <p:inputText id="globalFilter" onkeyup="PF('approvedLeaveTableVar').filter()" filterDelay="1000" style="width:150px" placeholder="Enter keyword"/> </p:outputPanel></f:facet>
+							<p:column id="nameTypeHEader" filterBy="#{approvedLeave.employee.name}" filterMatchMode="contains" ><f:facet name="header"> Name </f:facet><h:outputText value="#{approvedLeave.employee.name}" /></p:column>
+							<p:column id="leaveTypeHEader" filterBy="#{approvedLeave.leaveType.name}" filterMatchMode="contains"><f:facet name="header"> Leave Type </f:facet><h:outputText value="#{approvedLeave.leaveType.name}" /></p:column>
+							<p:column id="startDateHeader" filterBy="#{approvedLeave.startDateTime}" filterMatchMode="contains"><f:facet name="header"> Start Date </f:facet><h:outputText value="#{approvedLeave.startDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy" /> </h:outputText></p:column>
+							<p:column id="endDateHeader" filterBy="#{approvedLeave.endDateTime}" filterMatchMode="contains"><f:facet name="header"> End Date </f:facet><h:outputText value="#{approvedLeave.endDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy" />  </h:outputText></p:column>
+							<p:column id="noOfDaysHeader" filterBy="#{approvedLeave.numberOfDays}" filterMatchMode="contains"><f:facet name="header"> Number of Days </f:facet><h:outputText value="#{approvedLeave.numberOfDays}" /></p:column>
+							<p:column id="reasonHeader" filterBy="#{approvedLeave.reason}" filterMatchMode="contains"><f:facet name="header"> Reason </f:facet><h:outputText value="#{approvedLeave.reason}"/></p:column>
+							<p:column id="statusHeader" filterBy="#{approvedLeave.status}" filterMatchMode="contains"><f:facet name="header"> Status </f:facet><h:outputText value="#{approvedLeave.status}"/></p:column>
+						</p:dataTable>
+					</h:form>
+	  	</ui:insert>
+		</div>
+	</div>
+	<div id="footer">
+		<ui:insert name="footer">
+			<ui:include src="/templates/footer.xhtml" />
+		</ui:insert>
+	</div>
+ 
+ </div>
+
+</h:body>
+
+</html>

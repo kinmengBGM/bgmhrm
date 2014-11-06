@@ -53,6 +53,18 @@
 						<f:selectItem itemLabel="Female" itemValue="F" />
 					</p:selectOneMenu>
 					<p:message for="gender" display="text"></p:message>
+					
+					<h:outputText value="Marital Status" class="req" />
+					<p:selectOneMenu id="martialStatus" required="true" requiredMessage="Marital Status Required"
+						value="#{employeeRegistrationMgmtBean.maritalStatus}"
+						effect="fade">
+						<f:selectItem itemLabel="Select one" itemValue=""/>
+						<f:selectItem itemLabel="Single" itemValue="Single" />
+						<f:selectItem itemLabel="Married" itemValue="Married" />
+					</p:selectOneMenu>
+					<p:message for="martialStatus" display="text"></p:message>
+					
+					
 					<h:outputText value="Email Address (Personal)" class="req" />
 					<h:inputText id="personalEmailAddress"
 						value="#{employeeRegistrationMgmtBean.personalEmailAddress}" validatorMessage="Invalid Email Format">

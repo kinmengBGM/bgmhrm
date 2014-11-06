@@ -29,9 +29,9 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 	private LeaveTransactionService leaveTransactionService;
 	
 	@Override
-	public void submitLeave(Employee employee,
-			YearlyEntitlement yearlyEntitlement,
-			LeaveTransaction leaveTransaction) throws RoleNotFound, LeaveApplicationException{
+	public void submitLeave(Employee employee,YearlyEntitlement yearlyEntitlement,LeaveTransaction leaveTransaction) throws RoleNotFound, LeaveApplicationException{
+		Long currentTaskId=new Long(1);
+		try{
 		Set<Role> userRoles = employee.getUsers().getUserRoles();
 		
 		if(!isEmployee(userRoles)) {
@@ -52,13 +52,20 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 		if(taskIdList.size() == 0) {
 			throw new LeaveApplicationException("Ooops! Something serious has happened. Please contact your Administrator");
 		}
-		Long currentTaskId = taskIdList.get(0);
+		try{
+		currentTaskId = taskIdList.get(0);
 		leaveTransaction.setTaskId(currentTaskId);
 		LeaveTransaction leaveTransactionPersist = getLeaveTransactionService().insertFromWorkflow(leaveTransaction);
 		leaveTransaction.setId(leaveTransactionPersist.getId());
 		parameterMap.put("leaveTransaction", leaveTransaction);
 		applyLeaveRuntime.submitTask(employee.getUsers().getUsername(), currentTaskId, parameterMap);
-		
+		}catch(Exception e){
+			log.error("Error is handled by Leave approver :", e);
+		}
+		}catch(Exception e){
+			log.error("Following exception caught while applying for a leave :", e);
+			throw new BSLException("error.leaveapp.leaveapply");
+		}
 	}
 	
 	
@@ -201,6 +208,7 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 	
 	@Override
 	public void approveLeaveOfEmployee(LeaveTransaction leaveTransaction, String actorId) {
+		long taskId = 0;
 		try{
 		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
 		
@@ -212,14 +220,17 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 			parameterMap.put("isApproverApproved",Boolean.TRUE);
 			parameterMap.put("approverName", actorId);
 		
-		long taskId = leaveTransaction.getTaskId();
+		 taskId = leaveTransaction.getTaskId();
 		applyLeaveRuntime.submitTask(actorId, taskId, parameterMap);
-		}catch(BSLException e){
-		log.error("Error while approving leave in service ", e);
-		throw new BSLException(e.getMessage());
 		}catch(Exception e){
-			log.error("Error while approving leave in service ", e);
-			throw new BSLException("err.leave.approve");
+			// Terminating the failed task
+			applyLeaveRuntime.terminateTask(taskId, actorId);
+			// Sending mail to leave applicant to reapply leave
+			LeaveApplicationWorker.sendTerminateMail(leaveTransaction.getEmployee().getName(), leaveTransaction.getEmployee().getWorkEmailAddress());
+			// Removing the line item from the LeaveTransaction Table as well
+			getLeaveTransactionService().delete(leaveTransaction.getId());
+			log.info("Error while approving leave and process is getting terminated "+taskId);
+			throw new BSLException("error.leaveapp.terminate");
 		}
 		
 	}
@@ -227,6 +238,7 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 	
 	@Override
 	public void rejectLeaveOfEmployee(LeaveTransaction leaveTransaction, String actorId) {
+		long taskId=0;
 		try{
 			HashMap<String, Object> parameterMap = new HashMap<String, Object>();
 			
@@ -234,14 +246,17 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 			parameterMap.put("approverName", actorId);
 			parameterMap.put("leaveTransaction", leaveTransaction);
 			
-		long taskId = leaveTransaction.getTaskId();
+		taskId = leaveTransaction.getTaskId();
 		applyLeaveRuntime.submitTask(actorId, taskId, parameterMap);
-		}catch(BSLException e){
-		log.error("Error while rejecting leave in service ", e);
-		throw new BSLException(e.getMessage());
 		}catch(Exception e){
-			log.error("Error while rejecting leave in service ", e);
-			throw new BSLException("err.leave.reject");
+			// Terminating the failed task
+			applyLeaveRuntime.terminateTask(taskId, actorId);
+			// Sending mail to leave applicant to reapply leave
+			LeaveApplicationWorker.sendTerminateMail(leaveTransaction.getEmployee().getName(), leaveTransaction.getEmployee().getWorkEmailAddress());
+			// Removing the line item from the LeaveTransaction Table as well
+			getLeaveTransactionService().delete(leaveTransaction.getId());
+			log.info("Error while rejecting leave and process is getting terminated "+taskId);
+			throw new BSLException("error.leaveapp.terminate");
 		}
 	}
 

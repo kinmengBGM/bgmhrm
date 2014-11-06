@@ -24,7 +24,14 @@ public class RegisteredEmployee implements Serializable{
 	private String employeeNumber;
 	private String position;
 	private Date joinDate;
+	private String maritalStatus;
 	
+	public String getMaritalStatus() {
+		return maritalStatus;
+	}
+	public void setMaritalStatus(String maritalStatus) {
+		this.maritalStatus = maritalStatus;
+	}
 	public long getTaskId() {
 		return taskId;
 	}
@@ -142,4 +149,23 @@ public class RegisteredEmployee implements Serializable{
 	public void setJoinDate(Date joinDate) {
 		this.joinDate = joinDate;
 	}
+	@Override
+	public String toString() {
+		return "RegisteredEmployee [taskId=" + taskId + ", fullname="
+				+ fullname + ", username=" + username + ", registrationDate="
+				+ registrationDate + ", idNumber=" + idNumber
+				+ ", passportNumber=" + passportNumber + ", departmentId="
+				+ departmentId + ", employeeTypeId=" + employeeTypeId
+				+ ", employeeGradeId=" + employeeGradeId
+				+ ", personalEmailAddress=" + personalEmailAddress
+				+ ", personalPhoneNumber=" + personalPhoneNumber
+				+ ", workEmailAddress=" + workEmailAddress
+				+ ", workPhoneNumber=" + workPhoneNumber + ", password="
+				+ password + ", gender=" + gender + ", reason=" + reason
+				+ ", employeeNumber=" + employeeNumber + ", position="
+				+ position + ", joinDate=" + joinDate + ", maritalStatus="
+				+ maritalStatus + "]";
+	}
+	
+	
 }

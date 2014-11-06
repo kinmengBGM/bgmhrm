@@ -785,7 +785,12 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		leaveApplicationDate.setTime(applicationDate);
 		
 		if(Leave.ANNUAL.equalsName(leaveTransaction.getLeaveType().getName())){
-				List<AnnualLeaveReport>	 annualLeaveList = annualLeaveRepository.getEmployeeMonthlyLeaveReportData(leaveTransaction.getEmployee().getId(), leaveApplicationDate.get(Calendar.MONTH)+1, leaveApplicationDate.get(Calendar.YEAR));
+			List<AnnualLeaveReport>	 annualLeaveList=null;
+			if(leaveApplicationDate.get(Calendar.MONTH)+1 == Calendar.getInstance().get(Calendar.MONTH)+1)
+				annualLeaveList = annualLeaveRepository.getEmployeeMonthlyLeaveReportData(leaveTransaction.getEmployee().getId(), leaveApplicationDate.get(Calendar.MONTH)+1, leaveApplicationDate.get(Calendar.YEAR));
+			else
+				annualLeaveList = annualLeaveRepository.getEmployeeMonthlyLeaveReportData(leaveTransaction.getEmployee().getId(), Calendar.getInstance().get(Calendar.MONTH)+1, Calendar.getInstance().get(Calendar.YEAR));
+				
 				if(annualLeaveList!=null && annualLeaveList.size()==2){
 				
 				ArrayList<AnnualLeaveReport> annualLeaveToBeUpdatedList = new ArrayList<AnnualLeaveReport>();

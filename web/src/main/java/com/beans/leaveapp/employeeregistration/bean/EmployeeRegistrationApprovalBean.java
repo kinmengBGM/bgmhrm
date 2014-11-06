@@ -119,6 +119,7 @@ private static final long serialVersionUID = 1L;
 			
 			Employee employee =  employeeService.findByUsername(selectedRegisteredEmployee.getUsername());
 			
+			//employee.setMaritalStatus(selectedRegisteredEmployee.getMaritalStatus());
 			yearlyEntitlementService.addAllEntitlementsToNewEmployee(employee);
 			
 			auditTrail.log(SystemAuditTrailActivity.APPROVED, SystemAuditTrailLevel.INFO, getActorUsers().getId(), getActorUsers().getUsername(), getActorUsers().getUsername() + " has approved a employee registration of " + selectedRegisteredEmployee.getFullname());

@@ -85,11 +85,8 @@ public class LeaveTransactionServiceImpl implements LeaveTransactionService {
 	@Override
 	public void delete(int id) {
 		try{
-		LeaveTransaction leaveTransaction = leaveTransactionRepository
-				.findOne(id);
-		System.out.println(leaveTransaction.isDeleted());
-		leaveTransaction.setDeleted(true);
-		System.out.println(leaveTransaction.isDeleted());
+		System.out.println("Caught error with transaction id and removing : "+id);
+		leaveTransactionRepository.delete(id);
 		}catch(Exception e){
 			e.printStackTrace();
 		}

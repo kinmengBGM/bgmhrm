@@ -335,7 +335,48 @@ public void sendEmailNotificationForCancelLeave(LeaveTransaction leaveTransactio
 	}
 }
 
+	public void sendLeaveTerminateMailToApplicant(String leaveApplicant,String emailId){
+		try{
+			InputStream inputStream = getClass().getClassLoader().getResourceAsStream("leaveTerminationMailTemplate.html");
+			InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
+			// read file into string
+			String line = null;
+
+			StringBuilder responseData = new StringBuilder();
+			try {
+				while ((line = bufferedReader.readLine()) != null) {
+					responseData.append(line);
+				}
+			} catch (IOException e3) {
+				e3.printStackTrace();
+			}
+			// load your HTML email template
+			String htmlEmailTemplate = responseData.toString();
+			
+			// create the email message
+			HtmlEmail email = new HtmlEmail();
+			
+			htmlEmailTemplate = htmlEmailTemplate.replace("##employeeName##", leaveApplicant);
+			// set email subject
+			email.setSubject("Reg : Leave Application Terminated, Please apply again");
+			// set email TO
+			email.addTo(emailId);
+			// set the html message
+			try {
+				email.setHtmlMsg(htmlEmailTemplate);
+			} catch (EmailException e2) {
+				e2.printStackTrace();
+			}
+			// send the email
+				LeaveApplicationSendingMailServiceImpl.sendEMail(email);
+				System.out.println("Email has been sent successfully to Leave Applicant ");
+						
+		}catch(Exception e){
+			
+		}
+	}
 
 
 

@@ -2,6 +2,7 @@ package com.beans.leaveapp.applyleave.bean;
 
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +27,7 @@ import com.beans.exceptions.BSLException;
 import com.beans.leaveapp.applyleave.model.LeaveApprovalDataModel;
 import com.beans.leaveapp.applyleave.service.LeaveApplicationService;
 import com.beans.leaveapp.applyleave.service.LeaveApplicationWorker;
+import com.beans.leaveapp.calendar.service.CalendarEventService;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.beans.leaveapp.leavetransaction.service.LeaveTransactionService;
 import com.beans.leaveapp.monthlyreport.service.SendMonthlyLeaveReportService;
@@ -40,7 +42,8 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private Logger log = Logger.getLogger(this.getClass());
-	List<LeaveTransaction>  leaveRequestList;
+	List<LeaveTransaction> leaveRequestList;
+	List<LeaveTransaction> pendingLeaveRequestList;
 	private boolean insertDeleted = false;
 	private Users actorUsers;
 	private AuditTrail auditTrail;
@@ -62,17 +65,25 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		}
 		param = parameterMap.get("id");		
 		if(param!=null){
-			for (LeaveTransaction leaveTransaction : leaveRequestList) {
+			  pendingLeaveRequestList = getLeaveRequestApprovalList();
+			for (LeaveTransaction leaveTransaction : pendingLeaveRequestList) {
 				if(leaveTransaction.getId()==Integer.parseInt(param)){
 					selectedLeaveRequest = leaveTransaction;
 				}
 			}
-		}
-		
+		}		
 		
 		return LeaveApprovalDataModel;
 	}
 	
+	public List<LeaveTransaction> getLeaveRequestList() {
+		return leaveRequestList;
+	}
+
+	public void setLeaveRequestList(List<LeaveTransaction> leaveRequestList) {
+		this.leaveRequestList = leaveRequestList;
+	}
+
 	public LeaveApprovalDataModel getLeaveApprovalDataModelFutureLeaves() {
 		return new LeaveApprovalDataModel(getLeaveRequestFutureLeaveList());
 		
@@ -89,7 +100,16 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		
 	}	
 
+	public List<LeaveTransaction> getPendingLeaveRequestList() {
+		return pendingLeaveRequestList;
+	}
 
+	public void setPendingLeaveRequestList(
+			List<LeaveTransaction> pendingLeaveRequestList) {
+		this.pendingLeaveRequestList = pendingLeaveRequestList;
+	}
+	
+	
 	public void setLeaveApprovalDataModel(LeaveApprovalDataModel leaveApprovalDataModel) {
 		LeaveApprovalDataModel = leaveApprovalDataModel;
 	}
@@ -118,15 +138,8 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	}
 	public void setAuditTrail(AuditTrail auditTrail) {
 		this.auditTrail = auditTrail;
-	}
-	public List<LeaveTransaction> getLeaveRequestList() {
-		return leaveRequestList;
-	}
-	public void setLeaveRequestList(List<LeaveTransaction> leaveRequestList) {
-		this.leaveRequestList = leaveRequestList;
-	}
+	} 	
 	
- 	
 	public LeaveTransaction getSelectedLeaveRequest() {
 		return selectedLeaveRequest;
 	}
@@ -164,16 +177,8 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	}
 
 	public List<LeaveTransaction> getLeaveRequestApprovalList() {
-		if(leaveRequestList == null || insertDeleted == true) {
-			 try {
-				 leaveRequestList =   getLeaveApplicationService().getPendingLeaveRequestsList(actorUsers.getUsername());
-			} catch (Throwable e) {
-				e.printStackTrace();
-			}
+			return    getLeaveApplicationService().getPendingLeaveRequestsList(actorUsers.getUsername());
 			
-		}
-		
-		return leaveRequestList;
 	}
 	
 	public List<LeaveTransaction> getLeaveRequestFutureLeaveList() {
@@ -203,12 +208,16 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 				roleSet.add(role.getRole());
 			}
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info : "+getExcptnMesProperty("info.leave.approve.dir"),"Leave Approved"));
+			CalendarEventService.createEventForApprovedLeave(selectedLeaveRequest);
 		}catch(BSLException e){
 			FacesMessage msg = new FacesMessage("Error : "+getExcptnMesProperty(e.getMessage()),"Leave approve error");  
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			msg.setSeverity(FacesMessage.SEVERITY_INFO);
 	        FacesContext.getCurrentInstance().addMessage(null, msg); 
 		}catch(Exception e) {
 			log.error("Error while approving leave by "+getActorUsers().getUsername(), e);
+			FacesMessage msg = new FacesMessage("Error : "+getExcptnMesProperty(e.getMessage()),"Leave approve error");  
+			msg.setSeverity(FacesMessage.SEVERITY_INFO);
+	        FacesContext.getCurrentInstance().addMessage(null, msg);
 		}
 	}
 	
@@ -230,10 +239,13 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info : "+getExcptnMesProperty("info.leave.reject"),"Leave Rejected"));
 			}catch(BSLException e){
 				FacesMessage msg = new FacesMessage("Error : "+getExcptnMesProperty(e.getMessage()),"Leave Reject Error");  
-				msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+				msg.setSeverity(FacesMessage.SEVERITY_INFO);
 		        FacesContext.getCurrentInstance().addMessage(null, msg); 
 			}catch(Exception e) {
 				log.error("Error while approving leave by "+getActorUsers().getUsername(), e);
+				FacesMessage msg = new FacesMessage("Error : "+getExcptnMesProperty(e.getMessage()),"Leave approve error");  
+				msg.setSeverity(FacesMessage.SEVERITY_INFO);
+		        FacesContext.getCurrentInstance().addMessage(null, msg);
 			}
 		}
 

@@ -10,6 +10,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.event.SelectEvent;
+import org.springframework.context.ApplicationContext;
 
 import com.beans.common.audit.service.AuditTrail;
 import com.beans.common.audit.service.SystemAuditTrailActivity;
@@ -22,6 +23,8 @@ import com.beans.leaveapp.employee.service.EmployeeNotFound;
 import com.beans.leaveapp.employee.service.EmployeeService;
 import com.beans.leaveapp.employeeprofile.model.AddressDataModel;
 import com.beans.leaveapp.employeeprofile.model.EmployeeProfileDataModel;
+import com.beans.leaveapp.jbpm6.util.ApplicationContextProvider;
+import com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementService;
 
 
 public class EmployeeProfileManagementBean implements Serializable{
@@ -222,6 +225,10 @@ public class EmployeeProfileManagementBean implements Serializable{
 		users.setEnabled(true);
 		
 		getEmployeeService().createEmployee(newEmployee, selectedEmployeeGrade, selectedEmployeeType, selectedDepartment, users, newAddressMap);
+		
+		ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
+		YearlyEntitlementService yearlyEntitlementService = (YearlyEntitlementService) applicationContext.getBean("yearlyEntitlementService");
+		yearlyEntitlementService.addAllEntitlementsToNewEmployee(newEmployee);	
 		
 		auditTrail.log(SystemAuditTrailActivity.CREATED, SystemAuditTrailLevel.INFO, getActorUsers().getId(), getActorUsers().getUsername(), getActorUsers().getUsername() + " has created employee " + newEmployee.getName());
 		this.setInsertDelete(true);

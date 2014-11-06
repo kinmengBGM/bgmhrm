@@ -62,15 +62,13 @@
 						<f:selectItem itemLabel="Others" itemValue="Others" />
 					</p:selectOneMenu>
 
-					<h:outputText value="Marital Status" />
+					<h:outputText value="Marital Status" class="req"/>
 					<p:selectOneMenu
 						value="#{employeeProfileMgmtBean.newEmployee.maritalStatus}"
-						effect="fade">
+						effect="fade" required="true" requiredMessage="Please Select Marital Status">
 						<f:selectItem itemLabel="Select one" itemValue=""/>
 						<f:selectItem itemLabel="Single" itemValue="Single" />
 						<f:selectItem itemLabel="Married" itemValue="Married" />
-						<f:selectItem itemLabel="Divorced" itemValue="Divorced" />
-						<f:selectItem itemLabel="Widowed" itemValue="Widowed" />
 					</p:selectOneMenu>
 
 					<h:outputText value="Nationality" />
@@ -131,10 +129,10 @@
 					<h:inputText
 						value="#{employeeProfileMgmtBean.newEmployee.personalPhone}" />
 
-					<h:outputText value="Join Date" />
+					<h:outputText value="Join Date" class="req"/>
 					<p:calendar pattern="dd/MM/yyyy"
 						value="#{employeeProfileMgmtBean.newEmployee.joinDate}"
-						id="newEmployeeJoinDateCal" />
+						id="newEmployeeJoinDateCal"  required="true" requiredMessage="Please Enter Join Date"/>
 
 					<h:outputText value="Resignation Date" />
 					<p:calendar pattern="dd/MM/yyyy"

@@ -255,7 +255,7 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 		if("PERM".equalsIgnoreCase(newlyRegisteredEmployee.getEmployeeType().getName())){
 		for(Leave leaveType : Leave.values()){
 			
-			if(!(leaveType.equalsName(Leave.ANNUAL.toString()) || leaveType.equalsName(Leave.UNPAID.toString()))){
+			if(!(leaveType.equalsName(Leave.ANNUAL.toString()) || leaveType.equalsName(Leave.UNPAID.toString()) || leaveType.equalsName(Leave.TIMEINLIEU.toString()))){
 			// Checking whether the employee is Married or single to add Marriage Leaves
 				if(married.equalsIgnoreCase(newlyRegisteredEmployee.getMaritalStatus())){
 				if( newlyRegisteredEmployee.getGender().equals("M")&& leaveType.equalsName(Leave.MATERNITY.toString()) || newlyRegisteredEmployee.getGender().equals("F")&& leaveType.equalsName(Leave.PATERNITY.toString()) || leaveType.equalsName(Leave.MARRIAGE.toString()))
@@ -300,8 +300,8 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 				int joinedMonth = newlyRegisteredEmployee.getJoinDate().getMonth();
 				if(joinedDate>15){
 					leaveEntitlement.setcurrentLeaveBalance(-1);
-					leaveEntitlement.setEntitlement(12-joinedMonth+1);
-					leaveEntitlement.setYearlyLeaveBalance(12-joinedMonth+1);
+					leaveEntitlement.setEntitlement(12-joinedMonth-1);
+					leaveEntitlement.setYearlyLeaveBalance(12-joinedMonth-1);
 				}
 				else{
 					leaveEntitlement.setcurrentLeaveBalance(0);
@@ -326,8 +326,8 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 			int joinedMonth = newlyRegisteredEmployee.getJoinDate().getMonth();
 			if(joinedDate>15){
 				leaveEntitlement.setcurrentLeaveBalance(-1);
-				leaveEntitlement.setEntitlement(12-joinedMonth+1);
-				leaveEntitlement.setYearlyLeaveBalance(12-joinedMonth+1);
+				leaveEntitlement.setEntitlement(12-joinedMonth-1);
+				leaveEntitlement.setYearlyLeaveBalance(12-joinedMonth-1);
 			}
 			else{
 				leaveEntitlement.setcurrentLeaveBalance(0);
@@ -356,7 +356,20 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 		leaveEntitlement.setDeleted(false);
 		leaveEntitlement.setLeaveType(leaveTypeBean);
 		yearlyEntitleRepository.save(leaveEntitlement);
+		}
 		
+		leaveTypeBean = leaveTypeRepository.getLeaveTypeByName(Leave.TIMEINLIEU.toString(),newlyRegisteredEmployee.getEmployeeType().getId());
+		if(leaveTypeBean!=null){
+		leaveEntitlement = new YearlyEntitlement();
+		leaveEntitlement.setCreatedBy(leaveTypeBean.getCreatedBy());
+		leaveEntitlement.setCreationTime(new Date());
+		leaveEntitlement.setcurrentLeaveBalance(0);
+		leaveEntitlement.setYearlyLeaveBalance(0);
+		leaveEntitlement.setEntitlement(0);
+		leaveEntitlement.setEmployee(newlyRegisteredEmployee);
+		leaveEntitlement.setDeleted(false);
+		leaveEntitlement.setLeaveType(leaveTypeBean);
+		yearlyEntitleRepository.save(leaveEntitlement);
 		}
 		}catch(Exception e){
 			e.printStackTrace();

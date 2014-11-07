@@ -52,6 +52,7 @@
 			<p:submenu label="Leave Administration" rendered="#{authenticationBean.hasAccess('CancelLeave') or authenticationBean.hasAccess('ApproveLeave')}">
 				<p:menuitem value="Leave Approval" url="/protected/applyleave/approveleavetasklist.jsf" rendered="#{authenticationBean.hasAccess('ApproveLeave')}"/>
 				<p:menuitem value="Cancel Leave" url="/protected/applyleave/cancelLeaveTransactionList.jsf" rendered="#{authenticationBean.hasAccess('CancelLeave')}"/>
+				<p:menuitem value="Pending Leaves" url="/protected/applyleave/pendingLeaveTransactionList.jsf" rendered="#{authenticationBean.hasAccess('CancelLeave')}"/>
 			</p:submenu>
 			<p:menuitem value="Change Password" url="/protected/userchangepassword.jsf"/>
 			<p:menuitem value="Logout" action="${authenticationBean.doLogout}"></p:menuitem>

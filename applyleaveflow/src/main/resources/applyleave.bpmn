@@ -169,41 +169,29 @@ LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelMode
       <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_1">
-        <bpmn2:dataInput id="DataInput_12" itemSubjectRef="ItemDefinition_2" name="approverName"/>
-        <bpmn2:dataInput id="DataInput_13" itemSubjectRef="ItemDefinition_6" name="isApproverApproved"/>
         <bpmn2:dataInput id="DataInput_17" name="TaskName"/>
         <bpmn2:dataInput id="DataInput_20" name="GroupId"/>
-        <bpmn2:dataInput id="DataInput_141" itemSubjectRef="_approvalLevelModel" name="approvalLevelModel"/>
         <bpmn2:dataInput id="DataInput_142" itemSubjectRef="_ItemDefinition_9" name="leaveTransaction"/>
-        <bpmn2:dataOutput id="DataOutput_13" itemSubjectRef="ItemDefinition_2" name="approverName"/>
-        <bpmn2:dataOutput id="DataOutput_14" itemSubjectRef="ItemDefinition_6" name="isApproverApproved"/>
+        <bpmn2:dataInput id="DataInput_16" itemSubjectRef="_ItemDefinition_1257" name="timeInLieuBean"/>
+        <bpmn2:dataInput id="DataInput_27" itemSubjectRef="_approvalLevelModel" name="approvalLevelModel"/>
         <bpmn2:dataOutput id="DataOutput_5" itemSubjectRef="_ItemDefinition_9" name="leaveTransaction"/>
         <bpmn2:dataOutput id="DataOutput_6" itemSubjectRef="_approvalLevelModel" name="approvalLevelModel"/>
+        <bpmn2:dataOutput id="DataOutput_2_1" itemSubjectRef="_ItemDefinition_1257" name="timeInLieuBean"/>
         <bpmn2:inputSet id="InputSet_1">
-          <bpmn2:dataInputRefs>DataInput_12</bpmn2:dataInputRefs>
-          <bpmn2:dataInputRefs>DataInput_13</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_17</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_20</bpmn2:dataInputRefs>
-          <bpmn2:dataInputRefs>DataInput_141</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_142</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_16</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_27</bpmn2:dataInputRefs>
         </bpmn2:inputSet>
         <bpmn2:inputSet id="InputSet_2" name="New Input Set"/>
         <bpmn2:outputSet id="OutputSet_1">
-          <bpmn2:dataOutputRefs>DataOutput_13</bpmn2:dataOutputRefs>
-          <bpmn2:dataOutputRefs>DataOutput_14</bpmn2:dataOutputRefs>
           <bpmn2:dataOutputRefs>DataOutput_5</bpmn2:dataOutputRefs>
           <bpmn2:dataOutputRefs>DataOutput_6</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_2</bpmn2:dataOutputRefs>
         </bpmn2:outputSet>
         <bpmn2:outputSet id="OutputSet_2" name="Output Set"/>
       </bpmn2:ioSpecification>
-      <bpmn2:dataInputAssociation id="DataInputAssociation_12">
-        <bpmn2:sourceRef>approverName</bpmn2:sourceRef>
-        <bpmn2:targetRef>DataInput_12</bpmn2:targetRef>
-      </bpmn2:dataInputAssociation>
-      <bpmn2:dataInputAssociation id="DataInputAssociation_13">
-        <bpmn2:sourceRef>isApproverApproved</bpmn2:sourceRef>
-        <bpmn2:targetRef>DataInput_13</bpmn2:targetRef>
-      </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="DataInputAssociation_17">
         <bpmn2:targetRef>DataInput_17</bpmn2:targetRef>
         <bpmn2:assignment id="Assignment_13">
@@ -218,22 +206,18 @@ LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelMode
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="FormalExpression_34">DataInput_20</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
-      <bpmn2:dataInputAssociation id="DataInputAssociation_141">
-        <bpmn2:sourceRef>approvalLevelModel</bpmn2:sourceRef>
-        <bpmn2:targetRef>DataInput_141</bpmn2:targetRef>
-      </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="DataInputAssociation_142">
         <bpmn2:sourceRef>leaveTransaction</bpmn2:sourceRef>
         <bpmn2:targetRef>DataInput_142</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
-      <bpmn2:dataOutputAssociation id="DataOutputAssociation_13">
-        <bpmn2:sourceRef>DataOutput_13</bpmn2:sourceRef>
-        <bpmn2:targetRef>approverName</bpmn2:targetRef>
-      </bpmn2:dataOutputAssociation>
-      <bpmn2:dataOutputAssociation id="DataOutputAssociation_14">
-        <bpmn2:sourceRef>DataOutput_14</bpmn2:sourceRef>
-        <bpmn2:targetRef>isApproverApproved</bpmn2:targetRef>
-      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_16">
+        <bpmn2:sourceRef>timeInLieuBean</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_16</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_27">
+        <bpmn2:sourceRef>approvalLevelModel</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_27</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_5">
         <bpmn2:sourceRef>DataOutput_5</bpmn2:sourceRef>
         <bpmn2:targetRef>leaveTransaction</bpmn2:targetRef>
@@ -241,6 +225,14 @@ LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelMode
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_6">
         <bpmn2:sourceRef>DataOutput_6</bpmn2:sourceRef>
         <bpmn2:targetRef>approvalLevelModel</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_2_1">
+        <bpmn2:sourceRef>DataOutput_2</bpmn2:sourceRef>
+        <bpmn2:targetRef>timeInLieuBean</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_20">
+        <bpmn2:sourceRef>DataOutput_2_1</bpmn2:sourceRef>
+        <bpmn2:targetRef>timeInLieuBean</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_13" tns:priority="1" name="" sourceRef="UserTask_3" targetRef="ScriptTask_1"/>
@@ -330,7 +322,12 @@ if(!&quot;Time-In-Lieu&quot;.equals(leaveTransaction.getLeaveType().getName()) |
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveBalanceAfterApproval(leaveTransaction,timeInLieuBean.getIsFirstApproverApproved());
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatusForLeaves(leaveTransaction,timeInLieuBean);
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,timeInLieuBean);
+}else{
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateToAnnualLeaveBalanceAfterApproval(leaveTransaction,timeInLieuBean);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatusForFinalApproval(leaveTransaction,timeInLieuBean);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,timeInLieuBean);
 }
+
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_3" tns:priority="1" name="" sourceRef="ScriptTask_3" targetRef="EndEvent_2"/>
@@ -346,41 +343,29 @@ com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEm
       <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_3">
-        <bpmn2:dataInput id="DataInput_47" itemSubjectRef="ItemDefinition_2" name="approverName"/>
-        <bpmn2:dataInput id="DataInput_48" itemSubjectRef="ItemDefinition_6" name="isApproverApproved"/>
         <bpmn2:dataInput id="DataInput_32" name="TaskName"/>
         <bpmn2:dataInput id="DataInput_35" name="GroupId"/>
         <bpmn2:dataInput id="DataInput_155" itemSubjectRef="_approvalLevelModel" name="approvalLevelModel"/>
         <bpmn2:dataInput id="DataInput_156" itemSubjectRef="_ItemDefinition_9" name="leaveTransaction"/>
-        <bpmn2:dataOutput id="DataOutput_23" itemSubjectRef="ItemDefinition_2" name="approverName"/>
-        <bpmn2:dataOutput id="DataOutput_24" itemSubjectRef="ItemDefinition_6" name="isApproverApproved"/>
+        <bpmn2:dataInput id="DataInput_12" itemSubjectRef="_ItemDefinition_1257" name="timeInLieuBean"/>
         <bpmn2:dataOutput id="DataOutput_11" itemSubjectRef="_approvalLevelModel" name="approvalLevelModel"/>
         <bpmn2:dataOutput id="DataOutput_12" itemSubjectRef="_ItemDefinition_9" name="leaveTransaction"/>
+        <bpmn2:dataOutput id="DataOutput_9" itemSubjectRef="_ItemDefinition_1257" name="timeInLieuBean"/>
         <bpmn2:inputSet id="InputSet_5">
-          <bpmn2:dataInputRefs>DataInput_47</bpmn2:dataInputRefs>
-          <bpmn2:dataInputRefs>DataInput_48</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_32</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_35</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_155</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_156</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_12</bpmn2:dataInputRefs>
         </bpmn2:inputSet>
         <bpmn2:inputSet id="InputSet_6" name="New Input Set"/>
         <bpmn2:outputSet id="OutputSet_5">
-          <bpmn2:dataOutputRefs>DataOutput_23</bpmn2:dataOutputRefs>
-          <bpmn2:dataOutputRefs>DataOutput_24</bpmn2:dataOutputRefs>
           <bpmn2:dataOutputRefs>DataOutput_11</bpmn2:dataOutputRefs>
           <bpmn2:dataOutputRefs>DataOutput_12</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_9</bpmn2:dataOutputRefs>
         </bpmn2:outputSet>
         <bpmn2:outputSet id="OutputSet_6" name="Output Set"/>
       </bpmn2:ioSpecification>
-      <bpmn2:dataInputAssociation id="DataInputAssociation_47">
-        <bpmn2:sourceRef>approverName</bpmn2:sourceRef>
-        <bpmn2:targetRef>DataInput_47</bpmn2:targetRef>
-      </bpmn2:dataInputAssociation>
-      <bpmn2:dataInputAssociation id="DataInputAssociation_48">
-        <bpmn2:sourceRef>isApproverApproved</bpmn2:sourceRef>
-        <bpmn2:targetRef>DataInput_48</bpmn2:targetRef>
-      </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="DataInputAssociation_32">
         <bpmn2:targetRef>DataInput_32</bpmn2:targetRef>
         <bpmn2:assignment id="Assignment_20">
@@ -403,14 +388,10 @@ com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEm
         <bpmn2:sourceRef>leaveTransaction</bpmn2:sourceRef>
         <bpmn2:targetRef>DataInput_156</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
-      <bpmn2:dataOutputAssociation id="DataOutputAssociation_23">
-        <bpmn2:sourceRef>DataOutput_23</bpmn2:sourceRef>
-        <bpmn2:targetRef>approverName</bpmn2:targetRef>
-      </bpmn2:dataOutputAssociation>
-      <bpmn2:dataOutputAssociation id="DataOutputAssociation_24">
-        <bpmn2:sourceRef>DataOutput_24</bpmn2:sourceRef>
-        <bpmn2:targetRef>isApproverApproved</bpmn2:targetRef>
-      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_12">
+        <bpmn2:sourceRef>timeInLieuBean</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_12</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_11">
         <bpmn2:sourceRef>DataOutput_11</bpmn2:sourceRef>
         <bpmn2:targetRef>approvalLevelModel</bpmn2:targetRef>
@@ -418,6 +399,10 @@ com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEm
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_12">
         <bpmn2:sourceRef>DataOutput_12</bpmn2:sourceRef>
         <bpmn2:targetRef>leaveTransaction</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_9">
+        <bpmn2:sourceRef>DataOutput_9</bpmn2:sourceRef>
+        <bpmn2:targetRef>timeInLieuBean</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_10" tns:priority="1" name="" sourceRef="UserTask_5" targetRef="ScriptTask_6"/>
@@ -429,7 +414,12 @@ if(!&quot;Time-In-Lieu&quot;.equals(leaveTransaction.getLeaveType().getName()) |
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveBalanceAfterApproval(leaveTransaction,timeInLieuBean.getIsFirstApproverApproved());
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatusForLeaves(leaveTransaction,timeInLieuBean);
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,timeInLieuBean);
+}else{
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateToAnnualLeaveBalanceAfterApproval(leaveTransaction,timeInLieuBean);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatusForFinalApproval(leaveTransaction,timeInLieuBean);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,timeInLieuBean);
 }
+
 </bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_11" tns:priority="1" name="" sourceRef="ScriptTask_6" targetRef="EndEvent_4"/>
@@ -459,41 +449,29 @@ com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEm
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_2">
-        <bpmn2:dataInput id="DataInput_15" itemSubjectRef="ItemDefinition_2" name="approverName"/>
-        <bpmn2:dataInput id="DataInput_16" itemSubjectRef="ItemDefinition_6" name="isApproverApproved"/>
         <bpmn2:dataInput id="DataInput_73" name="TaskName"/>
         <bpmn2:dataInput id="DataInput_76" name="GroupId"/>
         <bpmn2:dataInput id="DataInput_148" itemSubjectRef="_approvalLevelModel" name="approvalLevelModel"/>
         <bpmn2:dataInput id="DataInput_149" itemSubjectRef="_ItemDefinition_9" name="leaveTransaction"/>
-        <bpmn2:dataOutput id="DataOutput_18" itemSubjectRef="ItemDefinition_2" name="approverName"/>
-        <bpmn2:dataOutput id="DataOutput_19" itemSubjectRef="ItemDefinition_6" name="isApproverApproved"/>
+        <bpmn2:dataInput id="DataInput_6" itemSubjectRef="_ItemDefinition_1257" name="timeInLieuBean"/>
         <bpmn2:dataOutput id="DataOutput_7" itemSubjectRef="_ItemDefinition_9" name="leaveTransaction"/>
         <bpmn2:dataOutput id="DataOutput_10" itemSubjectRef="_approvalLevelModel" name="approvalLevelModel"/>
+        <bpmn2:dataOutput id="DataOutput_8" itemSubjectRef="_ItemDefinition_1257" name="timeInLieuBean"/>
         <bpmn2:inputSet id="InputSet_3">
-          <bpmn2:dataInputRefs>DataInput_15</bpmn2:dataInputRefs>
-          <bpmn2:dataInputRefs>DataInput_16</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_73</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_76</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_148</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>DataInput_149</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>DataInput_6</bpmn2:dataInputRefs>
         </bpmn2:inputSet>
         <bpmn2:inputSet id="InputSet_4" name="New Input Set"/>
         <bpmn2:outputSet id="OutputSet_3">
-          <bpmn2:dataOutputRefs>DataOutput_18</bpmn2:dataOutputRefs>
-          <bpmn2:dataOutputRefs>DataOutput_19</bpmn2:dataOutputRefs>
           <bpmn2:dataOutputRefs>DataOutput_7</bpmn2:dataOutputRefs>
           <bpmn2:dataOutputRefs>DataOutput_10</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>DataOutput_8</bpmn2:dataOutputRefs>
         </bpmn2:outputSet>
         <bpmn2:outputSet id="OutputSet_4" name="Output Set"/>
       </bpmn2:ioSpecification>
-      <bpmn2:dataInputAssociation id="DataInputAssociation_15">
-        <bpmn2:sourceRef>approverName</bpmn2:sourceRef>
-        <bpmn2:targetRef>DataInput_15</bpmn2:targetRef>
-      </bpmn2:dataInputAssociation>
-      <bpmn2:dataInputAssociation id="DataInputAssociation_16">
-        <bpmn2:sourceRef>isApproverApproved</bpmn2:sourceRef>
-        <bpmn2:targetRef>DataInput_16</bpmn2:targetRef>
-      </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="DataInputAssociation_73">
         <bpmn2:targetRef>DataInput_73</bpmn2:targetRef>
         <bpmn2:assignment id="Assignment_43">
@@ -516,14 +494,10 @@ com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEm
         <bpmn2:sourceRef>leaveTransaction</bpmn2:sourceRef>
         <bpmn2:targetRef>DataInput_149</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
-      <bpmn2:dataOutputAssociation id="DataOutputAssociation_18">
-        <bpmn2:sourceRef>DataOutput_18</bpmn2:sourceRef>
-        <bpmn2:targetRef>approverName</bpmn2:targetRef>
-      </bpmn2:dataOutputAssociation>
-      <bpmn2:dataOutputAssociation id="DataOutputAssociation_19">
-        <bpmn2:sourceRef>DataOutput_19</bpmn2:sourceRef>
-        <bpmn2:targetRef>isApproverApproved</bpmn2:targetRef>
-      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_6">
+        <bpmn2:sourceRef>timeInLieuBean</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_6</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_7">
         <bpmn2:sourceRef>DataOutput_7</bpmn2:sourceRef>
         <bpmn2:targetRef>leaveTransaction</bpmn2:targetRef>
@@ -531,6 +505,10 @@ com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEm
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_10">
         <bpmn2:sourceRef>DataOutput_10</bpmn2:sourceRef>
         <bpmn2:targetRef>approvalLevelModel</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_8">
+        <bpmn2:sourceRef>DataOutput_8</bpmn2:sourceRef>
+        <bpmn2:targetRef>timeInLieuBean</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_2" tns:priority="1" name="" sourceRef="UserTask_4" targetRef="ScriptTask_3"/>
@@ -541,6 +519,10 @@ com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEm
 if(!&quot;Time-In-Lieu&quot;.equals(leaveTransaction.getLeaveType().getName()) || (&quot;Time-In-Lieu&quot;.equals(leaveTransaction.getLeaveType().getName()) &amp;&amp; !timeInLieuBean.getIsFirstApproverApproved())){
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveBalanceAfterApproval(leaveTransaction,timeInLieuBean.getIsFirstApproverApproved());
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatusForLeaves(leaveTransaction,timeInLieuBean);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,timeInLieuBean);
+}else{
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateToAnnualLeaveBalanceAfterApproval(leaveTransaction,timeInLieuBean);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatusForFinalApproval(leaveTransaction,timeInLieuBean);
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,timeInLieuBean);
 }
 </bpmn2:script>
@@ -626,13 +608,13 @@ com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEm
     <bpmn2:sequenceFlow id="SequenceFlow_17" tns:priority="1" name="TimeInLieu condition" sourceRef="ExclusiveGateway_2" targetRef="UserTask_6">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_24" language="http://www.java.com/java">return &quot;Time-In-Lieu&quot;.equals(leaveTransaction.getLeaveType().getName()) &amp;&amp; timeInLieuBean.getIsFirstApproverApproved();</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
-    <bpmn2:scriptTask id="ScriptTask_7" name="Email to Leave Requester and HR Final Level" scriptFormat="http://www.java.com/java">
+    <bpmn2:scriptTask id="ScriptTask_7" name="Email to Leave Applicant and HR" scriptFormat="http://www.java.com/java">
       <bpmn2:incoming>SequenceFlow_18</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_19</bpmn2:outgoing>
       <bpmn2:script>System.out.println(&quot;Successfully  approved by 2 levels : &quot;+leaveTransaction);
 System.out.println(&quot;Successfully  approved by 2 levels : &quot;+timeInLieuBean.getSecondApprover());
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateToAnnualLeaveBalanceAfterApproval(leaveTransaction,timeInLieuBean);
-com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatusForTimeInLieu(leaveTransaction,timeInLieuBean);
+com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatusForFinalApproval(leaveTransaction,timeInLieuBean);
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,timeInLieuBean);
 </bpmn2:script>
     </bpmn2:scriptTask>

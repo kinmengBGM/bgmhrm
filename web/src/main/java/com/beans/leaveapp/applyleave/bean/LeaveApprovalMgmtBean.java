@@ -20,6 +20,7 @@ import com.beans.common.audit.service.SystemAuditTrailLevel;
 import com.beans.common.security.role.model.Role;
 import com.beans.common.security.users.model.Users;
 import com.beans.exceptions.BSLException;
+import com.beans.leaveapp.applyleave.model.ApprovalLevelModel;
 import com.beans.leaveapp.applyleave.model.LeaveApprovalDataModel;
 import com.beans.leaveapp.applyleave.model.TimeInLieuBean;
 import com.beans.leaveapp.applyleave.service.LeaveApplicationService;
@@ -94,6 +95,14 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		}
 		return LeaveApprovalDataModel;
 	}	
+	
+	public LeaveApprovalDataModel getLeaveApprovalDataModelPendingLeaves() {
+		if(LeaveApprovalDataModel == null || insertDeleted == true) {
+			LeaveApprovalDataModel = new LeaveApprovalDataModel(getLeaveTransactionService().getAllLeavesAppliedByEmployee());
+		}
+		return LeaveApprovalDataModel;
+	}	
+
 
 
 	public void setLeaveApprovalDataModel(LeaveApprovalDataModel leaveApprovalDataModel) {
@@ -207,6 +216,7 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 			Map<String,Object>  processInstanceData =	leaveApplicationService.getContentMapDataByTaskId(selectedLeaveRequest.getTaskId());
 			if(processInstanceData!=null){
 				TimeInLieuBean processDecisionData =   (TimeInLieuBean) processInstanceData.get("timeInLieuBean");
+				ApprovalLevelModel approverBean =  (ApprovalLevelModel) processInstanceData.get("approvalLevelModel");
 					if(processDecisionData!=null && processDecisionData.getIsTwoLeveApproval()){
 						if(selectedLeaveRequest.getLeaveType()!=null && Leave.TIMEINLIEU.equalsName(selectedLeaveRequest.getLeaveType().getName()) )
 							leaveApplicationService.approveLeaveOfEmployee(selectedLeaveRequest, getActorUsers().getUsername(),"SECOND");
@@ -214,7 +224,7 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 					else{
 						leaveApplicationService.approveLeaveOfEmployee(selectedLeaveRequest, getActorUsers().getUsername(),"FIRST");
 						// Creating calendar event for approved leave slot
-						if(selectedLeaveRequest.getLeaveType()!=null && !Leave.TIMEINLIEU.equalsName(selectedLeaveRequest.getLeaveType().getName()) ){
+						if(selectedLeaveRequest.getLeaveType()!=null && !Leave.TIMEINLIEU.equalsName(selectedLeaveRequest.getLeaveType().getName()) || approverBean!=null && !"ROLE_EMPLOYEE".equalsIgnoreCase(approverBean.getRole()) ){
 							CalendarEventService.createEventForApprovedLeave(selectedLeaveRequest);
 							
 							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info : "+getExcptnMesProperty("info.leave.approve.dir"),"Leave Approved"));

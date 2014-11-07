@@ -27,7 +27,7 @@ public class LeaveApplicationWorker {
 			sendMailService.sendEmailNotificationToLeaveApplicant(leaveTransaction, timeInLieuBean);
 			sendMailService.sendEmailNotificationToLeaveApprover(leaveTransaction, approvalBean,timeInLieuBean);
 		}
-		else if (timeInLieuBean.getIsFirstApproverApproved()!=null && timeInLieuBean.getIsFirstApproverApproved() && Leave.TIMEINLIEU.equalsName(leaveTransaction.getLeaveType().getName()) && timeInLieuBean.getIsSecondApproverApproved()==null ){
+		else if (timeInLieuBean.getIsFirstApproverApproved()!=null && timeInLieuBean.getIsFirstApproverApproved() && Leave.TIMEINLIEU.equalsName(leaveTransaction.getLeaveType().getName()) && timeInLieuBean.getIsSecondApproverApproved()==null && "ROLE_TEAMLEAD".equalsIgnoreCase(approvalBean.getApprover()) ){
 			sendMailService.sendEmailNotificationToLeaveApprover(leaveTransaction, approvalBean,timeInLieuBean);
 		}
 		else{
@@ -68,7 +68,7 @@ public class LeaveApplicationWorker {
 	
 	public static void updateToAnnualLeaveBalanceAfterApproval(LeaveTransaction leaveTransaction,TimeInLieuBean timeInLieuBean){
 		log.info("Data coming from process is  leaveTransaction : "+leaveTransaction+" and approval bean :"+timeInLieuBean);
-		if(leaveTransaction!=null && timeInLieuBean!=null && timeInLieuBean.getIsSecondApproverApproved())
+		if(leaveTransaction!=null && timeInLieuBean!=null && (timeInLieuBean.getIsSecondApproverApproved()==null || timeInLieuBean.getIsSecondApproverApproved()))
 		{
 			ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
 			YearlyEntitlementService yearlyEntitlementService = (YearlyEntitlementService) applicationContext.getBean("yearlyEntitlementService");
@@ -102,15 +102,15 @@ public class LeaveApplicationWorker {
 	
 
 	// This method used for 2 level approval and updating the leave Transaction table
-	public static void updateLeaveApplicationStatusForTimeInLieu(LeaveTransaction leaveTransaction,TimeInLieuBean timeInLieuBean){
+	public static void updateLeaveApplicationStatusForFinalApproval(LeaveTransaction leaveTransaction,TimeInLieuBean timeInLieuBean){
 		System.out.println("Updated Leave Transaction : "+timeInLieuBean.getIsSecondApproverApproved());
 		ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
 		LeaveTransactionService leaveTransactionService = (LeaveTransactionService) applicationContext.getBean("leaveTransactionService");
-		if(timeInLieuBean!=null && timeInLieuBean.getIsSecondApproverApproved())
+		if(timeInLieuBean!=null && timeInLieuBean.getIsSecondApproverApproved()!=null && timeInLieuBean.getIsSecondApproverApproved() ||(timeInLieuBean!=null && timeInLieuBean.getIsTwoLeveApproval()==null))
 			leaveTransaction.setStatus("Approved");
 		else
 			leaveTransaction.setStatus("Rejected");
-		if(timeInLieuBean!=null && timeInLieuBean.getIsSecondApproverApproved())
+		if(timeInLieuBean!=null && timeInLieuBean.getIsSecondApproverApproved()!=null && timeInLieuBean.getIsSecondApproverApproved() || (timeInLieuBean!=null && timeInLieuBean.getIsTwoLeveApproval()==null))
 			leaveTransaction.setYearlyLeaveBalance(leaveTransaction.getYearlyLeaveBalance()+leaveTransaction.getNumberOfDays());
 		
 			leaveTransaction.setLastModifiedBy(timeInLieuBean!=null?timeInLieuBean.getSecondApprover():"Admin");

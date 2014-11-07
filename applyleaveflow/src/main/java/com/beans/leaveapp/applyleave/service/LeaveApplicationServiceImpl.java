@@ -2,6 +2,7 @@ package com.beans.leaveapp.applyleave.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -217,12 +218,15 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 			Task currentTask = applyLeaveRuntime.getTaskById(leaveTransaction.getTaskId());
 			Map<String, Object> contentMap = applyLeaveRuntime.getContentForTask(currentTask);
 			ApprovalLevelModel approvalLevelModel =(ApprovalLevelModel) contentMap.get("approvalLevelModel");
+			Set<Role> userRoles = 	leaveTransaction.getEmployee().getUsers().getUserRoles();
+			
+			Role highestRole =	getHighestRoleOfEmployee(userRoles);
 			
 			if("FIRST".equalsIgnoreCase(level)){
 				timeInLieu = new TimeInLieuBean();
 				timeInLieu.setFirstApprover(actorId);
 				timeInLieu.setIsFirstApproverApproved(Boolean.TRUE);
-				if(Leave.TIMEINLIEU.equalsName(leaveTransaction.getLeaveType().getName()))
+				if(Leave.TIMEINLIEU.equalsName(leaveTransaction.getLeaveType().getName()) && "ROLE_EMPLOYEE".equalsIgnoreCase(highestRole.getRole()))
 					timeInLieu.setIsTwoLeveApproval(Boolean.TRUE);
 			}
 			else{

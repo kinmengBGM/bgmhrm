@@ -155,4 +155,8 @@ public class AuthenticationBean implements Serializable{
 		this.auditTrail = auditTrail;
 	}		
 	
+	public void sendMonthlyReport(){
+		LeaveReportWorker.doSendLeaveReport();
+	}
+	
 }

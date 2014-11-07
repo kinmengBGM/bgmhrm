@@ -195,7 +195,7 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 	public String applyLeave() throws LeaveApplicationException, RoleNotFound  {
 		
 		if(isEmployeeFinishedOneYear()){
-			if(!Leave.UNPAID.equalsName(leaveType) && !(numberOfDays<= yearlyEntitlement.getYearlyLeaveBalance()))
+			if(!(Leave.UNPAID.equalsName(leaveType) || Leave.TIMEINLIEU.equalsName(leaveType)) && !(numberOfDays<= yearlyEntitlement.getYearlyLeaveBalance()))
 			{
 				FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.sick.validation"), "Leave error message");  
 				msg.setSeverity(FacesMessage.SEVERITY_ERROR);

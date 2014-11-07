@@ -5,23 +5,9 @@
 	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xmlns:tx="http://www.springframework.org/schema/tx">
 
-	<!-- <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> 
-		<property name="jndiName" value="java:jboss/datasources/mysqlDS"/> </bean> -->
-	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"	destroy-method="close">
-		<!-- Connection properties -->
-		<property name="driverClass" value="com.mysql.jdbc.Driver" />
-		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/beans" />
-		<property name="user" value="beans" />
-		<property name="password" value="Admin!123" />
-		<!-- Pool properties -->
-		<property name="minPoolSize" value="1" />
-		<property name="maxPoolSize" value="10" />
-		<property name="acquireIncrement" value="2" />
-		<property name="maxStatements" value="500" />
-		<property name="idleConnectionTestPeriod" value="30" />
-		<property name="maxIdleTime" value="15" />
-	</bean>
-
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> 
+		<property name="jndiName" value="java:jboss/datasources/mysqlDS"/> </bean>
+	
 	<!--Following entity manager for Mysql database -->
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">

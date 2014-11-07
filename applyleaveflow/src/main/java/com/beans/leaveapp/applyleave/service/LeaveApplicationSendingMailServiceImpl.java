@@ -260,7 +260,7 @@ public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,TimeInLi
 			email.setSubject("Reg : Leave Application Approved for "+leaveTransaction.getEmployee().getName());
 		}
 	}
-	// Get all users with role ROLE_TEAMLEAD
+	// Get all users with role ROLE_HR
 	List<Employee> hrEmpolyeeList = getEmployeeService().findAllEmployeesByRole("ROLE_HR");
 	
 	List<String> emailList = new ArrayList<String>();

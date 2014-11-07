@@ -1,5 +1,6 @@
 package com.beans.leaveapp.applyleave.bean;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,7 +10,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.util.IOUtils;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 import com.beans.common.audit.service.AuditTrail;
 import com.beans.common.audit.service.SystemAuditTrailActivity;
@@ -43,8 +47,9 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 	private LeaveApplicationService leaveApplicationService;
 	private AuditTrail auditTrail;
 	private Double allowedMaximumLeaves;
-	
-	
+	private UploadedFile sickLeaveAttachment;
+	private byte[] byteData;
+    private String timings;
 	
 	public Double getAllowedMaximumLeaves() {
 		return allowedMaximumLeaves;
@@ -256,9 +261,20 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 			leaveTransaction.setReason(getReason());
 			leaveTransaction.setStartDateTime(getStartDate());
 			leaveTransaction.setEndDateTime(getEndDate());
+			leaveTransaction.setTimings(getTimings());
 			leaveTransaction.setCreatedBy(getActorUsers().getUsername());
 			leaveTransaction.setCreationTime(new Date());
 			leaveTransaction.setStatus("Pending");
+			if("Sick".equalsIgnoreCase(leaveType)){
+				if(byteData != null){
+				leaveTransaction.setSickLeaveAttachment(byteData);
+				} else {
+					FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.sickleaveattachment.mcNotFound"), getExcptnMesProperty("error.sickleaveattachment.mcNotFound")); 
+					msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			        FacesContext.getCurrentInstance().addMessage(null, msg);
+			        return "";
+				}
+			}
 			try {
 				leaveApplicationService.submitLeave(getEmployee(), getYearlyEntitlement(), leaveTransaction);
 				
@@ -295,6 +311,14 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 		
 	}
 	
+	public void upload() throws IOException{
+		if(sickLeaveAttachment!= null){
+			byteData = IOUtils.toByteArray(sickLeaveAttachment.getInputstream());
+		}
+			
+	}
+	
+	
 	private boolean isEmployeeFinishedOneYear(){
 		
 		if(employee!=null){
@@ -320,7 +344,30 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 		
 		return false;
 	}
+	public UploadedFile getSickLeaveAttachment() {
+		return sickLeaveAttachment;
+	}
+	public void setSickLeaveAttachment(UploadedFile sickLeaveAttachment) {
+		this.sickLeaveAttachment = sickLeaveAttachment;
+	}
+	public byte[] getByteData() {
+		return byteData;
+	}
+	public void setByteData(byte[] byteData) {
+		this.byteData = byteData;
+	}
+
+	public String getTimings() {
+		return timings;
+	}
+	public void setTimings(String timings) {
+		this.timings = timings;
+	}
 	
-	
-	
-}
+	public void checkHalfDayLeave(Long days){
+		if(days==0.5){
+			numberOfDays=0.5;
+		}
+	}
+
+}	

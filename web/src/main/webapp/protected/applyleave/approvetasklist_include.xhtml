@@ -19,7 +19,7 @@
 				<p:column id="leaveTypeHEader"><f:facet name="header"> Leave Type </f:facet><h:outputText value="#{approveLeave0.leaveType.name}" /></p:column>
 				<p:column id="startDateHeader"><f:facet name="header"> Start Date </f:facet><h:outputText value="#{approveLeave0.startDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy" /> </h:outputText></p:column>
 				<p:column id="endDateHeader"><f:facet name="header"> End Date </f:facet><h:outputText value="#{approveLeave0.endDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy" />  </h:outputText></p:column>
-				<p:column id="noOfDaysHeader"><f:facet name="header"> Number of Days </f:facet><h:outputText value="#{approveLeave0.numberOfDays}" /></p:column>
+				<p:column id="noOfDaysHeader"><f:facet name="header"> Number of Days </f:facet><h:outputText value="#{approveLeave0.numberOfDays} #{approveLeave0.timings}" /></p:column>
 				<p:column id="reasonHeader"><f:facet name="header"> Reason </f:facet><h:outputText value="#{approveLeave0.reason}"/></p:column>
 			</p:dataTable>
 		</h:form>
@@ -30,6 +30,7 @@
 	
           <p:dialog header="Approve Leave Request" styleClass="dlgCSS" widgetVar="leaveRequestDialogVar" resizable="false" id="leaveRequestDialog" modal ="true">
                <h:form id="leaveRequestDialogForm">
+               <p:messages autoUpdate="true"/>
                 <p:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
             			<h:outputText value="Name :"></h:outputText>
             			<h:outputText value="#{leaveApprovalBean.selectedLeaveRequest.employee.name}" />
@@ -38,7 +39,7 @@
             			<h:outputText value="#{leaveApprovalBean.selectedLeaveRequest.leaveType.name}" />
             			
             			<h:outputText value="Number of Days :"></h:outputText>
-            			<h:outputText value="#{leaveApprovalBean.selectedLeaveRequest.numberOfDays}" />
+            			<h:outputText value="#{leaveApprovalBean.selectedLeaveRequest.numberOfDays} #{leaveApprovalBean.selectedLeaveRequest.timings}" />
             			
             			
             			<h:outputText value="Yearly Balance :" rendered="#{leaveApprovalBean.selectedLeaveRequest.leaveType.name ne 'Unpaid'}"></h:outputText>
@@ -52,6 +53,11 @@
             			
             			<h:outputText value="Reason :"></h:outputText>
             			<h:outputText value="#{leaveApprovalBean.selectedLeaveRequest.reason}" />
+            			
+            			<h:outputText value="Sick Leave Attachment :" rendered="#{leaveApprovalBean.selectedLeaveRequest.leaveType.name eq 'Sick'}"></h:outputText>
+            			<p:commandButton value="Download" ajax="false" icon="ui-icon-arrowthick-1-s" rendered="#{leaveApprovalBean.selectedLeaveRequest.leaveType.name eq 'Sick'}">
+        					<p:fileDownload value="#{leaveApprovalBean.sickLeaveAttachment}"/>
+    					</p:commandButton>
             			
             			<p:commandButton value="Approve" actionListener="#{leaveApprovalBean.doApproveLeaveRequest()}" update=":leaveApprovalForm:approveLeaveTable" oncomplete="leaveRequestDialogVar.hide()"></p:commandButton>
             			<p:commandButton value="Reject"  immediate="true" oncomplete="rejectRegistrationVar.show();"></p:commandButton>

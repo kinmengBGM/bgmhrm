@@ -13,7 +13,7 @@
 <ui:define name="title">Leave Application</ui:define>
 <ui:define name="content">
         <h1>Leave Application</h1>
-		<h:form id="employeeLeaveTypeForm">
+		<h:form id="employeeLeaveTypeForm" enctype="multipart/form-data">
 		<p:messages autoUpdate="true"></p:messages>
 		<p:panelGrid id="leaveTypeSelection" columns="2" cellpadding="4" style="">
 		<h:outputText value="Leave Type*" />
@@ -22,36 +22,49 @@
 						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItems value="#{yearlyEntitlementListBean.yearlyEntitlementList}" var="yearlyEntitlement0" itemLabel="#{yearlyEntitlement0.leaveType.description}" itemValue="#{yearlyEntitlement0.id}"  />
 					</p:selectOneMenu>
-      </p:panelGrid>						
+      </p:panelGrid>	
+      					
 			<p:panelGrid id="AnnualLeaveDetail" columns="3" cellpadding="4" rendered="#{not empty employeeLeaveFormMgmtBean.leaveType}">
 				<h:outputText value="Entitlement"  rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')}"/>
 				<h:inputText value="#{employeeLeaveFormMgmtBean.yearlyEntitlement.entitlement}" disabled="true" rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu') }"/>
 				<h:outputText value="" rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')}"/>
-				
+		
 				<h:outputText value="Current Leave Balance" rendered="#{employeeLeaveFormMgmtBean.leaveType eq 'Annual'}"/>
 				<h:inputText value="#{employeeLeaveFormMgmtBean.yearlyEntitlement.currentLeaveBalance}" disabled="true" rendered="#{employeeLeaveFormMgmtBean.leaveType eq 'Annual'}"/>						
 	  			<h:outputText value="" rendered="#{employeeLeaveFormMgmtBean.leaveType eq 'Annual'}" />
 	  			
+
 	  			<h:outputText value="Yearly Leave Balance" rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')  }"/>
 				<h:inputText value="#{employeeLeaveFormMgmtBean.yearlyEntitlement.yearlyLeaveBalance}" disabled="true" rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')  }"/>						
 	  			<h:outputText value="" rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu') }"/>
-	  			
+		
 	  			<h:outputText value="Start Date*" />
 	  			<p:calendar pattern="dd/MM/yyyy" mode="popup" value="#{employeeLeaveFormMgmtBean.startDate}" id="annualLeaveStartDateCal" required="true" requiredMessage="Please choose start date" readonlyInput="true" />		
 	  			<h:outputText value="" />
 	  			
 	  			<h:outputText value="End Date*" />
 	  			<p:calendar pattern="dd/MM/yyyy" value="#{employeeLeaveFormMgmtBean.endDate}" id="annualLeaveEndDateCal" required="true" requiredMessage="Please choose end date"  readonlyInput="true"/>	
-				<h:outputText value="" />
+				<h:outputText value="" />							
 				
 				<h:outputText value="Number of Day(s)*" />
-				<h:inputText label="Number of Day(s)" value="#{employeeLeaveFormMgmtBean.numberOfDays}" required="true" requiredMessage="Please enter number of day(s)" maxlength="4" converterMessage="Invalid Number of Days. Please enter numerical value.">  </h:inputText>			
+				<h:inputText value="#{employeeLeaveFormMgmtBean.numberOfDays}" required="true" requiredMessage="Please enter number of day(s)" maxlength="4" converterMessage="Invalid Number of Days. Please enter numerical value.">  </h:inputText>			
 				<h:outputText value="(#{employeeLeaveFormMgmtBean.allowedMaximumLeaves} leaves are allowed to apply maximum ) " rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')  }" > </h:outputText> 
 				<h:outputText value="" rendered="#{(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')  }"></h:outputText>
+				<h:outputText value="Timings*" />
+				<p:selectOneMenu value="#{employeeLeaveFormMgmtBean.timings}" effect="fade" >
+						<f:selectItem itemLabel="Select one" itemValue=""/>
+						<f:selectItem itemLabel="AM" itemValue="AM" />
+						<f:selectItem itemLabel="PM" itemValue="PM" />
+				</p:selectOneMenu> 
+				<h:outputText value="(please select either AM or PM if half-day leave is applying)"/>					
+
 				<h:outputText value="Reason*" />
 				<p:inputTextarea id="reason" rows="5" cols="24" counter="counter" maxlength="100" counterTemplate="{0} characters remaining." autoResize="false" value="#{employeeLeaveFormMgmtBean.reason}" required="true" requiredMessage="Please enter Reason"/> 
-				<h:outputText value="" />
+				<h:outputText value="" />			
 				
+				<h:outputText value="Sick Leave Attachment*" rendered="#{employeeLeaveFormMgmtBean.leaveType eq 'Sick' }"/>
+				<p:commandButton value="Sick Leave Attachment" onclick="sickLeaveAttachmentDialog.show()" rendered="#{employeeLeaveFormMgmtBean.leaveType eq 'Sick' }"></p:commandButton>
+			 			
 				<h:outputText value="" />
 				<h:outputText id="counter" />
 				<h:outputText value="" />
@@ -59,7 +72,14 @@
 				<p:commandButton value="Apply Leave" style="text-align:center;"  action="#{employeeLeaveFormMgmtBean.applyLeave}"  update=":employeeLeaveTypeForm" validateClient="true" />
 			</f:facet> 		
       		</p:panelGrid>
-      </h:form>
+      </h:form>  
+      
+      <p:dialog header="Sick Leave Attachment" styleClass="dlgCSS" widgetVar="sickLeaveAttachmentDialog" resizable="false" id="sickleaveAttachmentDlg" modal="true" >
+      			<h:form enctype="multipart/form-data">
+      			<p:fileUpload value="#{employeeLeaveFormMgmtBean.sickLeaveAttachment}" mode="simple" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf)$/" required="true" requiredMessage="Please select a File to upload your MC"/>
+			 	<p:commandButton value="Submit" ajax="false" actionListener="#{employeeLeaveFormMgmtBean.upload}" oncomplete="sickLeaveAttachmentDialog.hide()" validateClient="true"/>
+      			</h:form>
+      </p:dialog>
       
       <p:dialog header="Warning!" styleClass="dlgCSS" widgetVar="currentLeaveBalanceDialog" resizable="false" id="currentLeaveBalanceDlg" modal ="true">
                <h:form id="currentLeaveBalance">

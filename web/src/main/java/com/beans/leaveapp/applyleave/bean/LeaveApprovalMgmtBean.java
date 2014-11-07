@@ -1,6 +1,8 @@
 package com.beans.leaveapp.applyleave.bean;
 
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -13,6 +15,8 @@ import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 import com.beans.common.audit.service.AuditTrail;
 import com.beans.common.audit.service.SystemAuditTrailActivity;
@@ -41,8 +45,8 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private Logger log = Logger.getLogger(this.getClass());
-	List<LeaveTransaction>  leaveRequestList;
-	List<LeaveTransaction>  pendingLeaveRequestList;
+	List<LeaveTransaction> leaveRequestList;
+	List<LeaveTransaction> pendingLeaveRequestList;
 	private boolean insertDeleted = false;
 	private Users actorUsers;
 	private AuditTrail auditTrail;
@@ -54,6 +58,7 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	private Double currentLeaveBalance;
 	private String param;
 	private SendMonthlyLeaveReportService monthlyLeaveReportService;
+	private StreamedContent sickLeaveAttachment;
 	
 	public LeaveApprovalDataModel getLeaveApprovalDataModel() {
 		FacesContext f = FacesContext.getCurrentInstance();
@@ -63,18 +68,25 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		}
 		param = parameterMap.get("id");		
 		if(param!=null){
-			    pendingLeaveRequestList = getLeaveRequestApprovalList();
+			  pendingLeaveRequestList = getLeaveRequestApprovalList();
 			for (LeaveTransaction leaveTransaction : pendingLeaveRequestList) {
 				if(leaveTransaction.getId()==Integer.parseInt(param)){
 					selectedLeaveRequest = leaveTransaction;
 				}
 			}
-		}
-		
+		}		
 		
 		return LeaveApprovalDataModel;
 	}
 	
+	public List<LeaveTransaction> getLeaveRequestList() {
+		return leaveRequestList;
+	}
+
+	public void setLeaveRequestList(List<LeaveTransaction> leaveRequestList) {
+		this.leaveRequestList = leaveRequestList;
+	}
+
 	public LeaveApprovalDataModel getLeaveApprovalDataModelFutureLeaves() {
 		return new LeaveApprovalDataModel(getLeaveRequestFutureLeaveList());
 		
@@ -104,7 +116,16 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	}	
 
 
+	public List<LeaveTransaction> getPendingLeaveRequestList() {
+		return pendingLeaveRequestList;
+	}
 
+	public void setPendingLeaveRequestList(
+			List<LeaveTransaction> pendingLeaveRequestList) {
+		this.pendingLeaveRequestList = pendingLeaveRequestList;
+	}
+	
+	
 	public void setLeaveApprovalDataModel(LeaveApprovalDataModel leaveApprovalDataModel) {
 		LeaveApprovalDataModel = leaveApprovalDataModel;
 	}
@@ -133,23 +154,8 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	}
 	public void setAuditTrail(AuditTrail auditTrail) {
 		this.auditTrail = auditTrail;
-	}
-	public List<LeaveTransaction> getLeaveRequestList() {
-		return leaveRequestList;
-	}
-	public void setLeaveRequestList(List<LeaveTransaction> leaveRequestList) {
-		this.leaveRequestList = leaveRequestList;
-	}	
+	} 	
 
-	public List<LeaveTransaction> getPendingLeaveRequestList() {
-		return pendingLeaveRequestList;
-	}
-
-	public void setPendingLeaveRequestList(
-			List<LeaveTransaction> pendingLeaveRequestList) {
-		this.pendingLeaveRequestList = pendingLeaveRequestList;
-	}
- 	
 	public LeaveTransaction getSelectedLeaveRequest() {
 		return selectedLeaveRequest;
 	}
@@ -325,8 +331,22 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		RequestContext.getCurrentInstance().addCallbackParam("leaveType", selectedLeaveRequest.getLeaveType().getName());
 		RequestContext.getCurrentInstance().execute("leaveRequestDialogVar.show();");
 		}	
-		}	
+		}		
+	
 
+	public StreamedContent getSickLeaveAttachment() {
+		int id;
+		id = selectedLeaveRequest.getId();
+		LeaveTransaction sickLeaveTransaction = leaveTransactionService.findById(id);
+		byte[] data = sickLeaveTransaction.getSickLeaveAttachment();
+		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
+		sickLeaveAttachment = new DefaultStreamedContent(byteArrayInputStream);		
+		return sickLeaveAttachment;
+	}
+
+	public void setSickLeaveAttachment(StreamedContent sickLeaveAttachment) {
+		this.sickLeaveAttachment = sickLeaveAttachment;
+	}
 
 	public LeaveTransactionService getLeaveTransactionService() {
 		return leaveTransactionService;

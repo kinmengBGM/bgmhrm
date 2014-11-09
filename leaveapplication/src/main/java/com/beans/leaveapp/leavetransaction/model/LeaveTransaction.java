@@ -52,6 +52,7 @@ public class LeaveTransaction implements Serializable{
 	private String status;
 	private String rejectReason;
 	private String timings;
+	private String sickLeaveAttachmentName;
 	
 	@Lob
 	private byte[] sickLeaveAttachment;
@@ -267,7 +268,12 @@ public class LeaveTransaction implements Serializable{
 		this.timings = timings;
 	}
 	
-	
-	
+	@Column(name="sickLeaveAttachmentName",nullable=true)
+	public String getSickLeaveAttachmentName() {
+		return sickLeaveAttachmentName;
+	}
+	public void setSickLeaveAttachmentName(String sickLeaveAttachmentName) {
+		this.sickLeaveAttachmentName = sickLeaveAttachmentName;
+	}	
 	
 }

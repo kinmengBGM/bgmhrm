@@ -311,8 +311,14 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		id = selectedLeaveRequest.getId();
 		LeaveTransaction sickLeaveTransaction = leaveTransactionService.findById(id);
 		byte[] data = sickLeaveTransaction.getSickLeaveAttachment();
-		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
-		sickLeaveAttachment = new DefaultStreamedContent(byteArrayInputStream);		
+		String sickLeaveAttachmentName = sickLeaveTransaction.getSickLeaveAttachmentName();
+		String name = sickLeaveAttachmentName.substring(sickLeaveAttachmentName.length()-3);
+		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);		
+		if(name.equals("pdf")){
+			sickLeaveAttachment = new DefaultStreamedContent(byteArrayInputStream, "application/pdf",sickLeaveAttachmentName);
+		}else{		
+		sickLeaveAttachment = new DefaultStreamedContent(byteArrayInputStream, "image/jpeg",sickLeaveAttachmentName);
+		}
 		return sickLeaveAttachment;
 	}
 

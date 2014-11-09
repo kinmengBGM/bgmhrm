@@ -48,7 +48,7 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 	private AuditTrail auditTrail;
 	private Double allowedMaximumLeaves;
 	private UploadedFile sickLeaveAttachment;
-	private byte[] byteData;
+	private byte[] byteData = null;
     private String timings;
 	
 	public Double getAllowedMaximumLeaves() {
@@ -239,6 +239,7 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 	        return "";
 		} else {
 			
+			
 			LeaveTransaction leaveTransaction = new LeaveTransaction();
 			leaveTransaction.setApplicationDate(new Date());
 			leaveTransaction.setDeleted(false);
@@ -255,7 +256,9 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 			leaveTransaction.setStatus("Pending");
 			if("Sick".equalsIgnoreCase(leaveType)){
 				if(byteData != null){
+				String sickLeaveAttachmentName = sickLeaveAttachment.getFileName();	
 				leaveTransaction.setSickLeaveAttachment(byteData);
+				leaveTransaction.setSickLeaveAttachmentName(sickLeaveAttachmentName);
 				} else {
 					FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.sickleaveattachment.mcNotFound"), getExcptnMesProperty("error.sickleaveattachment.mcNotFound")); 
 					msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -290,8 +293,7 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 				msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 				FacesContext.getCurrentInstance().addMessage("index.xhtml", msg); 
 				FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-			}
-			
+			}			
 			
 		}
 		
@@ -300,10 +302,17 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 	}
 	
 	public void upload() throws IOException{
-		if(sickLeaveAttachment!= null){
+		String fileName = sickLeaveAttachment.getFileName();
+		String format = fileName.substring(fileName.length()-3);
+		if(sickLeaveAttachment!= null && (format.equals("jpg") || format.equals("png") || format.equals("gif") || format.equals("pdf")))
+		{
 			byteData = IOUtils.toByteArray(sickLeaveAttachment.getInputstream());
 		}
-			
+		else {
+			FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.sickleaveattachment.formatException"), getExcptnMesProperty("error.sickleaveattachment.formatException")); 
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+	        FacesContext.getCurrentInstance().addMessage(null, msg);
+		}
 	}
 	
 	

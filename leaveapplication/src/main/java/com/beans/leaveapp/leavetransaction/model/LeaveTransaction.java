@@ -250,6 +250,22 @@ public class LeaveTransaction implements Serializable{
 		this.rejectReason = rejectReason;
 	}
 
+	@Override
+	public String toString() {
+		return "LeaveTransaction [id=" + id + ", applicationDate="
+				+ applicationDate + ", startDateTime=" + startDateTime
+				+ ", endDateTime=" + endDateTime + ", yearlyLeaveBalance="
+				+ yearlyLeaveBalance + ", numberOfDays=" + numberOfDays
+				+ ", reason=" + reason + ", leaveType=" + leaveType
+				+ ", employee=" + employee + ", leaveApplicationComments="
+				+ leaveApplicationComments + ", taskId=" + taskId
+				+ ", isDelete=" + isDelete + ", createdBy=" + createdBy
+				+ ", creationTime=" + creationTime + ", lastModifiedBy="
+				+ lastModifiedBy + ", lastModifiedTime=" + lastModifiedTime
+				+ ", status=" + status + ", rejectReason=" + rejectReason + "]";
+	}
+
+
 	
 	@Column(name="sickLeaveAttachment",nullable=true)
 	public byte[] getSickLeaveAttachment() {
@@ -266,6 +282,7 @@ public class LeaveTransaction implements Serializable{
 	}
 	public void setTimings(String timings) {
 		this.timings = timings;
+
 	}
 	
 	@Column(name="sickLeaveAttachmentName",nullable=true)

@@ -22,20 +22,22 @@
 						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItems value="#{yearlyEntitlementListBean.yearlyEntitlementList}" var="yearlyEntitlement0" itemLabel="#{yearlyEntitlement0.leaveType.description}" itemValue="#{yearlyEntitlement0.id}"  />
 					</p:selectOneMenu>
-      </p:panelGrid>						
-			<p:panelGrid id="AnnualLeaveDetail" columns="3" cellpadding="5" rendered="#{not empty employeeLeaveFormMgmtBean.leaveType}">
-				<h:outputText value="Entitlement"  rendered="#{employeeLeaveFormMgmtBean.leaveType ne 'Unpaid' }"/>
-				<h:inputText value="#{employeeLeaveFormMgmtBean.yearlyEntitlement.entitlement}" disabled="true" rendered="#{employeeLeaveFormMgmtBean.leaveType != 'Unpaid' }"/>
-				<h:outputText value="" rendered="#{employeeLeaveFormMgmtBean.leaveType ne 'Unpaid'}"/>
-				
+      </p:panelGrid>	
+      					
+			<p:panelGrid id="AnnualLeaveDetail" columns="3" cellpadding="4" rendered="#{not empty employeeLeaveFormMgmtBean.leaveType}">
+				<h:outputText value="Entitlement"  rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')}"/>
+				<h:inputText value="#{employeeLeaveFormMgmtBean.yearlyEntitlement.entitlement}" disabled="true" rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu') }"/>
+				<h:outputText value="" rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')}"/>
+		
 				<h:outputText value="Current Leave Balance" rendered="#{employeeLeaveFormMgmtBean.leaveType eq 'Annual'}"/>
 				<h:inputText value="#{employeeLeaveFormMgmtBean.yearlyEntitlement.currentLeaveBalance}" disabled="true" rendered="#{employeeLeaveFormMgmtBean.leaveType eq 'Annual'}"/>						
 	  			<h:outputText value="" rendered="#{employeeLeaveFormMgmtBean.leaveType eq 'Annual'}" />
 	  			
-	  			<h:outputText value="Yearly Leave Balance" rendered="#{employeeLeaveFormMgmtBean.leaveType ne 'Unpaid' }"/>
-				<h:inputText value="#{employeeLeaveFormMgmtBean.yearlyEntitlement.yearlyLeaveBalance}" disabled="true" rendered="#{employeeLeaveFormMgmtBean.leaveType != 'Unpaid' }"/>						
-	  			<h:outputText value="" rendered="#{employeeLeaveFormMgmtBean.leaveType ne 'Unpaid' }"/>	  				  			
-	  			
+
+	  			<h:outputText value="Yearly Leave Balance" rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')  }"/>
+				<h:inputText value="#{employeeLeaveFormMgmtBean.yearlyEntitlement.yearlyLeaveBalance}" disabled="true" rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')  }"/>						
+	  			<h:outputText value="" rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu') }"/>
+		
 	  			<h:outputText value="Start Date*" />
 	  			<p:calendar pattern="dd/MM/yyyy" mode="popup" value="#{employeeLeaveFormMgmtBean.startDate}" id="annualLeaveStartDateCal" required="true" requiredMessage="Please choose start date" readonlyInput="true" />		
 	  			<h:outputText value="" />
@@ -45,18 +47,16 @@
 				<h:outputText value="" />							
 				
 				<h:outputText value="Number of Day(s)*" />
-				<h:inputText label="Number of Day(s)" value="#{employeeLeaveFormMgmtBean.numberOfDays}" required="true" requiredMessage="Please enter number of day(s)" maxlength="4" converterMessage="Invalid Number of Days. Please enter numerical value."> 
-						
-				 </h:inputText>			
-				<h:outputText value="(#{employeeLeaveFormMgmtBean.allowedMaximumLeaves} leaves are allowed to apply maximum ) " > </h:outputText> 
-
-				<h:outputText value="Timings*"/>
-				<p:selectOneMenu value="#{employeeLeaveFormMgmtBean.timings}" effect="fade">
+				<h:inputText value="#{employeeLeaveFormMgmtBean.numberOfDays}" required="true" requiredMessage="Please enter number of day(s)" maxlength="4" converterMessage="Invalid Number of Days. Please enter numerical value.">  </h:inputText>			
+				<h:outputText value="(#{employeeLeaveFormMgmtBean.allowedMaximumLeaves} leaves are allowed to apply maximum ) " rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')  }" > </h:outputText> 
+				<h:outputText value="" rendered="#{(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')  }"></h:outputText>
+				<h:outputText value="Timings*" />
+				<p:selectOneMenu value="#{employeeLeaveFormMgmtBean.timings}" effect="fade" >
 						<f:selectItem itemLabel="Select one" itemValue=""/>
 						<f:selectItem itemLabel="AM" itemValue="AM" />
 						<f:selectItem itemLabel="PM" itemValue="PM" />
 				</p:selectOneMenu> 
-				<h:outputText value="(If you are applying for a half-day leave please select this option)" />					
+				<h:outputText value="(please select either AM or PM if half-day leave is applying)"/>					
 
 				<h:outputText value="Reason*" />
 				<p:inputTextarea id="reason" rows="5" cols="24" counter="counter" maxlength="100" counterTemplate="{0} characters remaining." autoResize="false" value="#{employeeLeaveFormMgmtBean.reason}" required="true" requiredMessage="Please enter Reason"/> 

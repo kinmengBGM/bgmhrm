@@ -42,6 +42,8 @@ public interface LeaveTransactionService {
     List<LeaveTransaction> getAllApprovedLeavesAppliedByEmployee();
     
     List<LeaveTransaction> getAllLeavesAppliedByEmployee(int employeeId);
+    
+    List<LeaveTransaction> getAllLeavesAppliedByEmployee();
 }
 
 

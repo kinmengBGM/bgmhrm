@@ -871,6 +871,38 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 		}
 		
 	}
+	
+	// Update Annual leaves of employee when Time-In-Lieu leave application is approved
+	@Override
+	public void updateEmployeeAnnualLeavesAfterLeaveApproval(LeaveTransaction leaveTransaction,Date applicationDate) {
+		try{
+		Calendar leaveApplicationDate = Calendar.getInstance();
+		leaveApplicationDate.setTime(applicationDate);
+		AnnualLeaveReport annualLeaveCurrentMonth=null;
+			if(leaveApplicationDate.get(Calendar.MONTH)+1 == Calendar.getInstance().get(Calendar.MONTH)+1)
+				annualLeaveCurrentMonth = annualLeaveRepository.getCurrentMonthAnnualLeaveRecord(leaveTransaction.getEmployee().getId(), leaveApplicationDate.get(Calendar.MONTH)+1, leaveApplicationDate.get(Calendar.YEAR));
+			else
+				annualLeaveCurrentMonth = annualLeaveRepository.getCurrentMonthAnnualLeaveRecord(leaveTransaction.getEmployee().getId(), Calendar.getInstance().get(Calendar.MONTH)+1, Calendar.getInstance().get(Calendar.YEAR));
+				
+				if(annualLeaveCurrentMonth!=null){
+				ArrayList<AnnualLeaveReport> annualLeaveToBeUpdatedList = new ArrayList<AnnualLeaveReport>();
+				if(annualLeaveCurrentMonth.getCurrentLeaveBalance()!=null)
+					annualLeaveCurrentMonth.setCurrentLeaveBalance(annualLeaveCurrentMonth.getCurrentLeaveBalance()+leaveTransaction.getNumberOfDays());
+				if(annualLeaveCurrentMonth.getYearlyLeaveBalance()!=null)
+					annualLeaveCurrentMonth.setYearlyLeaveBalance(annualLeaveCurrentMonth.getYearlyLeaveBalance()+leaveTransaction.getNumberOfDays());
+				annualLeaveCurrentMonth.setTimeInLieuCredited(annualLeaveCurrentMonth.getTimeInLieuCredited()+leaveTransaction.getNumberOfDays());
+				annualLeaveToBeUpdatedList.add(annualLeaveCurrentMonth);
+				annualLeaveRepository.save(annualLeaveToBeUpdatedList);
+			}
+		
+		}catch(Exception e){
+			System.out.println("Error while updating leaves balance after approval for employee : "+leaveTransaction.getEmployee().getName());
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
 
 	@Override
 	public void initializeMonthlyLeaveReportWithDefaultValues() {
@@ -959,6 +991,66 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 			}
 	}
 
+	@Override
+	public void initializeMonthlyLeaveReportForNewEmployee(Employee employee) {
+		
+		try{
+				// Firstly initialize Annual Leaves of present month of new employee
+				Calendar currentMonth = Calendar.getInstance();
+				currentMonth.setTime(employee.getJoinDate());
+				List<AnnualLeaveReport>	 annualLeaveList = annualLeaveRepository.getEmployeeMonthlyLeaveReportData(employee.getId(), currentMonth.get(Calendar.MONTH)+1, currentMonth.get(Calendar.YEAR));
+				if(annualLeaveList!=null && annualLeaveList.size()==2){
+					AnnualLeaveReport totalRecord = annualLeaveList.get(1);	
+					AnnualLeaveReport currentMonthRecord = annualLeaveList.get(0);
+					YearlyEntitlement annualEntitlement =null;
+					List<YearlyEntitlement> entitlementList =	entitlementRepository.findByEmployeeIdAndEmployeeTypeAndLeaveTypeName(employee.getId(), Leave.ANNUAL.toString());
+					if(entitlementList!=null && entitlementList.size()>0){
+						annualEntitlement =	entitlementList.get(0);
+						currentMonthRecord.setCurrentLeaveBalance(annualEntitlement.getCurrentLeaveBalance());
+						currentMonthRecord.setYearlyLeaveBalance(annualEntitlement.getYearlyLeaveBalance());
+					}
+					currentMonthRecord.setBalanceBroughtForward(new Double(0));
+					currentMonthRecord.setLeavesCredited(new Double(0));
+					currentMonthRecord.setLeavesTaken(new Double(0));
+					currentMonthRecord.setTimeInLieuCredited(new Double(0));
+					annualLeaveRepository.save(currentMonthRecord);
+					// setting default values and updating the current month record only
+					totalRecord.setBalanceBroughtForward(new Double(0));
+					totalRecord.setLeavesCredited(new Double(0));
+					totalRecord.setLeavesTaken(new Double(0));
+					annualLeaveRepository.save(totalRecord);
+				 }
+				// Secondly initialize except Annual Leaves of present month of newly joined employee
+				List<LeaveType>		leaveTypeList =	leaveTypeRepository.getAllLeaveTypesGivenByEmployeeType(employee.getId());
+				if(leaveTypeList!=null && leaveTypeList.size()>0){
+					for (LeaveType leaveType : leaveTypeList) {
+							List<MonthlyLeaveReport>	monthlyLeaveList = monthlyLeaveRepository.getEmployeeMonthlyLeaveReportData(employee.getId(),  currentMonth.get(Calendar.MONTH)+1, leaveType.getId(), currentMonth.get(Calendar.YEAR));
+							if(monthlyLeaveList!=null && monthlyLeaveList.size()==2){
+							MonthlyLeaveReport currentMonthRecord =	monthlyLeaveList.get(0);
+							MonthlyLeaveReport totalRecord =	monthlyLeaveList.get(1);
+							YearlyEntitlement		leaveTypeEntitlement =		entitlementRepository.findByEmployeeAndLeaveTypeId(employee.getId(), leaveType.getId());
+							if(leaveTypeEntitlement!=null){
+							currentMonthRecord.setLeavesTaken(new Double(0));
+							currentMonthRecord.setYearlyLeaveBalance(leaveTypeEntitlement.getYearlyLeaveBalance());
+							// setting default values and updating the current month record only
+							monthlyLeaveRepository.save(currentMonthRecord);
+							totalRecord.setYearlyLeaveBalance(leaveTypeEntitlement.getYearlyLeaveBalance());
+							totalRecord.setLeavesTaken(new Double(0));
+							monthlyLeaveRepository.save(totalRecord);
+							}
+							
+							}
+						}
+				}
+			}catch(Exception e){
+				System.out.println("Error while initializing with current month leaves fields.");
+				e.printStackTrace();
+				throw new RuntimeException("Can't process request, kindly add employee again.");
+			}
+	}
+
+	
+	
 	@Override
 	public void updateLeaveBalanceAfterCancelled(LeaveTransaction leaveTransaction) {
 		

@@ -43,5 +43,14 @@ public class LeaveReportWorker {
 	}
 	
 	
-
+	public static void doInsertReportDataForNewEmployee(Employee employee){
+		
+		ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
+		MonthlyLeaveReportPrePreparation monthlyLeaveReportService = (MonthlyLeaveReportPrePreparation) applicationContext.getBean("monthlyLeaveReportService");
+		monthlyLeaveReportService.prepareAnnualLeaveDataForYearOfEmployee(employee);
+		monthlyLeaveReportService.prepareAllLeaveDataForYearOfEmployee(employee);
+		
+		SendMonthlyLeaveReportService sendLeaveReportService = (SendMonthlyLeaveReportService) applicationContext.getBean("sendLeaveReportService");
+		sendLeaveReportService.initializeMonthlyLeaveReportForNewEmployee(employee);
+	}
 }

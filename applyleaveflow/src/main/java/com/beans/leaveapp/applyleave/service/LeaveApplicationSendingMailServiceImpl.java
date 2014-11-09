@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -17,6 +16,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.beans.exceptions.BSLException;
 import com.beans.leaveapp.applyleave.model.ApprovalLevelModel;
+import com.beans.leaveapp.applyleave.model.TimeInLieuBean;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.employee.service.EmployeeService;
 import com.beans.leaveapp.jbpm6.util.ApplicationContextProvider;
@@ -25,7 +25,7 @@ import com.beans.leaveapp.leavetype.model.LeaveType;
 import com.beans.util.email.EmailSender;
 public class LeaveApplicationSendingMailServiceImpl {
 	
-	public void sendEmailNotificationToLeaveApplicant(LeaveTransaction leaveTransaction,Boolean isApproverApproved,String approverName) {
+	public void sendEmailNotificationToLeaveApplicant(LeaveTransaction leaveTransaction,TimeInLieuBean timeInLieuBean) {
 		try {
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("leaveApplicantMailTemplate.html");
 		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -61,23 +61,39 @@ public class LeaveApplicationSendingMailServiceImpl {
 			htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##","N/A for Unpaid Leave");
 		
 		
-		if(isApproverApproved==null){
+		if(timeInLieuBean.getIsFirstApproverApproved()==null){
 			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##"," Details for your leave application are as shown below:");
 			htmlEmailTemplate = htmlEmailTemplate.replace("##firstApplied##","<br/>You will receive another email notification when your application is  approved or rejected.");
 			htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalanceLabel##","Current Yearly Balance");
 			// set email subject
 			email.setSubject("Reg : Leave Application acknowledgment");
 		}
-			else if(isApproverApproved){
-				htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Your leave application has been approved by <b>"+getEmployeeService().getFullNameOfEmployee(approverName)+"</b><br/>");
+			else if(timeInLieuBean.getIsFirstApproverApproved()){
+				if(timeInLieuBean.getIsSecondApproverApproved()==null){
+				htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Your leave application has been approved by <b>"+getEmployeeService().getFullNameOfEmployee(timeInLieuBean.getFirstApprover())+"</b><br/>");
 				htmlEmailTemplate = htmlEmailTemplate.replace("##firstApplied##","");
 				htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalanceLabel##","New Yearly Balance");
-			// set email subject
-			email.setSubject("Reg : Leave Application Approved");
+				// set email subject
+				email.setSubject("Reg : Leave Application Approved");
+				}
+				else if(!timeInLieuBean.getIsSecondApproverApproved()){
+					htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Sorry but your leave application has been rejected by <b>"+getEmployeeService().getFullNameOfEmployee(timeInLieuBean.getSecondApprover())+"</b> due to <b>"+leaveTransaction.getRejectReason()+"</b>");
+					htmlEmailTemplate = htmlEmailTemplate.replace("##firstApplied##","");
+					htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalanceLabel##","New Yearly Balance");
+					// set email subject
+					email.setSubject("Reg : Leave Application Rejected");
+				}
+				else {
+					htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Your leave application has been approved by <b>"+getEmployeeService().getFullNameOfEmployee(timeInLieuBean.getFirstApprover())+"</b> and <b>"+getEmployeeService().getFullNameOfEmployee(timeInLieuBean.getSecondApprover())+"</b><br/>");
+					htmlEmailTemplate = htmlEmailTemplate.replace("##firstApplied##","");
+					htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalanceLabel##","New Yearly Balance");
+					// set email subject
+					email.setSubject("Reg : Leave Application Approved");
+				}
 		}
 		else
-			if(!isApproverApproved){
-				htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Sorry but your leave application has been rejected by <b>"+getEmployeeService().getFullNameOfEmployee(approverName)+"</b> due to <b>"+leaveTransaction.getRejectReason()+"</b>");
+			if(!timeInLieuBean.getIsFirstApproverApproved()){
+				htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","Sorry but your leave application has been rejected by <b>"+getEmployeeService().getFullNameOfEmployee(timeInLieuBean.getFirstApprover())+"</b> due to <b>"+leaveTransaction.getRejectReason()+"</b>");
 				htmlEmailTemplate = htmlEmailTemplate.replace("##firstApplied##","");
 				htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalanceLabel##","New Yearly Balance");
 				// set email subject
@@ -106,7 +122,7 @@ public class LeaveApplicationSendingMailServiceImpl {
 	}
 
 	
-public void sendEmailNotificationToLeaveApprover(LeaveTransaction leaveTransaction,ApprovalLevelModel approvalBean) {
+public void sendEmailNotificationToLeaveApprover(LeaveTransaction leaveTransaction,ApprovalLevelModel approvalBean,TimeInLieuBean timeInLieuBean) {
 	try{
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("leaveApproverMailTemplate.html");
 		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -143,16 +159,21 @@ public void sendEmailNotificationToLeaveApprover(LeaveTransaction leaveTransacti
 		else 
 			htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##","N/A for Unpaid Leave");
 		
-
-			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<b>"+leaveTransaction.getEmployee().getName()+"</b> has applied for leave and is pending for your approval at <a href='http://localhost:8080/hrm/protected/applyleave/approveleavetasklist.jsf?id="+leaveTransaction.getId()+"'>HRM Application</a>");
+		if(timeInLieuBean.getIsTwoLeveApproval()!=null)
+			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<b>"+leaveTransaction.getEmployee().getName()+"</b> has applied for leave and is approved by <b>"+timeInLieuBean.getFirstApprover()+"</b> and is pending for your final approval at <a href='http://beans-my.dyndns.biz:8182/hrm/protected/applyleave/approveleavetasklist.jsf?id="+leaveTransaction.getId()+"'>HRM Application</a>");
+		else
+			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<b>"+leaveTransaction.getEmployee().getName()+"</b> has applied for leave and is pending for your approval at <a href='http://beans-my.dyndns.biz:8182/hrm/protected/applyleave/approveleavetasklist.jsf?id="+leaveTransaction.getId()+"'>HRM Application</a>");
 
 			// set email subject
 			email.setSubject("Reg : Leave Approval Required For "+leaveTransaction.getEmployee().getName());
 		
 		List<String> emailList = new ArrayList<String>();
-		// Get all users with role who can approve the leave
-		List<Employee> approverList = getEmployeeService().findAllEmployeesByRole(approvalBean.getApprover());
-				
+		// Get all users with role who can approve the leave, For Time-in-Lieu case, ROLE_OPERDIR will have to get mail at 2nd stage
+		List<Employee> approverList= new ArrayList<Employee>();
+		if(timeInLieuBean.getIsTwoLeveApproval()!=null)
+			approverList = getEmployeeService().findAllEmployeesByRole("ROLE_OPERDIR");
+		else
+			approverList = getEmployeeService().findAllEmployeesByRole(approvalBean.getApprover());
 		// add reciepiant email address
 		for (Employee employee : approverList) {
 			if(employee.getWorkEmailAddress()!=null && employee.getWorkEmailAddress()!="")
@@ -180,7 +201,7 @@ public void sendEmailNotificationToLeaveApprover(LeaveTransaction leaveTransacti
 		}
 	}
 
-public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,Boolean isApproverApproved,String approverName) {
+public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,TimeInLieuBean timeInLieuBean) {
 	try{
 	InputStream inputStream = getClass().getClassLoader().getResourceAsStream("leaveApproverMailTemplate.html");
 	InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -217,17 +238,29 @@ public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,Boolean 
 		htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##","N/A for Unpaid Leave");
 	
 	
-	if(!isApproverApproved){
-		htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<br/><b>"+leaveTransaction.getEmployee().getName()+"</b> leave application has been rejected by <b>"+getEmployeeService().getFullNameOfEmployee(approverName)+"</b> due to <b>"+leaveTransaction.getRejectReason()+"</b> <br/> Details for your rejected leave application are shown below:");
+	if(!timeInLieuBean.getIsFirstApproverApproved()){
+		htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<br/><b>"+leaveTransaction.getEmployee().getName()+"</b> leave application has been rejected by <b>"+getEmployeeService().getFullNameOfEmployee(timeInLieuBean.getFirstApprover())+"</b> due to <b>"+leaveTransaction.getRejectReason()+"</b> <br/> Details for your rejected leave application are shown below:");
 		// set email subject
 		email.setSubject("Reg : Leave Application Rejected for "+leaveTransaction.getEmployee().getName());
+		
 	}
 	else {
-		htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<b>"+leaveTransaction.getEmployee().getName()+"</b> leave application has been approved by <b>"+getEmployeeService().getFullNameOfEmployee(approverName)+"</b>.<br/> Details for the approved leave application are shown below:<br/>");
+		if(timeInLieuBean.getIsSecondApproverApproved()==null){
+		htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<b>"+leaveTransaction.getEmployee().getName()+"</b> leave application has been approved by <b>"+getEmployeeService().getFullNameOfEmployee(timeInLieuBean.getFirstApprover())+"</b>.<br/> Details for the approved leave application are shown below:<br/>");
 		// set email subject
 		email.setSubject("Reg : Leave Application Approved for "+leaveTransaction.getEmployee().getName());
+		}else if(!timeInLieuBean.getIsSecondApproverApproved()){
+			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<br/><b>"+leaveTransaction.getEmployee().getName()+"</b> leave application has been rejected by <b>"+getEmployeeService().getFullNameOfEmployee(timeInLieuBean.getSecondApprover())+"</b> due to <b>"+leaveTransaction.getRejectReason()+"</b> <br/> Details for your rejected leave application are shown below:");
+			// set email subject
+			email.setSubject("Reg : Leave Application Rejected for "+leaveTransaction.getEmployee().getName());
+		}
+		else{
+			htmlEmailTemplate = htmlEmailTemplate.replace("##mainMessage##","<b>"+leaveTransaction.getEmployee().getName()+"</b> leave application has been approved by <b>"+getEmployeeService().getFullNameOfEmployee(timeInLieuBean.getFirstApprover())+"</b> and  <b>"+getEmployeeService().getFullNameOfEmployee(timeInLieuBean.getSecondApprover())+"</b>.<br/> Details for the approved leave application are shown below:<br/>");
+			// set email subject
+			email.setSubject("Reg : Leave Application Approved for "+leaveTransaction.getEmployee().getName());
+		}
 	}
-	// Get all users with role ROLE_TEAMLEAD
+	// Get all users with role ROLE_HR
 	List<Employee> hrEmpolyeeList = getEmployeeService().findAllEmployeesByRole("ROLE_HR");
 	
 	List<String> emailList = new ArrayList<String>();
@@ -389,16 +422,16 @@ public void sendEmailNotificationForCancelLeave(LeaveTransaction leaveTransactio
 	public static void main(String[] args){
 		Employee employee = new Employee();
 		employee.setName("Lakshminarayana R");
-		employee.setWorkEmailAddress("beanshrmtest@gmail.com");
+		employee.setWorkEmailAddress("rlnarayana4java@gmail.com");
 		LeaveType leaveType = new LeaveType();
 		leaveType.setDescription("Annaul Leave");
 		ApprovalLevelModel approvalBean = new ApprovalLevelModel();
 		approvalBean.setApprover("ROLE_TEAMLEAD");
 		LeaveTransaction leave = new LeaveTransaction(3, new Date(), new Date(), new Date(), new Double(18.0), new Double(2.0), "Testing", "Waiting", leaveType, employee, false);
 		LeaveApplicationSendingMailServiceImpl service = new LeaveApplicationSendingMailServiceImpl();
-		service.sendEmailNotificationToLeaveApplicant(leave,null, "Tester");
-		service.sendEmailNotificationToLeaveApprover(leave, approvalBean);
-		service.sendEmailNotificationToHR(leave, null, "xx");
+		service.sendEmailNotificationToLeaveApplicant(leave,null);
+		service.sendEmailNotificationToLeaveApprover(leave, approvalBean,new TimeInLieuBean());
+		service.sendEmailNotificationToHR(leave, null);
 	}
 
 	private static void  sendEMail(final HtmlEmail email){

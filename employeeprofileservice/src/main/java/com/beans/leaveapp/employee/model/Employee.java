@@ -274,6 +274,24 @@ public class Employee implements Serializable {
 	public String getLastModifiedBy() {
 		return lastModifiedBy;
 	}
+	@Override
+	public String toString() {
+		return "Employee [id=" + id + ", employeeNumber=" + employeeNumber
+				+ ", name=" + name + ", position=" + position + ", idNumber="
+				+ idNumber + ", passportNumber=" + passportNumber + ", gender="
+				+ gender + ", religion=" + religion + ", maritalStatus="
+				+ maritalStatus + ", workEmailAddress=" + workEmailAddress
+				+ ", personalEmailAddress=" + personalEmailAddress
+				+ ", officePhone=" + officePhone + ", personalPhone="
+				+ personalPhone + ", nationality=" + nationality + ", users="
+				+ users + ", employeeGrade=" + employeeGrade + ", department="
+				+ department + ", employeeType=" + employeeType + ", joinDate="
+				+ joinDate + ", resignationDate=" + resignationDate
+				+ ", isDeleted=" + isDeleted + ", isResigned=" + isResigned
+				+ ", createdBy=" + createdBy + ", creationTime=" + creationTime
+				+ ", lastModifiedBy=" + lastModifiedBy + ", lastModifiedTime="
+				+ lastModifiedTime + "]";
+	}
 
 	
 	

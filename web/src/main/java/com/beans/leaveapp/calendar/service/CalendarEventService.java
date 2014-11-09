@@ -7,10 +7,16 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
+import org.springframework.context.ApplicationContext;
+
+import com.beans.leaveapp.employee.model.Employee;
+import com.beans.leaveapp.employee.service.EmployeeService;
+import com.beans.leaveapp.jbpm6.util.ApplicationContextProvider;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.HttpTransport;
@@ -90,11 +96,22 @@ public class CalendarEventService {
 			Event event = new Event();
 			Calendar service =null;
 
-			event.setSummary("On Leave : "+leaveTransaction.getLeaveType().getName());
+			event.setSummary("On Leave : "+leaveTransaction.getEmployee().getName());
+			event.setDescription(leaveTransaction.getEmployee().getName()+ " is on "+leaveTransaction.getLeaveType().getName()+" Leave due to "+leaveTransaction.getReason());
 			event.setLocation("Malaysia");
 
 			ArrayList<EventAttendee> attendees = new ArrayList<EventAttendee>();
 			attendees.add(new EventAttendee().setEmail(leaveTransaction.getEmployee().getWorkEmailAddress()));
+			
+			// Get all users with role ROLE_TEAMLEAD
+			List<Employee> hrEmpolyeeList = getEmployeeService().findAllEmployeesByRole("ROLE_HR");
+			
+			List<String> emailList = new ArrayList<String>();
+			// add reciepiant email address
+			if(hrEmpolyeeList!=null && hrEmpolyeeList.size()>0)
+			for (Employee employee : hrEmpolyeeList) {
+				attendees.add(new EventAttendee().setEmail(employee.getWorkEmailAddress()));
+			}
 			event.setAttendees(attendees);
 			
 			Date startDate,endDate=null;
@@ -131,9 +148,16 @@ public class CalendarEventService {
 			event.setEnd(new EventDateTime().setDateTime(end));
 
 			service =new  CalendarEventService().configure();
+			
 			Event createdEvent = service.events().insert("primary", event).execute();
 
 			System.out.println("Event is created for user : "+leaveTransaction.getEmployee().getName()+" in  calendar "+leaveTransaction.getEmployee().getWorkEmailAddress()); 
 	  }
+	  
+	  private static EmployeeService getEmployeeService()
+		{
+			ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
+			return (EmployeeService) applicationContext.getBean("employeeService");
+		}
 
 }

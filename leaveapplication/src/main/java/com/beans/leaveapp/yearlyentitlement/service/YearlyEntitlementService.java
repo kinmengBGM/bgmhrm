@@ -43,9 +43,15 @@ public interface YearlyEntitlementService {
 
 	void updateLeaveBalanceAfterApproval(int employeeId,int leaveTypeId,double numberOfDaysApproved);
 	
+	void updateAnnualLeaveBalanceAfterApproval(int employeeId,int leaveTypeId,double numberOfDaysApproved);
+	
 	void updateLeaveBalanceAfterCancelled(int employeeId,int leaveTypeId,double numberOfDaysApproved);
 	
 	YearlyEntitlement findYearlyEntitlementById(int employeeId, int leaveTypeId);
 	
 	void addAllEntitlementsToNewEmployee(Employee newlyRegisteredEmployee);
+	
+	YearlyEntitlement findAnnualYearlyEntitlementOfEmployee(int employeeId);
+	
+	
 }

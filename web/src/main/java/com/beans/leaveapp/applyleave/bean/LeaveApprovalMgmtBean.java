@@ -24,17 +24,19 @@ import com.beans.common.audit.service.SystemAuditTrailLevel;
 import com.beans.common.security.role.model.Role;
 import com.beans.common.security.users.model.Users;
 import com.beans.exceptions.BSLException;
+import com.beans.leaveapp.applyleave.model.ApprovalLevelModel;
 import com.beans.leaveapp.applyleave.model.LeaveApprovalDataModel;
+import com.beans.leaveapp.applyleave.model.TimeInLieuBean;
 import com.beans.leaveapp.applyleave.service.LeaveApplicationService;
 import com.beans.leaveapp.applyleave.service.LeaveApplicationWorker;
 import com.beans.leaveapp.calendar.service.CalendarEventService;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
-import com.beans.leaveapp.leavetransaction.model.LeaveTransactionsDataModel;
 import com.beans.leaveapp.leavetransaction.service.LeaveTransactionService;
 import com.beans.leaveapp.monthlyreport.service.SendMonthlyLeaveReportService;
 import com.beans.leaveapp.web.bean.BaseMgmtBean;
 import com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement;
 import com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementService;
+import com.beans.util.enums.Leave;
 
 public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 
@@ -105,6 +107,14 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		}
 		return LeaveApprovalDataModel;
 	}	
+	
+	public LeaveApprovalDataModel getLeaveApprovalDataModelPendingLeaves() {
+		if(LeaveApprovalDataModel == null || insertDeleted == true) {
+			LeaveApprovalDataModel = new LeaveApprovalDataModel(getLeaveTransactionService().getAllLeavesAppliedByEmployee());
+		}
+		return LeaveApprovalDataModel;
+	}	
+
 
 	public List<LeaveTransaction> getPendingLeaveRequestList() {
 		return pendingLeaveRequestList;
@@ -207,17 +217,35 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	public void doApproveLeaveRequest() {
 		try {
 			
-			log.info("Leave Request Approved...!!!");
-			//auditTrail.log(SystemAuditTrailActivity.APPROVED, SystemAuditTrailLevel.INFO, getActorUsers().getId(), getActorUsers().getUsername(), getActorUsers().getUsername() + " has approved a employee registration of " + selectedRegisteredEmployee.getFullname());
-			leaveApplicationService.approveLeaveOfEmployee(selectedLeaveRequest, getActorUsers().getUsername());
+			log.info("Leave Request Approved by "+getActorUsers().getUsername());
+			
+			Map<String,Object>  processInstanceData =	leaveApplicationService.getContentMapDataByTaskId(selectedLeaveRequest.getTaskId());
+			if(processInstanceData!=null){
+				TimeInLieuBean processDecisionData =   (TimeInLieuBean) processInstanceData.get("timeInLieuBean");
+				ApprovalLevelModel approverBean =  (ApprovalLevelModel) processInstanceData.get("approvalLevelModel");
+					if(processDecisionData!=null && processDecisionData.getIsTwoLeveApproval()){
+						if(selectedLeaveRequest.getLeaveType()!=null && Leave.TIMEINLIEU.equalsName(selectedLeaveRequest.getLeaveType().getName()) )
+							leaveApplicationService.approveLeaveOfEmployee(selectedLeaveRequest, getActorUsers().getUsername(),"SECOND");
+					}
+					else{
+						leaveApplicationService.approveLeaveOfEmployee(selectedLeaveRequest, getActorUsers().getUsername(),"FIRST");
+						// Creating calendar event for approved leave slot
+						if(selectedLeaveRequest.getLeaveType()!=null && !Leave.TIMEINLIEU.equalsName(selectedLeaveRequest.getLeaveType().getName()) || approverBean!=null && !"ROLE_EMPLOYEE".equalsIgnoreCase(approverBean.getRole()) ){
+							CalendarEventService.createEventForApprovedLeave(selectedLeaveRequest);
+							
+							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info : "+getExcptnMesProperty("info.leave.approve.dir"),"Leave Approved"));
+						}else{
+							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info : "+getExcptnMesProperty("info.leave.approve.operdir"),"Leave Approved"));
+						}
+					}
+			}
+			
 		    setInsertDeleted(true);
 		    
 		    Set<String> roleSet = new HashSet<String>();
 			for (Role role : getActorUsers().getUserRoles()) {
 				roleSet.add(role.getRole());
 			}
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info : "+getExcptnMesProperty("info.leave.approve.dir"),"Leave Approved"));
-			CalendarEventService.createEventForApprovedLeave(selectedLeaveRequest);
 		}catch(BSLException e){
 			FacesMessage msg = new FacesMessage("Error : "+getExcptnMesProperty(e.getMessage()),"Leave approve error");  
 			msg.setSeverity(FacesMessage.SEVERITY_INFO);

@@ -240,6 +240,11 @@ public class LeaveTransactionServiceImpl implements LeaveTransactionService {
 		return leaveTransactionRepository.findAllLeavesHistoryOfEmployee(userId);
 	}
 	
+	@Override
+	public List<LeaveTransaction> getAllLeavesAppliedByEmployee() {
+		return leaveTransactionRepository.findAllPendingLeavesOfEmployees();
+	}
+	
 }
 
 

@@ -134,7 +134,18 @@ public class LeaveType implements Serializable{
 	public void setEmployeeType(EmployeeType employeeType) {
 		this.employeeType = employeeType;
 	}
+	@Override
+	public String toString() {
+		return "LeaveType [id=" + id + ", name=" + name + ", description="
+				+ description + ", entitlement=" + entitlement
+				+ ", isAccountable=" + isAccountable + ", isDeleted="
+				+ isDeleted + ", createdBy=" + createdBy + ", creationTime="
+				+ creationTime + ", lastModifiedBy=" + lastModifiedBy
+				+ ", lastModifiedTime=" + lastModifiedTime + ", employeeType="
+				+ employeeType + "]";
+	}
 	
 		
+	
 	}
 	

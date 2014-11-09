@@ -161,4 +161,8 @@ public class AuthenticationBean implements Serializable{
 	}
 	
 	
+	public void sendMonthlyReport(){
+		LeaveReportWorker.doSendLeaveReport();
+	}
+	
 }

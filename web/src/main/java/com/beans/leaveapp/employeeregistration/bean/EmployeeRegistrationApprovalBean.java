@@ -19,6 +19,7 @@ import com.beans.leaveapp.employee.service.EmployeeNotFound;
 import com.beans.leaveapp.employee.service.EmployeeRegistrationService;
 import com.beans.leaveapp.employee.service.EmployeeService;
 import com.beans.leaveapp.employeeregistration.model.RegisteredEmployeeDataModel;
+import com.beans.leaveapp.montlhyreport.LeaveReportWorker;
 import com.beans.leaveapp.web.bean.BaseMgmtBean;
 import com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementService;
 
@@ -121,7 +122,7 @@ private static final long serialVersionUID = 1L;
 			
 			//employee.setMaritalStatus(selectedRegisteredEmployee.getMaritalStatus());
 			yearlyEntitlementService.addAllEntitlementsToNewEmployee(employee);
-			
+			LeaveReportWorker.doInsertReportDataForNewEmployee(employee);
 			auditTrail.log(SystemAuditTrailActivity.APPROVED, SystemAuditTrailLevel.INFO, getActorUsers().getId(), getActorUsers().getUsername(), getActorUsers().getUsername() + " has approved a employee registration of " + selectedRegisteredEmployee.getFullname());
 			setInsertDelete(true);
 			setSelectedDepartment(0);

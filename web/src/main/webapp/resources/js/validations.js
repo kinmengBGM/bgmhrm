@@ -13,7 +13,6 @@
        }
   		}
   	  function displayWhichHalfDay(value){
-  	  alert(value);
 	  	 if(value==0.5){
 			var myClasses = document.querySelectorAll('.timings'),
 	        i = 0,
@@ -22,6 +21,15 @@
 	    	for (i; i < l; i++) {
 	       	 myClasses[i].style.display = 'block';
 	   	 	}
-	  	}	
+	  	}
+	  	 else{
+	  		var myClasses = document.querySelectorAll('.timings'),
+	        i = 0,
+	        l = myClasses.length;
+	
+	    	for (i; i < l; i++) {
+	       	 myClasses[i].style.display = 'none';
+	   	 	}
+	  	 }
   	  }
     

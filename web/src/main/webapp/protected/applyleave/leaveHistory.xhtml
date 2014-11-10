@@ -56,7 +56,7 @@
 						<p:column id="leaveTypeHEader" filterBy="#{employeeLeaveHistory.leaveType.name}" filterMatchMode="contains"><f:facet name="header"> Leave Type </f:facet><h:outputText value="#{employeeLeaveHistory.leaveType.name}" /></p:column>
 						<p:column id="startDateHeader" filterBy="#{employeeLeaveHistory.startDateTime}" filterMatchMode="contains"><f:facet name="header"> Start Date </f:facet><h:outputText value="#{employeeLeaveHistory.startDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy" /> </h:outputText></p:column>
 						<p:column id="endDateHeader" filterBy="#{employeeLeaveHistory.endDateTime}" filterMatchMode="contains"><f:facet name="header"> End Date </f:facet><h:outputText value="#{employeeLeaveHistory.endDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy" />  </h:outputText></p:column>
-						<p:column id="noOfDaysHeader" filterBy="#{employeeLeaveHistory.numberOfDays}" filterMatchMode="contains"><f:facet name="header"> Number of Days </f:facet><h:outputText value="#{employeeLeaveHistory.numberOfDays}" /></p:column>
+						<p:column id="noOfDaysHeader" filterBy="#{employeeLeaveHistory.numberOfDays}" filterMatchMode="contains"><f:facet name="header"> Number of Days </f:facet><h:outputText value="#{employeeLeaveHistory.numberOfDays}  #{employeeLeaveHistory.timings}" /></p:column>
 						<p:column id="reasonHeader" filterBy="#{employeeLeaveHistory.reason}" filterMatchMode="contains"><f:facet name="header"> Reason </f:facet><h:outputText value="#{employeeLeaveHistory.reason}"/></p:column>
 						<p:column id="statusHEader" filterBy="#{employeeLeaveHistory.status}" filterMatchMode="contains"><f:facet name="header"> Status </f:facet><h:outputText value="#{employeeLeaveHistory.status}" /></p:column>
 			    </p:dataTable>

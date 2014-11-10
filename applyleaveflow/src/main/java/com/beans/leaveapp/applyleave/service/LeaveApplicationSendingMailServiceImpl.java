@@ -53,7 +53,7 @@ public class LeaveApplicationSendingMailServiceImpl {
 		htmlEmailTemplate = htmlEmailTemplate.replace("##leaveType##",leaveTransaction.getLeaveType().getDescription());
 		htmlEmailTemplate = htmlEmailTemplate.replace("##startDate##",leaveTransaction.fetchStartTimeStr());
 		htmlEmailTemplate = htmlEmailTemplate.replace("##endDate##",leaveTransaction.fetchEndTimeStr());
-		htmlEmailTemplate = htmlEmailTemplate.replace("##numberOfDays##",leaveTransaction.getNumberOfDays().toString());
+		htmlEmailTemplate = htmlEmailTemplate.replace("##numberOfDays##",leaveTransaction.getNumberOfDays().toString()+checkAMorPM(leaveTransaction));
 		htmlEmailTemplate = htmlEmailTemplate.replace("##reason##",leaveTransaction.getReason());
 		if(!"Unpaid".equalsIgnoreCase(leaveTransaction.getLeaveType().getName()))
 				htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##",leaveTransaction.getYearlyLeaveBalance().toString());
@@ -151,7 +151,7 @@ public void sendEmailNotificationToLeaveApprover(LeaveTransaction leaveTransacti
 		htmlEmailTemplate = htmlEmailTemplate.replace("##leaveType##",leaveTransaction.getLeaveType().getDescription());
 		htmlEmailTemplate = htmlEmailTemplate.replace("##startDate##",leaveTransaction.fetchStartTimeStr());
 		htmlEmailTemplate = htmlEmailTemplate.replace("##endDate##",leaveTransaction.fetchEndTimeStr());
-		htmlEmailTemplate = htmlEmailTemplate.replace("##numberOfDays##",leaveTransaction.getNumberOfDays().toString());
+		htmlEmailTemplate = htmlEmailTemplate.replace("##numberOfDays##",leaveTransaction.getNumberOfDays().toString()+checkAMorPM(leaveTransaction));
 		htmlEmailTemplate = htmlEmailTemplate.replace("##reason##",leaveTransaction.getReason());
 		htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalanceLabel##"," Current Yearly Balance");
 		if(!"Unpaid".equalsIgnoreCase(leaveTransaction.getLeaveType().getName()))
@@ -229,7 +229,7 @@ public void sendEmailNotificationToHR(LeaveTransaction leaveTransaction,TimeInLi
 	htmlEmailTemplate = htmlEmailTemplate.replace("##leaveType##",leaveTransaction.getLeaveType().getDescription());
 	htmlEmailTemplate = htmlEmailTemplate.replace("##startDate##",leaveTransaction.fetchStartTimeStr());
 	htmlEmailTemplate = htmlEmailTemplate.replace("##endDate##",leaveTransaction.fetchEndTimeStr());
-	htmlEmailTemplate = htmlEmailTemplate.replace("##numberOfDays##",leaveTransaction.getNumberOfDays().toString());
+	htmlEmailTemplate = htmlEmailTemplate.replace("##numberOfDays##",leaveTransaction.getNumberOfDays().toString()+checkAMorPM(leaveTransaction));
 	htmlEmailTemplate = htmlEmailTemplate.replace("##reason##",leaveTransaction.getReason());
 	htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalanceLabel##","New Yearly Balance");
 	if(!"Unpaid".equalsIgnoreCase(leaveTransaction.getLeaveType().getName()))
@@ -317,7 +317,7 @@ public void sendEmailNotificationForCancelLeave(LeaveTransaction leaveTransactio
 	htmlEmailTemplate = htmlEmailTemplate.replace("##leaveType##",leaveTransaction.getLeaveType().getDescription());
 	htmlEmailTemplate = htmlEmailTemplate.replace("##startDate##",leaveTransaction.fetchStartTimeStr());
 	htmlEmailTemplate = htmlEmailTemplate.replace("##endDate##",leaveTransaction.fetchEndTimeStr());
-	htmlEmailTemplate = htmlEmailTemplate.replace("##numberOfDays##",leaveTransaction.getNumberOfDays().toString());
+	htmlEmailTemplate = htmlEmailTemplate.replace("##numberOfDays##",leaveTransaction.getNumberOfDays().toString()+checkAMorPM(leaveTransaction));
 	htmlEmailTemplate = htmlEmailTemplate.replace("##reason##",leaveTransaction.getReason());
 	if(!"Unpaid".equalsIgnoreCase(leaveTransaction.getLeaveType().getName()))
 			htmlEmailTemplate = htmlEmailTemplate.replace("##yearlyBalance##",leaveTransaction.getYearlyLeaveBalance().toString());
@@ -447,4 +447,16 @@ public void sendEmailNotificationForCancelLeave(LeaveTransaction leaveTransactio
 		});
 		executorService.shutdown();
 	}
+	
+	private static String checkAMorPM(LeaveTransaction leaveTransaction){
+		if(leaveTransaction.getNumberOfDays()==0.5){
+			if("AM".equalsIgnoreCase(leaveTransaction.getTimings()))
+				return " (Morning)";
+			else
+				return " (Afternoon)";
+		}
+		return "";
+	}
+	
+	
 }

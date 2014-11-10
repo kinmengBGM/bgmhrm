@@ -60,7 +60,7 @@
 							<p:column id="leaveTypeHEader" filterBy="#{approvedLeave.leaveType.name}" filterMatchMode="contains"><f:facet name="header"> Leave Type </f:facet><h:outputText value="#{approvedLeave.leaveType.name}" /></p:column>
 							<p:column id="startDateHeader" filterBy="#{approvedLeave.startDateTime}" filterMatchMode="contains"><f:facet name="header"> Start Date </f:facet><h:outputText value="#{approvedLeave.startDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy" /> </h:outputText></p:column>
 							<p:column id="endDateHeader" filterBy="#{approvedLeave.endDateTime}" filterMatchMode="contains"><f:facet name="header"> End Date </f:facet><h:outputText value="#{approvedLeave.endDateTime}" ><f:convertDateTime pattern="dd/MM/yyyy" />  </h:outputText></p:column>
-							<p:column id="noOfDaysHeader" filterBy="#{approvedLeave.numberOfDays}" filterMatchMode="contains"><f:facet name="header"> Number of Days </f:facet><h:outputText value="#{approvedLeave.numberOfDays}" /></p:column>
+							<p:column id="noOfDaysHeader" filterBy="#{approvedLeave.numberOfDays}" filterMatchMode="contains"><f:facet name="header"> Number of Days </f:facet><h:outputText value="#{approvedLeave.numberOfDays}  #{approvedLeave.timings}" /></p:column>
 							<p:column id="reasonHeader" filterBy="#{approvedLeave.reason}" filterMatchMode="contains"><f:facet name="header"> Reason </f:facet><h:outputText value="#{approvedLeave.reason}"/></p:column>
 							<p:column id="statusHeader" filterBy="#{approvedLeave.status}" filterMatchMode="contains"><f:facet name="header"> Status </f:facet><h:outputText value="#{approvedLeave.status}"/></p:column>
 						</p:dataTable>

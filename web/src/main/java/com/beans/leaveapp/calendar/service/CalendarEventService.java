@@ -125,7 +125,7 @@ public class CalendarEventService {
 			
 			
 			// write if condition for full leaves other than half days
-			if(true){
+			if(leaveTransaction.getNumberOfDays()>0.5){
 			startCal.set(java.util.Calendar.HOUR_OF_DAY, 9);
 			endCal.set(java.util.Calendar.HOUR_OF_DAY, 18);
 			startDate = startCal.getTime();
@@ -134,7 +134,7 @@ public class CalendarEventService {
 				{
 			// Half day leave if morning taken
 			int startHour=9,endHour=13;
-			if(true){
+			if("PM".equalsIgnoreCase(leaveTransaction.getTimings())){
 				startHour=13;endHour=18;
 			}
 			startCal.set(java.util.Calendar.HOUR_OF_DAY, startHour);

@@ -199,6 +199,7 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 			leaveRequest.setEndDateTime(leaveTransactionFromWorkFlow.getEndDateTime());
 			leaveRequest.setLeaveType(leaveTransactionFromWorkFlow.getLeaveType());
 			leaveRequest.setNumberOfDays(leaveTransactionFromWorkFlow.getNumberOfDays());
+			leaveRequest.setTimings(leaveTransactionFromWorkFlow.getTimings());
 			leaveRequest.setReason(leaveTransactionFromWorkFlow.getReason());
 			leaveRequest.setEmployee(leaveTransactionFromWorkFlow.getEmployee());
 			leaveRequest.setYearlyLeaveBalance(leaveTransactionFromWorkFlow.getYearlyLeaveBalance());

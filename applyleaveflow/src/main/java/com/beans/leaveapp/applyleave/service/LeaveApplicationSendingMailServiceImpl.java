@@ -449,7 +449,7 @@ public void sendEmailNotificationForCancelLeave(LeaveTransaction leaveTransactio
 	}
 	
 	private static String checkAMorPM(LeaveTransaction leaveTransaction){
-		if(leaveTransaction.getNumberOfDays()==0.5){
+		if(leaveTransaction.getNumberOfDays()==0.5 || leaveTransaction.getNumberOfDays()==0.50 || leaveTransaction.getNumberOfDays()==0.500){
 			if("AM".equalsIgnoreCase(leaveTransaction.getTimings()))
 				return " (Morning)";
 			else

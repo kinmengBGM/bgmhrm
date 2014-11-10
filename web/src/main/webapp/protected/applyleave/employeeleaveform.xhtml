@@ -47,16 +47,15 @@
 				<h:outputText value="" />							
 				
 				<h:outputText value="Number of Day(s)*" />
-				<h:inputText value="#{employeeLeaveFormMgmtBean.numberOfDays}" required="true" requiredMessage="Please enter number of day(s)" maxlength="4" converterMessage="Invalid Number of Days. Please enter numerical value.">  </h:inputText>			
-				<h:outputText value="(#{employeeLeaveFormMgmtBean.allowedMaximumLeaves} leaves are allowed to apply maximum ) " rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')  }" > </h:outputText> 
-				<h:outputText value="" rendered="#{(employeeLeaveFormMgmtBean.leaveType eq 'Unpaid' or employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')  }"></h:outputText>
-				<h:outputText value="Timings*" />
-				<p:selectOneMenu value="#{employeeLeaveFormMgmtBean.timings}" effect="fade" >
-						<f:selectItem itemLabel="Select one" itemValue=""/>
-						<f:selectItem itemLabel="AM" itemValue="AM" />
-						<f:selectItem itemLabel="PM" itemValue="PM" />
+				<h:inputText value="#{employeeLeaveFormMgmtBean.numberOfDays}" required="true" requiredMessage="Please enter number of day(s)" maxlength="4" converterMessage="Invalid Number of Days. Please enter numerical value." onblur="javascript:displayWhichHalfDay(this.value);">  </h:inputText>			
+				<h:outputText value="(#{employeeLeaveFormMgmtBean.allowedMaximumLeaves} leaves are allowed to apply maximum ) " rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')  }" > </h:outputText> 
+				<h:outputText value="" rendered="#{(employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')  }"></h:outputText>
+				<h:outputText value="Timings*"  styleClass="timings" style="display:none"/>
+				<p:selectOneMenu value="#{employeeLeaveFormMgmtBean.timings}" effect="fade" styleClass="timings" style="margin-left:auto;display:none">
+						<f:selectItem itemLabel="Morning (AM)" itemValue="AM" />
+						<f:selectItem itemLabel="Afternoon (PM)" itemValue="PM" />
 				</p:selectOneMenu> 
-				<h:outputText value="(please select either AM or PM if half-day leave is applying)"/>					
+				<h:outputText value="(By default AM, you can change to PM)" styleClass="timings" style="color:red;display:none"/>					
 
 				<h:outputText value="Reason*" />
 				<p:inputTextarea id="reason" rows="5" cols="24" counter="counter" maxlength="100" counterTemplate="{0} characters remaining." autoResize="false" value="#{employeeLeaveFormMgmtBean.reason}" required="true" requiredMessage="Please enter Reason"/> 
@@ -116,6 +115,17 @@
          return;
        }
   		}
+  	  function displayWhichHalfDay(value){
+	  	 if(value==0.5){
+			var myClasses = document.querySelectorAll('.timings'),
+	        i = 0,
+	        l = myClasses.length;
+	
+	    	for (i; i &lt; l; i++) {
+	       	 myClasses[i].style.display = 'block';
+	   	 	}
+	  	}	
+  	  }
       </h:outputScript>
         
 		  </ui:define>    

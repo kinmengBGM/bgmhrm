@@ -12,7 +12,6 @@ import javax.faces.event.ValueChangeEvent;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.util.IOUtils;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 import com.beans.common.audit.service.AuditTrail;
@@ -198,6 +197,16 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 	}
 	
 	public String applyLeave() throws LeaveApplicationException, RoleNotFound  {
+	// Validating whether number of days is half day or full day or not valid
+		if(getNumberOfDays()!=null){
+		double x = getNumberOfDays().doubleValue() - (long) getNumberOfDays().doubleValue();
+		if (!(x == 0.0 || x == 0.5)){
+			FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.days.validation"), "Leave error message");  
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+	        FacesContext.getCurrentInstance().addMessage(null, msg);  
+	        return "";
+			}
+		}
 		
 		if(isEmployeeFinishedOneYear()){
 			if(!(Leave.UNPAID.equalsName(leaveType) || Leave.TIMEINLIEU.equalsName(leaveType)) && !(numberOfDays<= yearlyEntitlement.getYearlyLeaveBalance()))

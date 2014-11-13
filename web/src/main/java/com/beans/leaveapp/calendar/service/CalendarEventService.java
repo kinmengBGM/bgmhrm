@@ -101,7 +101,10 @@ public class CalendarEventService {
 			event.setLocation("Malaysia");
 
 			ArrayList<EventAttendee> attendees = new ArrayList<EventAttendee>();
-			attendees.add(new EventAttendee().setEmail(leaveTransaction.getEmployee().getWorkEmailAddress()));
+			attendees.add(new EventAttendee().setEmail("admin@beans.com.my"));
+			/*   Commented as only sending creating event on admin@beans.com.my user.
+			 * 
+			 * attendees.add(new EventAttendee().setEmail(leaveTransaction.getEmployee().getWorkEmailAddress()));
 			
 			// Get all users with role ROLE_TEAMLEAD
 			List<Employee> hrEmpolyeeList = getEmployeeService().findAllEmployeesByRole("ROLE_HR");
@@ -111,7 +114,7 @@ public class CalendarEventService {
 			if(hrEmpolyeeList!=null && hrEmpolyeeList.size()>0)
 			for (Employee employee : hrEmpolyeeList) {
 				attendees.add(new EventAttendee().setEmail(employee.getWorkEmailAddress()));
-			}
+			}*/
 			event.setAttendees(attendees);
 			
 			Date startDate,endDate=null;
@@ -125,7 +128,7 @@ public class CalendarEventService {
 			
 			
 			// write if condition for full leaves other than half days
-			if(leaveTransaction.getNumberOfDays()>0.5){
+			if(leaveTransaction.getNumberOfDays().doubleValue()-(long)leaveTransaction.getNumberOfDays().doubleValue()!=0.5){
 			startCal.set(java.util.Calendar.HOUR_OF_DAY, 9);
 			endCal.set(java.util.Calendar.HOUR_OF_DAY, 18);
 			startDate = startCal.getTime();

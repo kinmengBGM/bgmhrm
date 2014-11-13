@@ -32,6 +32,10 @@
 	<param-value>6Lc0QfESAAAAAL2aqLSIPDa4HPCH7on4PsP6V7Zr</param-value>
 	</context-param>
 	
+	<context-param>
+	  <param-name>primefaces.UPLOADER</param-name>
+	  <param-value>commons</param-value>
+	</context-param>
 
  <filter>
   <filter-name>springSecurityFilterChain</filter-name>
@@ -42,7 +46,24 @@
   <url-pattern>/*</url-pattern>
   <dispatcher>REQUEST</dispatcher>
   <dispatcher>FORWARD</dispatcher>
- </filter-mapping>
+ </filter-mapping> 
+ <filter>
+ <filter-name>PrimeFaces FileUpload Filter</filter-name>
+ <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+</filter>
+<filter-mapping>
+ <filter-name>PrimeFaces FileUpload Filter</filter-name>
+ <servlet-name>Faces Servlet</servlet-name>
+</filter-mapping>
+<servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.jsf</url-pattern>
+    </servlet-mapping>
  <listener>
   <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
  </listener>

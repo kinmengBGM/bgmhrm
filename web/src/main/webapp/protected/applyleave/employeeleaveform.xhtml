@@ -47,7 +47,7 @@
 				<h:outputText value="" />							
 				
 				<h:outputText value="Number of Day(s)*" />
-				<h:inputText value="#{employeeLeaveFormMgmtBean.numberOfDays}" required="true" requiredMessage="Please enter number of day(s)" maxlength="4" converterMessage="Invalid Number of Days. Please enter numerical value." onblur="javascript:displayWhichHalfDay(this.value);">  </h:inputText>			
+				<h:inputText value="#{employeeLeaveFormMgmtBean.numberOfDays}" required="true" requiredMessage="Please enter number of day(s)" maxlength="4" converterMessage="Invalid Number of Days. Please enter numerical value." onkeypress="return chkNumeric(event,this.value);" onblur="displayWhichHalfDay(this.value);">  </h:inputText>			
 				<h:outputText value="(#{employeeLeaveFormMgmtBean.allowedMaximumLeaves} leaves are allowed to apply maximum ) " rendered="#{!(employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')  }" > </h:outputText> 
 				<h:outputText value="" rendered="#{(employeeLeaveFormMgmtBean.leaveType eq 'Time-In-Lieu')  }"></h:outputText>
 				<h:outputText value="Timings*"  styleClass="timings" style="display:none"/>
@@ -116,6 +116,11 @@
        }
   		}
   	  function displayWhichHalfDay(value){
+  	  	var number =	value.split('.');
+  	  	if(number.length!=1){
+  	  		if(number[1]==5 || number[1]==50)
+  	  		value=0.5;
+  	  		}
 	  	 if(value==0.5){
 			var myClasses = document.querySelectorAll('.timings'),
 	        i = 0,
@@ -135,6 +140,24 @@
 	   	 	}
   	  }
   	  }
+  	  function chkNumeric(evt,value) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode &gt; 31 &amp;&amp; (charCode &lt; 48 || charCode &gt; 57)) {
+            if (charCode == 46) { return true; }
+            else { return false; }
+        }
+        if(	value.indexOf(".")==value.lastIndexOf(".") &amp;&amp; value.indexOf(".")!=-1 &amp;&amp; charCode==46)
+               return false;
+       var number	= value.split('.');
+	  if(number.length==1)
+	  return true;
+	  else{
+	  	if(number[1].length &gt; 0)
+	  	return false;
+  	  }
+	  return true;
+    }
       </h:outputScript>
         
 		  </ui:define>    

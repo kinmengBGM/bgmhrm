@@ -271,7 +271,10 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 			leaveTransaction.setReason(getReason());
 			leaveTransaction.setStartDateTime(getStartDate());
 			leaveTransaction.setEndDateTime(getEndDate());
-			leaveTransaction.setTimings(getTimings());
+			if(getNumberOfDays().doubleValue() - (long) getNumberOfDays().doubleValue()==0.5)
+					leaveTransaction.setTimings(getTimings());
+			else
+				leaveTransaction.setTimings(null);
 			leaveTransaction.setCreatedBy(getActorUsers().getUsername());
 			leaveTransaction.setCreationTime(new Date());
 			leaveTransaction.setStatus("Pending");
@@ -323,17 +326,19 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 	}
 	
 	public void upload() throws IOException{
+		if(sickLeaveAttachment!=null){
 		String fileName = sickLeaveAttachment.getFileName();
 		String format = fileName.substring(fileName.length()-3);
 		if(sickLeaveAttachment!= null && (format.equals("jpg") || format.equals("png") || format.equals("gif") || format.equals("pdf")))
 		{
 			byteData = IOUtils.toByteArray(sickLeaveAttachment.getInputstream());
-		}
+		}		
 		else {
 			FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.sickleaveattachment.formatException"), getExcptnMesProperty("error.sickleaveattachment.formatException")); 
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 	        FacesContext.getCurrentInstance().addMessage(null, msg);
 		}
+		}		
 	}
 	
 	

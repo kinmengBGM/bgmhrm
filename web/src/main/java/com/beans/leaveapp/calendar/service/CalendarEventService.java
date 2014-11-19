@@ -18,6 +18,7 @@ import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.employee.service.EmployeeService;
 import com.beans.leaveapp.jbpm6.util.ApplicationContextProvider;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
+import com.beans.util.config.ConfigurationHolder;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -92,19 +93,20 @@ public class CalendarEventService {
 
 	  @SuppressWarnings("unused")
 	public static void createEventForApprovedLeave(LeaveTransaction leaveTransaction) throws IOException{
-		// TODO Auto-generated method stub
+		  try{
 			Event event = new Event();
 			Calendar service =null;
-
-			event.setSummary("On Leave : "+leaveTransaction.getEmployee().getName());
+			event.setSummary(leaveTransaction.getLeaveType().getName()+" : "+leaveTransaction.getEmployee().getName());
 			event.setDescription(leaveTransaction.getEmployee().getName()+ " is on "+leaveTransaction.getLeaveType().getName()+" Leave due to "+leaveTransaction.getReason());
 			event.setLocation("Malaysia");
 
 			ArrayList<EventAttendee> attendees = new ArrayList<EventAttendee>();
-			attendees.add(new EventAttendee().setEmail("admin@beans.com.my"));
+			
+			attendees.add(new EventAttendee().setEmail(ConfigurationHolder.getString("calendar.event.email")));
 			/*   Commented as only sending creating event on admin@beans.com.my user.
 			 * 
 			 * attendees.add(new EventAttendee().setEmail(leaveTransaction.getEmployee().getWorkEmailAddress()));
+			//attendees.add(new EventAttendee().setEmail("beans.com.my_odn79bke7gi43l511dldsr6oc0@group.calendar.google.com"));
 			
 			// Get all users with role ROLE_TEAMLEAD
 			List<Employee> hrEmpolyeeList = getEmployeeService().findAllEmployeesByRole("ROLE_HR");
@@ -154,7 +156,11 @@ public class CalendarEventService {
 			
 			Event createdEvent = service.events().insert("primary", event).execute();
 
-			System.out.println("Event is created for user : "+leaveTransaction.getEmployee().getName()+" in  calendar "+leaveTransaction.getEmployee().getWorkEmailAddress()); 
+			System.out.println("Event is created for user : "+leaveTransaction.getEmployee().getName()+" in  calendar "+leaveTransaction.getEmployee().getWorkEmailAddress());
+		  }catch(Exception e){
+			  System.out.println("Error while creating event for user : "+leaveTransaction.getEmployee().getName()+" with data : "+leaveTransaction);
+			  e.printStackTrace();
+		  }
 	  }
 	  
 	  private static EmployeeService getEmployeeService()

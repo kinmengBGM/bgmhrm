@@ -11,5 +11,10 @@
     <reloadingStrategy refreshDelay="3600000"
       config-class="org.apache.commons.configuration.reloading.FileChangedReloadingStrategy"/>
   </xml>
+  
+  <xml fileName="calendar/calendaremail.xml">
+    <reloadingStrategy refreshDelay="3600000"
+      config-class="org.apache.commons.configuration.reloading.FileChangedReloadingStrategy"/>
+  </xml>
 </configuration>
 

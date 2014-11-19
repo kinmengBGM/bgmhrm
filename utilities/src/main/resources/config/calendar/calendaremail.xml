@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- calendaremail.xml -->
+<config>
+	<calendar>
+		<event>
+			<email>rlnarayana4java@gmail.com</email>
+		</event>
+	</calendar>
+</config>

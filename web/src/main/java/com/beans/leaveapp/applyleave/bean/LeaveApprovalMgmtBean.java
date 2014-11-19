@@ -224,8 +224,11 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 				TimeInLieuBean processDecisionData =   (TimeInLieuBean) processInstanceData.get("timeInLieuBean");
 				ApprovalLevelModel approverBean =  (ApprovalLevelModel) processInstanceData.get("approvalLevelModel");
 					if(processDecisionData!=null && processDecisionData.getIsTwoLeveApproval()){
-						if(selectedLeaveRequest.getLeaveType()!=null && Leave.TIMEINLIEU.equalsName(selectedLeaveRequest.getLeaveType().getName()) )
+						if(selectedLeaveRequest.getLeaveType()!=null && Leave.TIMEINLIEU.equalsName(selectedLeaveRequest.getLeaveType().getName()) ){
 							leaveApplicationService.approveLeaveOfEmployee(selectedLeaveRequest, getActorUsers().getUsername(),"SECOND");
+							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info : "+getExcptnMesProperty("info.leave.approve.dir"),"Leave Approved"));
+							CalendarEventService.createEventForApprovedLeave(selectedLeaveRequest);
+						}
 					}
 					else{
 						leaveApplicationService.approveLeaveOfEmployee(selectedLeaveRequest, getActorUsers().getUsername(),"FIRST");

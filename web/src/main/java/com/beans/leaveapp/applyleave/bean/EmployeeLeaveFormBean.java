@@ -229,7 +229,7 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 		        FacesContext.getCurrentInstance().addMessage(null, msg);  
 		        return "";
 			}
-		} else if(!"Unpaid".equalsIgnoreCase(leaveType)&& StringUtils.isNotBlank(leaveType) && StringUtils.isNotEmpty(leaveType) && numberOfDays > yearlyEntitlement.getYearlyLeaveBalance())
+		} else if(!("Unpaid".equalsIgnoreCase(leaveType) || Leave.TIMEINLIEU.equalsName(leaveType))&& StringUtils.isNotBlank(leaveType) && StringUtils.isNotEmpty(leaveType) && numberOfDays > yearlyEntitlement.getYearlyLeaveBalance())
 		{
 				FacesMessage msg = new FacesMessage(getExcptnMesProperty("error.sick.validation"), "Leave error message");  
 				msg.setSeverity(FacesMessage.SEVERITY_ERROR);

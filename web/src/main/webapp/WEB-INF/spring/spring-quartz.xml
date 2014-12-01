@@ -15,7 +15,7 @@
 	<bean id="initializeCurrentMonthJob" class="com.beans.leaveapp.quartzjobs.InitializeCurrentMonthJob"></bean> 
 	
 	
-	<!-- <bean name="MonthlyAddedLeaveJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+	<bean name="MonthlyAddedLeaveJob" class="org.springframework.scheduling.quartz.JobDetailBean">
 			<property name="jobClass" value="com.beans.leaveapp.quartzjobs.MonthlyAddedLeaveJob"></property>	
 	</bean>
 	
@@ -63,5 +63,4 @@
 	</bean>
 	
 	<bean id="applicationContextProvider" class="com.beans.leaveapp.jbpm6.util.ApplicationContextProvider"></bean>
-	 -->
 </beans>	

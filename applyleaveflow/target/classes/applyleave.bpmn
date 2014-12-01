@@ -429,8 +429,8 @@ com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEm
     <bpmn2:scriptTask id="ScriptTask_4" name="Email to Leave Requester and HR" scriptFormat="http://www.java.com/java">
       <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
-      <bpmn2:script>System.out.println(&quot;Sending Email to Leave Requester and HR&quot;);
-if(!&quot;Time-In-Lieu&quot;.equals(leaveTransaction.getLeaveType().getName()) || (&quot;Time-In-Lieu&quot;.equals(leaveTransaction.getLeaveType().getName()) &amp;&amp; !timeInLieuBean.getIsFirstApproverApproved())){
+      <bpmn2:script>if(!&quot;Time-In-Lieu&quot;.equals(leaveTransaction.getLeaveType().getName()) || (&quot;Time-In-Lieu&quot;.equals(leaveTransaction.getLeaveType().getName()) &amp;&amp; !timeInLieuBean.getIsFirstApproverApproved())){
+System.out.println(&quot;Sending Email to Leave Requester and HR&quot;);
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveBalanceAfterApproval(leaveTransaction,timeInLieuBean.getIsFirstApproverApproved());
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.updateLeaveApplicationStatusForLeaves(leaveTransaction,timeInLieuBean);
 com.beans.leaveapp.applyleave.service.LeaveApplicationWorker.sendingIntimationEmail(leaveTransaction,approvalLevelModel,timeInLieuBean);

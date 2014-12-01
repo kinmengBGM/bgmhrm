@@ -71,7 +71,7 @@
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
-			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.show_sql" value="false" />
 
 			<!-- BZ 841786: AS7/EAP 6/Hib 4 uses new (sequence) generators which seem 
 				to cause problems -->

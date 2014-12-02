@@ -249,7 +249,8 @@ public class LeaveTransaction implements Serializable{
 	public void setRejectReason(String rejectReason) {
 		this.rejectReason = rejectReason;
 	}
-
+	
+	
 	@Override
 	public String toString() {
 		return "LeaveTransaction [id=" + id + ", applicationDate="
@@ -257,16 +258,8 @@ public class LeaveTransaction implements Serializable{
 				+ ", endDateTime=" + endDateTime + ", yearlyLeaveBalance="
 				+ yearlyLeaveBalance + ", numberOfDays=" + numberOfDays
 				+ ", reason=" + reason + ", leaveType=" + leaveType
-				+ ", employee=" + employee + ", leaveApplicationComments="
-				+ leaveApplicationComments + ", taskId=" + taskId
-				+ ", isDelete=" + isDelete + ", createdBy=" + createdBy
-				+ ", creationTime=" + creationTime + ", lastModifiedBy="
-				+ lastModifiedBy + ", lastModifiedTime=" + lastModifiedTime
-				+ ", status=" + status + ", rejectReason=" + rejectReason + "]";
+				+ ", taskId=" + taskId + ", status=" + status + "]";
 	}
-
-
-	
 	@Column(name="sickLeaveAttachment",nullable=true)
 	public byte[] getSickLeaveAttachment() {
 		return sickLeaveAttachment;

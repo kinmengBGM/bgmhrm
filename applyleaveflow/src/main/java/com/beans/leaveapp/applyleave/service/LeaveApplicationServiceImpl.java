@@ -2,16 +2,15 @@ package com.beans.leaveapp.applyleave.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.jbpm.services.task.exception.PermissionDeniedException;
 import org.kie.api.task.model.Task;
 import org.kie.api.task.model.TaskSummary;
-import org.springframework.data.domain.Auditable;
 
 import com.beans.common.security.role.model.Role;
 import com.beans.common.security.role.service.RoleNotFound;
@@ -49,27 +48,44 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 		parameterMap.put("approvalLevelModel", approvalLevelModel);
 		parameterMap.put("leaveTransaction", leaveTransaction);
 		parameterMap.put("timeInLieuBean", null);
-		long processInstanceId = applyLeaveRuntime.startProcessWithInitialParametersAndFireBusinessRules(PROCESS_NAME, parameterMap);
 		
-		List<Long> taskIdList = applyLeaveRuntime.getTaskIdsByProcessInstanceId(processInstanceId);
-		if(taskIdList.size() == 0) {
-			throw new LeaveApplicationException("Ooops! Something serious has happened. Please contact your Administrator");
-		}
-		try{
-		currentTaskId = taskIdList.get(0);
-		leaveTransaction.setTaskId(currentTaskId);
 		LeaveTransaction leaveTransactionPersist = getLeaveTransactionService().insertFromWorkflow(leaveTransaction);
 		leaveTransaction.setId(leaveTransactionPersist.getId());
 		parameterMap.put("leaveTransaction", leaveTransaction);
-		applyLeaveRuntime.submitTask(employee.getUsers().getUsername(), currentTaskId, parameterMap);
-		}catch(Exception e){
-			log.error("Error is handled by Leave approver :", e);
-		}
+		currentTaskId = triggerCasesUntilSuccessful(employee,parameterMap);
+		leaveTransactionPersist.setTaskId(currentTaskId);
+		getLeaveTransactionService().update(leaveTransactionPersist);
 		}catch(Exception e){
 			log.error("Following exception caught while applying for a leave :", e);
 			throw new BSLException("error.leaveapp.leaveapply");
 		}
 	}
+	
+	private Long triggerCasesUntilSuccessful(Employee employee,HashMap<String,Object> parameterMap) throws LeaveApplicationException{
+		long currentTaskId=1;
+		String username = employee.getUsers().getUsername();
+		List<Long> taskIdList = new ArrayList<Long>();
+		try{
+		long processInstanceId = applyLeaveRuntime.startProcessWithInitialParametersAndFireBusinessRules(PROCESS_NAME, parameterMap);
+		log.info("Initiated a new process with the processInstanceId : "+processInstanceId+"  for the user : "+username);
+		taskIdList = applyLeaveRuntime.getTaskIdsByProcessInstanceId(processInstanceId);
+		if(taskIdList.size() == 0) {
+			throw new LeaveApplicationException("Ooops! Something serious has happened. Please contact your Administrator");
+		}
+		currentTaskId  = taskIdList.get(0);
+		applyLeaveRuntime.submitTask(username, currentTaskId, parameterMap);
+		}catch(PermissionDeniedException e){
+			log.error("Caught Exception while submit task, so terminating the task with id : "+currentTaskId+" for the user : "+username);
+			applyLeaveRuntime.terminateTask(currentTaskId,username);
+			log.info("Process is terminated successfully with task id : "+currentTaskId+" And re-triggering the task to start new employee leave application");
+			triggerCasesUntilSuccessful(employee, parameterMap);
+			
+		}
+		log.info("Successfully started a process for employee with the task id : "+currentTaskId+" for the user : "+username);
+		return currentTaskId;
+	}
+	
+	
 	
 	
 	public JBPM6Runtime getApplyLeaveRuntime() {

@@ -67,7 +67,7 @@
 			<version>${jbpm.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jbpm</groupId>
+			<groupId>com.beans</groupId>
 			<artifactId>jbpm-human-task-core</artifactId>
 			<version>${jbpm.version}</version>
 		</dependency>

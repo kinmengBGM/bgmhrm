@@ -75,7 +75,7 @@
       
       <p:dialog header="Sick Leave Attachment" styleClass="dlgCSS" widgetVar="sickLeaveAttachmentDialog" resizable="false" id="sickleaveAttachmentDlg" modal="true" >
       			<h:form enctype="multipart/form-data">
-      			<p:fileUpload value="#{employeeLeaveFormMgmtBean.sickLeaveAttachment}" mode="simple" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf)$/" required="true" requiredMessage="Please select a File to upload your MC"/>
+      			<p:fileUpload value="#{employeeLeaveFormMgmtBean.sickLeaveAttachment}" mode="simple"  allowTypes="/(\.|\/)(gif|jpe?g|png|pdf)$/" required="true" requiredMessage="Please select a File to upload your MC"/>
 			 	<p:commandButton value="Submit" ajax="false" actionListener="#{employeeLeaveFormMgmtBean.upload}" oncomplete="sickLeaveAttachmentDialog.hide()" validateClient="true"/>
       			</h:form>
       </p:dialog>

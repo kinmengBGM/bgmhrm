@@ -51,10 +51,10 @@
 				  <h1>Approved Leave Request(s)</h1>
 					<h:form id="approvedLeaveForm">
 						<p:messages autoUpdate="true"  severity="info"/>
-						<p:dataTable id="approvedLeaveTable" widgetVar="approvedLeaveTableVar" var="approvedLeave" value="#{leaveApprovalBean.leaveApprovalDataModelApprovedLeaves}" 
+						<p:dataTable id="approvedLeaveTable" widgetVar="approvedLeaveTable" var="approvedLeave" value="#{leaveApprovalBean.leaveApprovalDataModelApprovedLeaves}" 
 													selection="#{leaveApprovalBean.selectedLeaveRequest}" selectionMode="single" rowKey="#{approvedLeave.taskId}"
 													 rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
-							<f:facet name="header"><p:outputPanel style="text-align:right;"> <h:outputText value="Search all fields:" /> <p:inputText id="globalFilter" onkeyup="PF('approvedLeaveTableVar').filter()" filterDelay="1000" style="width:150px" placeholder="Enter keyword"/> </p:outputPanel></f:facet>
+							<f:facet name="header"><p:outputPanel style="text-align:right;"> <h:outputText value="Search all fields:" /> <p:inputText id="globalFilter" onkeyup="PF('approvedLeaveTable').filter()" filterDelay="1000" style="width:150px" placeholder="Enter keyword"/> </p:outputPanel></f:facet>
 			         		<p:ajax event="rowSelect" listener="#{leaveApprovalBean.onRowSelect}" update=":leaveRequestDialogForm" oncomplete="PF('leaveRequestDialogVar').show();" />
 							<p:column id="nameTypeHEader" filterBy="#{approvedLeave.employee.name}" filterMatchMode="contains" ><f:facet name="header"> Name </f:facet><h:outputText value="#{approvedLeave.employee.name}" /></p:column>
 							<p:column id="leaveTypeHEader" filterBy="#{approvedLeave.leaveType.name}" filterMatchMode="contains"><f:facet name="header"> Leave Type </f:facet><h:outputText value="#{approvedLeave.leaveType.name}" /></p:column>
@@ -100,7 +100,7 @@
 		      </p:dialog>
 		      
 		      <p:dialog header="Cancel Approved Leave" severity="alert" widgetVar="cancelRegistrationVar" modal="true">	
-					<h:form>
+					<h:form id="cancelDialogVar">
 					<p:messages autoUpdate="true" />
 					<p:panelGrid id="RejectReason" columns="2" cellpadding="4" style="margin:0 auto;">
 						<h:outputText value="Reason*" />
@@ -108,7 +108,7 @@
 								<h:outputText value="" />
 								<h:outputText id="counter" /> 
 						<f:facet name="footer">
-							<p:commandButton value="Cancel Leave" oncomplete="if(!args.validationFailed) cancelRegistrationVar.hide();PF('leaveRequestDialogVar').hide();" actionListener="#{leaveApprovalBean.doCancelLeaveTransaction()}" validateClient="true" update=":approvedLeaveForm:approvedLeaveTable"/>
+							<p:commandButton value="Cancel Leave" onsuccess="this.disabled=false" oncomplete="if(!args.validationFailed) cancelRegistrationVar.hide();PF('leaveRequestDialogVar').hide();" actionListener="#{leaveApprovalBean.doCancelLeaveTransaction()}" validateClient="true" update=":approvedLeaveForm:approvedLeaveTable,:cancelDialogVar" onclick="this.disabled=true"/>
 							<p:commandButton value="Back" immediate="true" onclick="PF('cancelRegistrationVar').hide();PF('leaveRequestDialogVar').show();" type="button" />
 						</f:facet>
 					</p:panelGrid>

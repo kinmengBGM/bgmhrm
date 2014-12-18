@@ -6,6 +6,7 @@ import java.util.Date;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.context.ApplicationContext;
@@ -30,7 +31,7 @@ public class WelcomeEmailServiceTest {
 		
 	}
 	
-	@Test
+	@Ignore("not required to run") @Test
 	public void testWelcomeEmailSuccessful() {
 		Date date = new Date();	
 		RegisteredEmployee registeredEmployee = new RegisteredEmployee();
@@ -49,7 +50,7 @@ public class WelcomeEmailServiceTest {
 		registeredEmployeeEmailService.sendWelcomeEmail(registeredEmployee);
 	}
 	
-	@Test
+	@Ignore("not required to run") @Test
 	public void testRejectedEmailSuccessful() {
 		Date date = new Date();	
 		RegisteredEmployee registeredEmployee = new RegisteredEmployee();

@@ -14,6 +14,7 @@ import com.beans.leaveapp.leavetransaction.service.LeaveTransactionService;
 import com.beans.leaveapp.monthlyreport.service.SendMonthlyLeaveReportService;
 import com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementService;
 import com.beans.util.enums.Leave;
+import com.beans.util.log.ApplLogger;
 
 public class LeaveApplicationWorker {
 	private static Logger log = Logger.getLogger(LeaveApplicationWorker.class);
@@ -52,7 +53,7 @@ public class LeaveApplicationWorker {
 		sendMailService.sendLeaveTerminateMailToApplicant(leaveApplicant, emailId);
 	}
 	
-	
+	// This is used by JBPM
 	public static void updateLeaveBalanceAfterApproval(LeaveTransaction leaveTransaction,Boolean isApproverApproved){
 		log.info("Data coming from process is  leaveTransaction : "+leaveTransaction+" and isApproverApproved :"+isApproverApproved);
 		if(leaveTransaction!=null && isApproverApproved==true)
@@ -66,6 +67,21 @@ public class LeaveApplicationWorker {
 		}
 	}
 	
+	// This is used by our own process engine dealing with DB
+	public static void updateLeaveBalanceAfterApprovalNonTimeInLieuLeave(LeaveTransaction leaveTransaction){
+		ApplLogger.getLogger().info(String.format("Finally Leave is approved and updating to Yearly Balance in Entitlement, leaveTransaction object is : %s",leaveTransaction));
+		if(leaveTransaction!=null)
+		{
+			ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
+			YearlyEntitlementService yearlyEntitlementService = (YearlyEntitlementService) applicationContext.getBean("yearlyEntitlementService");
+			yearlyEntitlementService.updateLeaveBalanceAfterApproval(leaveTransaction.getEmployee().getId(), leaveTransaction.getLeaveType().getId(), leaveTransaction.getNumberOfDays());
+			SendMonthlyLeaveReportService annualLeaveService = (SendMonthlyLeaveReportService) applicationContext.getBean("sendLeaveReportService");
+			annualLeaveService.updateEmployeeLeavesAfterLeaveApproval(leaveTransaction, leaveTransaction.getApplicationDate());
+			
+		}
+	}
+	
+	// This is used by JBPM
 	public static void updateToAnnualLeaveBalanceAfterApproval(LeaveTransaction leaveTransaction,TimeInLieuBean timeInLieuBean){
 		log.info("Data coming from process is  leaveTransaction : "+leaveTransaction+" and approval bean :"+timeInLieuBean);
 		if(leaveTransaction!=null && timeInLieuBean!=null && (timeInLieuBean.getIsSecondApproverApproved()==null || timeInLieuBean.getIsSecondApproverApproved()))
@@ -79,11 +95,25 @@ public class LeaveApplicationWorker {
 		}
 	}
 	
+	// This is used by our own process engine dealing with DB
+		public static void updateToAnnualLeaveBalanceAfterApprovalTimeInLieuLeave(LeaveTransaction leaveTransaction){
+			ApplLogger.getLogger().info(String.format("Finally Leave is approved and updating to Annual/Monthly Leave report Balance for Monthly Email, leaveTransaction object is : %s",leaveTransaction));
+			if(leaveTransaction!=null)
+			{
+				ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
+				YearlyEntitlementService yearlyEntitlementService = (YearlyEntitlementService) applicationContext.getBean("yearlyEntitlementService");
+				yearlyEntitlementService.updateAnnualLeaveBalanceAfterApproval(leaveTransaction.getEmployee().getId(), leaveTransaction.getLeaveType().getId(), leaveTransaction.getNumberOfDays());
+				SendMonthlyLeaveReportService annualLeaveService = (SendMonthlyLeaveReportService) applicationContext.getBean("sendLeaveReportService");
+				annualLeaveService.updateEmployeeAnnualLeavesAfterLeaveApproval(leaveTransaction, leaveTransaction.getApplicationDate());
+				
+			}
+		}
+	
 	// This method used for 2 level approval and updating the annual leave
 	public static void updateLeaveBalanceAfterApproval(LeaveTransaction leaveTransaction,TimeInLieuBean timeInLieuBean){
 		System.out.println("Updating Yearly entitlement and Annual Leave report : "+leaveTransaction.getYearlyLeaveBalance());
 	}
-	
+	// This method is used by JBPM
 	public static void updateLeaveApplicationStatusForLeaves(LeaveTransaction leaveTransaction,TimeInLieuBean timeInLieuBean){
 		
 		ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
@@ -100,8 +130,27 @@ public class LeaveApplicationWorker {
 		leaveTransactionService.updateLeaveApplicationStatus(leaveTransaction);
 	}
 	
+	// This is used by our own process engine dealing with DB
+	public static void updateLeaveApplicationStatusForLeavesAfterFinalApproval(LeaveTransaction leaveTransaction,Boolean isApproved){
+		
+		ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
+		LeaveTransactionService leaveTransactionService = (LeaveTransactionService) applicationContext.getBean("leaveTransactionService");
+		if(isApproved!=null && isApproved){
+			leaveTransaction.setStatus("Approved");
+			if(Leave.TIMEINLIEU.equalsName(leaveTransaction.getLeaveType().getName()))
+				leaveTransaction.setYearlyLeaveBalance(leaveTransaction.getYearlyLeaveBalance()+leaveTransaction.getNumberOfDays());
+			else
+				leaveTransaction.setYearlyLeaveBalance(leaveTransaction.getYearlyLeaveBalance()-leaveTransaction.getNumberOfDays());
+		}
+		else
+			leaveTransaction.setStatus("Rejected");
+		
+			leaveTransaction.setLastModifiedBy(leaveTransaction.getDecisionToBeTaken());
+			leaveTransaction.setLastModifiedTime(new Date());
+		leaveTransactionService.updateLeaveApplicationStatus(leaveTransaction);
+	}
 
-	// This method used for 2 level approval and updating the leave Transaction table
+	// This method used for 2 level approval and updating the leave Transaction table by JPBM
 	public static void updateLeaveApplicationStatusForFinalApproval(LeaveTransaction leaveTransaction,TimeInLieuBean timeInLieuBean){
 		System.out.println("Updated Leave Transaction : "+timeInLieuBean.getIsSecondApproverApproved());
 		ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
@@ -117,7 +166,5 @@ public class LeaveApplicationWorker {
 			leaveTransaction.setLastModifiedTime(new Date());
 		leaveTransactionService.updateLeaveApplicationStatus(leaveTransaction);
 	}
-	
-	
 	
 }

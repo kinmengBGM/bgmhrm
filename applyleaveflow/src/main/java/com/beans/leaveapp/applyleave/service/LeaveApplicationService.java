@@ -15,4 +15,6 @@ public interface LeaveApplicationService {
 	 void approveLeaveOfEmployee(LeaveTransaction leaveTransaction, String actorId,String level);
 	 void rejectLeaveOfEmployee(LeaveTransaction leaveTransaction, String actorId);
 	 Map<String, Object> getContentMapDataByTaskId(long taskId);
+	
+	 
 }

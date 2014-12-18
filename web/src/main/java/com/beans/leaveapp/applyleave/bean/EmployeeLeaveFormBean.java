@@ -2,8 +2,10 @@ package com.beans.leaveapp.applyleave.bean;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -17,6 +19,9 @@ import org.primefaces.model.UploadedFile;
 import com.beans.common.audit.service.AuditTrail;
 import com.beans.common.audit.service.SystemAuditTrailActivity;
 import com.beans.common.audit.service.SystemAuditTrailLevel;
+import com.beans.common.leave.rules.model.LeaveFlowDecisionsTaken;
+import com.beans.common.leave.rules.model.LeaveRuleBean;
+import com.beans.common.security.role.model.Role;
 import com.beans.common.security.role.service.RoleNotFound;
 import com.beans.common.security.users.model.Users;
 import com.beans.exceptions.BSLException;
@@ -24,11 +29,15 @@ import com.beans.leaveapp.applyleave.service.LeaveApplicationException;
 import com.beans.leaveapp.applyleave.service.LeaveApplicationService;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
+import com.beans.leaveapp.leavetransaction.service.LeaveTransactionService;
 import com.beans.leaveapp.web.bean.BaseMgmtBean;
 import com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement;
 import com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementNotFound;
 import com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementService;
+import com.beans.leaveflow.service.email.LeaveApplicationEmailNotificationService;
 import com.beans.util.enums.Leave;
+import com.beans.util.enums.LeaveStatus;
+import com.beans.util.log.ApplLogger;
 
 public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -44,12 +53,12 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 	private Double yearlyBalance;
 	private YearlyEntitlementService yearlyEntitlementService;
 	private LeaveApplicationService leaveApplicationService;
+	private LeaveTransactionService leaveTransactionService;
 	private AuditTrail auditTrail;
 	private Double allowedMaximumLeaves;
 	private UploadedFile sickLeaveAttachment;
 	private byte[] byteData = null;
     private String timings;
-	
 	public Double getAllowedMaximumLeaves() {
 		return allowedMaximumLeaves;
 	}
@@ -189,6 +198,13 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 		this.leaveApplicationService = leaveApplicationService;
 	}
 	
+	public LeaveTransactionService getLeaveTransactionService() {
+		return leaveTransactionService;
+	}
+	public void setLeaveTransactionService(
+			LeaveTransactionService leaveTransactionService) {
+		this.leaveTransactionService = leaveTransactionService;
+	}
 	public AuditTrail getAuditTrail() {
 		return auditTrail;
 	}
@@ -277,7 +293,7 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 				leaveTransaction.setTimings(null);
 			leaveTransaction.setCreatedBy(getActorUsers().getUsername());
 			leaveTransaction.setCreationTime(new Date());
-			leaveTransaction.setStatus("Pending");
+			leaveTransaction.setStatus(LeaveStatus.PENDING.toString());
 			if("Sick".equalsIgnoreCase(leaveType)){
 				if(byteData != null){
 				String sickLeaveAttachmentName = sickLeaveAttachment.getFileName();	
@@ -290,8 +306,29 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 			        return "";
 				}
 			}
+			
+			// Get the Leave Rule for the applying leave applicant
+			List<String> roleList = new ArrayList<String>();
+			for (Role role : getActorUsers().getUserRoles()) {
+				roleList.add(role.getRole().trim());
+			}
+			LeaveRuleBean  leaveRuleBean = leaveTransactionService.getLeaveRuleByRoleAndLeaveType(leaveType, roleList);
+			leaveTransaction.setLeaveRuleBean(leaveRuleBean);
+			// saving the decisions taken by the approvers on a list
+			LeaveFlowDecisionsTaken leaveFlowDecisions = leaveTransactionService.saveLeaveApprovalDecisions(null);
+			// saving the leave transaction bean with the defined rule and decision bean
+			leaveTransaction.setDecisionsBean(leaveFlowDecisions);
+			
+			
 			try {
-				leaveApplicationService.submitLeave(getEmployee(), getYearlyEntitlement(), leaveTransaction);
+				leaveTransaction.setDecisionToBeTaken(leaveRuleBean.getApproverNameLevel1());
+				LeaveTransaction leavePersistBean =	leaveTransactionService.processAppliedLeaveOfEmployee(leaveTransaction);
+				ApplLogger.getLogger().info("Employee Leave is applied successfully with transaction ID : "+leavePersistBean.getId());
+				ApplLogger.getLogger().info("Employee Transaction Details : "+leavePersistBean.toString());
+				LeaveApplicationEmailNotificationService.sendingIntimationEmail(leavePersistBean);
+				
+				//leaveApplicationService.submitLeave(getEmployee(), getYearlyEntitlement(), leaveTransaction);  Enable for Jbpm process
+				
 				
 				setSelectedYearlyEntitlement(0);
 				setLeaveType("");

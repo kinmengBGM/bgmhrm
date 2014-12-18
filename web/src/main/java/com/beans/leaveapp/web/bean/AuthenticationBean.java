@@ -28,6 +28,7 @@ import com.beans.leaveapp.employee.service.EmployeeNotFound;
 import com.beans.leaveapp.employee.service.EmployeeService;
 import com.beans.leaveapp.leavetype.service.LeaveTypeNotFound;
 import com.beans.leaveapp.montlhyreport.LeaveReportWorker;
+import com.beans.util.log.ApplLogger;
 
 
 public class AuthenticationBean implements Serializable{
@@ -49,7 +50,7 @@ public class AuthenticationBean implements Serializable{
 			setUsername(auth.getName());
 			initEmployee();
 			populateAccessRightsSet();
-			
+			ApplLogger.getLogger().info("Logged in Username is : "+username);
 			auditTrail.log(SystemAuditTrailActivity.LOGIN, SystemAuditTrailLevel.INFO, getUsers().getId(), getUsername(), getUsername() + " has successfully logged in to the system.");
 		} else {
 			auditTrail.log(SystemAuditTrailActivity.LOGIN, SystemAuditTrailLevel.ERROR, 0, context.getRequestParameterMap().get("j_username"), context.getRequestParameterMap().get("j_username") + " has failed to log in to the system.");

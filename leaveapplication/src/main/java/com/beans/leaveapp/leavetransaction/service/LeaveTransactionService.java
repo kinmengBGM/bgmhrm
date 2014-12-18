@@ -2,7 +2,10 @@ package com.beans.leaveapp.leavetransaction.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+import com.beans.common.leave.rules.model.LeaveFlowDecisionsTaken;
+import com.beans.common.leave.rules.model.LeaveRuleBean;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.beans.leaveapp.leavetype.model.LeaveType;
@@ -44,6 +47,13 @@ public interface LeaveTransactionService {
     List<LeaveTransaction> getAllLeavesAppliedByEmployee(int employeeId);
     
     List<LeaveTransaction> getAllLeavesAppliedByEmployee();
+    
+    LeaveRuleBean getLeaveRuleByRoleAndLeaveType(String leaevType, List<String> roleType);
+    
+    LeaveFlowDecisionsTaken saveLeaveApprovalDecisions(LeaveFlowDecisionsTaken leaveFlowDecisions);
+    
+	LeaveTransaction processAppliedLeaveOfEmployee(LeaveTransaction leaveTransaction);
+    
 }
 
 

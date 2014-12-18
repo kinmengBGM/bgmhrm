@@ -12,7 +12,7 @@
 	<h:form id="leaveApprovalForm">
 	<p:messages autoUpdate="true" severity="info" ></p:messages>
 	<p:dataTable id="approveLeaveTable" widgetVar="approveLeaveTable" var="approveLeave0" value="#{leaveApprovalBean.leaveApprovalDataModel}"
-										selection="#{leaveApprovalBean.selectedLeaveRequest}" selectionMode="single" rowKey="#{approveLeave0.taskId}"
+										selection="#{leaveApprovalBean.selectedLeaveRequest}" selectionMode="single" rowKey="#{approveLeave0.id}" emptyMessage="No pending leaves found for your approval"
 										 rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"	>
          <p:ajax event="rowSelect" listener="#{leaveApprovalBean.onRowSelect}" update=":leaveRequestDialogForm" oncomplete="leaveRequestDialogVar.show();" />
 				<p:column id="nameTypeHEader"><f:facet name="header"> Name </f:facet><h:outputText value="#{approveLeave0.employee.name}" /></p:column>

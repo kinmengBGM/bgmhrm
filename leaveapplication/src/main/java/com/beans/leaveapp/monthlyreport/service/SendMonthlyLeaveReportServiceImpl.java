@@ -890,7 +890,8 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 					annualLeaveCurrentMonth.setCurrentLeaveBalance(annualLeaveCurrentMonth.getCurrentLeaveBalance()+leaveTransaction.getNumberOfDays());
 				if(annualLeaveCurrentMonth.getYearlyLeaveBalance()!=null)
 					annualLeaveCurrentMonth.setYearlyLeaveBalance(annualLeaveCurrentMonth.getYearlyLeaveBalance()+leaveTransaction.getNumberOfDays());
-				annualLeaveCurrentMonth.setTimeInLieuCredited(annualLeaveCurrentMonth.getTimeInLieuCredited()+leaveTransaction.getNumberOfDays());
+				if(annualLeaveCurrentMonth.getTimeInLieuCredited()!=null)
+					annualLeaveCurrentMonth.setTimeInLieuCredited(annualLeaveCurrentMonth.getTimeInLieuCredited()+leaveTransaction.getNumberOfDays());
 				annualLeaveToBeUpdatedList.add(annualLeaveCurrentMonth);
 				annualLeaveRepository.save(annualLeaveToBeUpdatedList);
 			}
@@ -1071,7 +1072,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 					if(annualLeaveCurrentMonth.getYearlyLeaveBalance()!=null)
 						annualLeaveCurrentMonth.setYearlyLeaveBalance(annualLeaveCurrentMonth.getYearlyLeaveBalance()+leaveTransaction.getNumberOfDays());
 					
-					if(annualLeaveCurrentMonth.getLeavesTaken()==null)
+					if(annualLeaveCurrentMonth.getLeavesTaken()!=null)
 						annualLeaveCurrentMonth.setLeavesTaken(annualLeaveCurrentMonth.getLeavesTaken()-leaveTransaction.getNumberOfDays());
 
 					if(annualLeaveCurrentMonth.getLeavesCredited()!=null)

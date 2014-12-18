@@ -4,15 +4,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
+
+import com.beans.common.leave.rules.model.LeaveFlowDecisionsTaken;
+import com.beans.common.leave.rules.model.LeaveRuleBean;
+import com.beans.common.leave.rules.repository.LeaveFlowDecisionsTakenRepository;
+import com.beans.common.leave.rules.repository.LeaveRuleBeanRepository;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.employee.repository.EmployeeRepository;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.beans.leaveapp.leavetransaction.repository.LeaveTransactionRepository;
 import com.beans.leaveapp.leavetype.model.LeaveType;
 import com.beans.leaveapp.leavetype.repository.LeaveTypeRepository;
+import com.beans.util.log.ApplLogger;
 
 public class LeaveTransactionServiceImpl implements LeaveTransactionService {
 
@@ -24,6 +32,13 @@ public class LeaveTransactionServiceImpl implements LeaveTransactionService {
 
 	@Resource
 	EmployeeRepository employeeRepository;
+	
+	@Resource
+	LeaveRuleBeanRepository leaveRuleBeanRepository;
+	
+	@Resource
+	LeaveFlowDecisionsTakenRepository leaveFlowDecisionRepository;
+	
 	
 	@Override
 	public List<LeaveTransaction> findAll() {
@@ -217,7 +232,7 @@ public class LeaveTransactionServiceImpl implements LeaveTransactionService {
 	leaveTransactionPersist.setLastModifiedBy(leaveTransaction.getLastModifiedBy());
 	leaveTransactionPersist.setLastModifiedTime(leaveTransaction.getLastModifiedTime());
 	leaveTransactionPersist.setYearlyLeaveBalance(leaveTransaction.getYearlyLeaveBalance());
-	return leaveTransactionRepository.save(leaveTransactionPersist);
+	return leaveTransactionRepository.saveAndFlush(leaveTransactionPersist);
 	
 	}
 
@@ -244,7 +259,89 @@ public class LeaveTransactionServiceImpl implements LeaveTransactionService {
 	public List<LeaveTransaction> getAllLeavesAppliedByEmployee() {
 		return leaveTransactionRepository.findAllPendingLeavesOfEmployees();
 	}
+
+
+	@Override
+	public LeaveRuleBean getLeaveRuleByRoleAndLeaveType(String leaveType, List<String> roleType) {
+		List<LeaveRuleBean> leaveRuleList=null;
+		List<String> defaultRoleList = new ArrayList<String>();
+		defaultRoleList.add("ROLE_USER");
+		defaultRoleList.add("ROLE_EMPLOYEE");
+		
+		int count = leaveRuleBeanRepository.findApplicantInApproverList(leaveType, roleType);
+		if(count==0){
+			// Applicant is not an approver any more, now check the exact path based on special roles by him
+			if(roleType.removeAll(defaultRoleList) && roleType.size()==0){
+				// Applicant is Normal employee, so can take the default path
+				leaveRuleList = leaveRuleBeanRepository.findRuleByLeaveandListOfRoleType(leaveType, defaultRoleList);
+			}else{
+				leaveRuleList = leaveRuleBeanRepository.findRuleByLeaveandListOfRoleType(leaveType, roleType);
+			}
+			
+		}else{
+			// Applicant is an approver any more, now check the exact role which is approver role
+			
+			leaveRuleList = leaveRuleBeanRepository.findRuleByApplicantApproverRole(leaveType, roleType);
+		}
+		// if more than one leave rule found, then find the minimum levels role and return it.
+		if(leaveRuleList!=null && leaveRuleList.size()>0)
+		{
+			if(leaveRuleList.size()==1){
+				LeaveRuleBean leaveRuleBean = leaveRuleList.get(0);
+				ApplLogger.getLogger().info("Leave rule found and approval path is : "+leaveRuleBean.getRoleType()+"==>"+leaveRuleBean.getApproverNameLevel1()+"==>"+leaveRuleBean.getApproverNameLevel2()+"==>"+leaveRuleBean.getApproverNameLevel3()+"==>"+leaveRuleBean.getApproverNameLevel4()+"==>"+leaveRuleBean.getApproverNameLevel5());
+				return leaveRuleBean;
+			}
+			LeaveRuleBean leaveRuleBean = null;
+			int totalLevels = 0;
+			for (LeaveRuleBean leaveRule : leaveRuleList) {
+				int levelsOfApproval =0;
+				if(StringUtils.trimToNull(leaveRule.getApproverNameLevel1())!=null){
+					++levelsOfApproval;
+					if(StringUtils.trimToNull(leaveRule.getApproverNameLevel2())!=null){
+						++levelsOfApproval;
+						if(StringUtils.trimToNull(leaveRule.getApproverNameLevel3())!=null){
+							++levelsOfApproval;
+							if(StringUtils.trimToNull(leaveRule.getApproverNameLevel4())!=null){
+								++levelsOfApproval;
+								if(StringUtils.trimToNull(leaveRule.getApproverNameLevel5())!=null){
+									++levelsOfApproval;
+								}
+							}
+						}
+					}
+				}
+				
+				if(levelsOfApproval>=0){
+					if(totalLevels==0){
+						leaveRuleBean = leaveRule;
+						totalLevels = levelsOfApproval;
+					}
+					if(levelsOfApproval<=totalLevels){
+						leaveRuleBean = leaveRule;
+						totalLevels = levelsOfApproval;
+					}
+				}
+			}
+			ApplLogger.getLogger().info("Leave rule found and approval path is : "+leaveRuleBean.getRoleType()+"==>"+leaveRuleBean.getApproverNameLevel1()+"==>"+leaveRuleBean.getApproverNameLevel2()+"==>"+leaveRuleBean.getApproverNameLevel3()+"==>"+leaveRuleBean.getApproverNameLevel4()+"==>"+leaveRuleBean.getApproverNameLevel5());
+			return leaveRuleBean;
+		}
+			
+		return null;
+	}
 	
+	public LeaveFlowDecisionsTaken saveLeaveApprovalDecisions(LeaveFlowDecisionsTaken leaveFlowDecisions){
+		if(leaveFlowDecisions==null)
+			leaveFlowDecisions = leaveFlowDecisionRepository.saveAndFlush(new LeaveFlowDecisionsTaken());
+		else
+			leaveFlowDecisions = leaveFlowDecisionRepository.saveAndFlush(leaveFlowDecisions);
+		return leaveFlowDecisions;
+	}
+
+
+	@Override
+	public LeaveTransaction processAppliedLeaveOfEmployee(LeaveTransaction leaveTransaction) {
+		return leaveTransactionRepository.saveAndFlush(leaveTransaction);
+	}
 }
 
 

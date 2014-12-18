@@ -3,16 +3,13 @@ package com.beans.leaveapp.leavetransaction.model;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -20,10 +17,10 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
 
+import com.beans.common.leave.rules.model.LeaveFlowDecisionsTaken;
+import com.beans.common.leave.rules.model.LeaveRuleBean;
 import com.beans.leaveapp.employee.model.Employee;
-import com.beans.leaveapp.leaveapplicationcomment.model.LeaveApplicationComment;
 import com.beans.leaveapp.leavetype.model.LeaveType;
-import com.mysql.jdbc.Blob;
 
 @Entity
 @Table(name="LeaveTransaction")
@@ -42,25 +39,33 @@ public class LeaveTransaction implements Serializable{
 	private String reason;
 	private LeaveType leaveType;
 	private Employee employee;
-	private List<LeaveApplicationComment> leaveApplicationComments;
 	private Long taskId;
-	private boolean isDelete;
-	private String createdBy;
-	private Date creationTime;
-	private String lastModifiedBy;
-	private Date lastModifiedTime;
 	private String status;
 	private String rejectReason;
 	private String timings;
 	private String sickLeaveAttachmentName;
+	private LeaveRuleBean leaveRuleBean;
+	private LeaveFlowDecisionsTaken decisionsBean;
+	private String decisionToBeTaken;
 	
 	@Lob
 	private byte[] sickLeaveAttachment;
+	private String createdBy;
+	private Date creationTime;
+	private String lastModifiedBy;
+	private Date lastModifiedTime;
+	private boolean isDelete;
 	
-	public LeaveTransaction(int id, Date applicationDate,
-			Date startDateTime, Date endDateTime,
-			Double yearlyLeaveBalance, Double numberOfDays, String reason,String status,
-			LeaveType leaveType, Employee employee, boolean isDeleted) {
+	public LeaveTransaction() {
+		
+	}
+	
+	
+	public LeaveTransaction(int id, Date applicationDate, Date startDateTime,
+			Date endDateTime, Double yearlyLeaveBalance, Double numberOfDays,
+			String reason, LeaveType leaveType, Employee employee,
+			String status, String timings, LeaveRuleBean leaveRuleBean,
+			LeaveFlowDecisionsTaken decisionsBean, boolean isDelete) {
 		super();
 		this.id = id;
 		this.applicationDate = applicationDate;
@@ -69,15 +74,16 @@ public class LeaveTransaction implements Serializable{
 		this.yearlyLeaveBalance = yearlyLeaveBalance;
 		this.numberOfDays = numberOfDays;
 		this.reason = reason;
-		this.status = status;
 		this.leaveType = leaveType;
 		this.employee = employee;
-		this.isDelete = isDeleted;
+		this.status = status;
+		this.timings = timings;
+		this.leaveRuleBean = leaveRuleBean;
+		this.decisionsBean = decisionsBean;
+		this.isDelete = isDelete;
 	}
-	public LeaveTransaction() {
-		
-	}
-	
+
+
 	@Id
 	@GeneratedValue
 	@Column( name="id",nullable=false,unique=true)
@@ -224,16 +230,6 @@ public class LeaveTransaction implements Serializable{
 	public String getLastModifiedBy() {
 		return lastModifiedBy;
 	}
-
-	
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="leaveTransaction")
-	public List<LeaveApplicationComment> getLeaveApplicationComments() {
-		return leaveApplicationComments;
-	}
-	public void setLeaveApplicationComments(
-			List<LeaveApplicationComment> leaveApplicationComments) {
-		this.leaveApplicationComments = leaveApplicationComments;
-	}
 	
 	@Column(name="status",nullable=true)
 	public String getStatus() {
@@ -250,16 +246,6 @@ public class LeaveTransaction implements Serializable{
 		this.rejectReason = rejectReason;
 	}
 	
-	
-	@Override
-	public String toString() {
-		return "LeaveTransaction [id=" + id + ", applicationDate="
-				+ applicationDate + ", startDateTime=" + startDateTime
-				+ ", endDateTime=" + endDateTime + ", yearlyLeaveBalance="
-				+ yearlyLeaveBalance + ", numberOfDays=" + numberOfDays
-				+ ", reason=" + reason + ", leaveType=" + leaveType
-				+ ", taskId=" + taskId + ", status=" + status + "]";
-	}
 	@Column(name="sickLeaveAttachment",nullable=true)
 	public byte[] getSickLeaveAttachment() {
 		return sickLeaveAttachment;
@@ -267,8 +253,18 @@ public class LeaveTransaction implements Serializable{
 	public void setSickLeaveAttachment(byte[] sickLeaveAttachment) {
 		this.sickLeaveAttachment = sickLeaveAttachment;
 	}
-
 	
+	@Column(name="decisionToBeTaken",nullable=true)
+	public String getDecisionToBeTaken() {
+		return decisionToBeTaken;
+	}
+
+
+	public void setDecisionToBeTaken(String decisionToBeTaken) {
+		this.decisionToBeTaken = decisionToBeTaken;
+	}
+
+
 	@Column(name="timings",nullable=true)
 	public String getTimings() {
 		return timings;
@@ -284,6 +280,34 @@ public class LeaveTransaction implements Serializable{
 	}
 	public void setSickLeaveAttachmentName(String sickLeaveAttachmentName) {
 		this.sickLeaveAttachmentName = sickLeaveAttachmentName;
-	}	
+	}
 	
+	@OneToOne
+	@JoinColumn(name="leaveRuleBeanId")
+	public LeaveRuleBean getLeaveRuleBean() {
+		return leaveRuleBean;
+	}
+
+	public void setLeaveRuleBean(LeaveRuleBean leaveRuleBean) {
+		this.leaveRuleBean = leaveRuleBean;
+	}
+
+	@OneToOne
+	@JoinColumn(name="decisionBeanId")
+	public LeaveFlowDecisionsTaken getDecisionsBean() {
+		return decisionsBean;
+	}
+
+	public void setDecisionsBean(LeaveFlowDecisionsTaken decisionsBean) {
+		this.decisionsBean = decisionsBean;
+	}
+
+
+	@Override
+	public String toString() {
+		return "LeaveTransaction [id=" + id + ", status=" + status
+				+ ", leaveRuleBean=" + leaveRuleBean + ", decisionsBean="
+				+ decisionsBean + ", decisionToBeTaken=" + decisionToBeTaken
+				+ "]";
+	}	
 }

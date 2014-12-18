@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -427,7 +426,8 @@ public void sendEmailNotificationForCancelLeave(LeaveTransaction leaveTransactio
 		leaveType.setDescription("Annaul Leave");
 		ApprovalLevelModel approvalBean = new ApprovalLevelModel();
 		approvalBean.setApprover("ROLE_TEAMLEAD");
-		LeaveTransaction leave = new LeaveTransaction(3, new Date(), new Date(), new Date(), new Double(18.0), new Double(2.0), "Testing", "Waiting", leaveType, employee, false);
+		//LeaveTransaction leave = new LeaveTransaction(3, new Date(), new Date(), new Date(), new Double(18.0), new Double(2.0), "Testing", "Waiting", leaveType, employee, false);
+		LeaveTransaction leave = new LeaveTransaction();
 		LeaveApplicationSendingMailServiceImpl service = new LeaveApplicationSendingMailServiceImpl();
 		service.sendEmailNotificationToLeaveApplicant(leave,null);
 		service.sendEmailNotificationToLeaveApprover(leave, approvalBean,new TimeInLieuBean());

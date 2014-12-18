@@ -7,11 +7,11 @@
             <port>465</port>
             <ssl>true</ssl>
             <auth>true</auth>
-            <sender>
+        	<sender>
             	<username>beanshrm@gmail.com</username>
             	<address>beanshrm@gmail.com</address>
         		<password>1700819819</password>
-        	</sender>    	
+        	</sender>     	
         </smtp>
     </mail>
 </config>

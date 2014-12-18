@@ -3,13 +3,14 @@ package com.beans.leaveapp.leavetransaction.repository;
 import java.sql.Date;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 
-public interface LeaveTransactionRepository extends CrudRepository<LeaveTransaction, Integer> {
+public interface LeaveTransactionRepository extends CrudRepository<LeaveTransaction, Integer>,JpaRepository<LeaveTransaction, Integer> {
 	
 	
 	@Query("select l from LeaveTransaction l where isDeleted =?")
@@ -85,5 +86,10 @@ public interface LeaveTransactionRepository extends CrudRepository<LeaveTransact
    
    @Query("select l from LeaveTransaction l where  leaveType.id in (select l from LeaveType l) and status='Pending'")
    List<LeaveTransaction> findAllPendingLeavesOfEmployees();
+   
+   
+   
+   @Query("select l from LeaveTransaction l where status='Pending' and decisionToBeTaken in :rolesList")
+   List<LeaveTransaction> findAllPendingLeavesWithGivenRoles(@Param("rolesList")List<String> rolesList);
    
   }

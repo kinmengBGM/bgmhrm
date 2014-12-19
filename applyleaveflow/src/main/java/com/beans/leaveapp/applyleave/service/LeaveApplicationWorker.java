@@ -145,7 +145,7 @@ public class LeaveApplicationWorker {
 		else
 			leaveTransaction.setStatus("Rejected");
 		
-			leaveTransaction.setLastModifiedBy(leaveTransaction.getDecisionToBeTaken());
+			leaveTransaction.setLastModifiedBy(leaveTransaction.getLastModifiedBy());
 			leaveTransaction.setLastModifiedTime(new Date());
 		leaveTransactionService.updateLeaveApplicationStatus(leaveTransaction);
 	}

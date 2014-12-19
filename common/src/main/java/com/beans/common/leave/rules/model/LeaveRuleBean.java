@@ -79,22 +79,22 @@ public class LeaveRuleBean  implements Serializable{
 		return approverNameLevel1;
 	}
 	
-	@Column(name="approverNameLevel2",nullable=false)
+	@Column(name="approverNameLevel2",nullable=true)
 	public String getApproverNameLevel2() {
 		return approverNameLevel2;
 	}
 	
-	@Column(name="approverNameLevel3",nullable=false)
+	@Column(name="approverNameLevel3",nullable=true)
 	public String getApproverNameLevel3() {
 		return approverNameLevel3;
 	}
 	
-	@Column(name="approverNameLevel4",nullable=false)
+	@Column(name="approverNameLevel4",nullable=true)
 	public String getApproverNameLevel4() {
 		return approverNameLevel4;
 	}
 	
-	@Column(name="approverNameLevel5",nullable=false)
+	@Column(name="approverNameLevel5",nullable=true)
 	public String getApproverNameLevel5() {
 		return approverNameLevel5;
 	}

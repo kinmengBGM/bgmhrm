@@ -24,7 +24,7 @@ public interface YearlyEntitlementRepository extends
 	 List<YearlyEntitlement> findByLeaveTypeIdLike(int leaveTypeId);
 
 	
-	@Query("select y from YearlyEntitlement y join y.employee e join y.leaveType l where e.id =? and y.id =?")
+	@Query("select y from YearlyEntitlement y join y.employee e join y.leaveType l where e.id =? and l.id =?")
 	 List<YearlyEntitlement> findByEmployeeIdAndLeaveTypeId( int employeeId,int leaveTypeId);
 	  
 	

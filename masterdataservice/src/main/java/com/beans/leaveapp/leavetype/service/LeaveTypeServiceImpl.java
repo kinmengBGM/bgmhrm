@@ -104,6 +104,13 @@ public class LeaveTypeServiceImpl implements LeaveTypeService {
 		EmployeeType employeeType =  employeeTypeRepository.findByName(name);
 		return employeeType;
 	}
+	
+	
+	@Override
+	public LeaveType findByEmployeeNameAndTypeId(String name,int employeeTypeId) {
+		LeaveType leaveType =  leaveTypeRepository.getLeaveTypeByName(name,employeeTypeId);
+		return leaveType;
+	}
 
 	@Override
 	public List<String> findByEmployeeTypes() {

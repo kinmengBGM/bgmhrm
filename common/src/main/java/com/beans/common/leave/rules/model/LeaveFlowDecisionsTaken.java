@@ -80,7 +80,7 @@ public class LeaveFlowDecisionsTaken  implements Serializable{
 	public String getDecisionUserLevel1() {
 		return decisionUserLevel1;
 	}
-	@Column(name = "decisionUserLevel2", nullable = false)
+	@Column(name = "decisionUserLevel2", nullable = true)
 	public String getDecisionUserLevel2() {
 		return decisionUserLevel2;
 	}

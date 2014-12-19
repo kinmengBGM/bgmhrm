@@ -15,5 +15,6 @@ public interface LeaveTypeService {
 	 List<String> findByName();
 	 EmployeeType findByEmployeeName(String name);
      List<String> findByEmployeeTypes();
+     LeaveType  findByEmployeeNameAndTypeId(String name, int employeeTypeId);
 }
 

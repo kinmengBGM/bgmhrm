@@ -525,6 +525,11 @@ http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
 				<property-name>leaveFlowService</property-name>
 				<value>#{leaveFlowService}</value>
 			</managed-property>
+		<managed-property>
+				<property-name>leaveTypeService</property-name>
+				<value>#{leaveTypeService}</value>
+		</managed-property>
 		</managed-bean>
+			
 </faces-config>
 

@@ -27,20 +27,20 @@ import com.beans.common.leave.rules.model.LeaveRuleBean;
 import com.beans.common.security.role.model.Role;
 import com.beans.common.security.users.model.Users;
 import com.beans.exceptions.BSLException;
-import com.beans.leaveapp.applyleave.model.ApprovalLevelModel;
 import com.beans.leaveapp.applyleave.model.LeaveApprovalDataModel;
-import com.beans.leaveapp.applyleave.model.TimeInLieuBean;
 import com.beans.leaveapp.applyleave.service.LeaveApplicationService;
 import com.beans.leaveapp.applyleave.service.LeaveApplicationWorker;
 import com.beans.leaveapp.calendar.service.CalendarEventService;
 import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.beans.leaveapp.leavetransaction.service.LeaveTransactionService;
+import com.beans.leaveapp.leavetype.model.LeaveType;
+import com.beans.leaveapp.leavetype.service.LeaveTypeService;
 import com.beans.leaveapp.monthlyreport.service.SendMonthlyLeaveReportService;
 import com.beans.leaveapp.web.bean.BaseMgmtBean;
 import com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement;
+import com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementNotFound;
 import com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementService;
 import com.beans.leaveflow.dbservice.LeaveApplicationFlowService;
-import com.beans.leaveflow.dbservice.LeaveApplicationFlowServiceImpl;
 import com.beans.leaveflow.service.email.LeaveApplicationEmailNotificationService;
 import com.beans.util.enums.Leave;
 import com.beans.util.log.ApplLogger;
@@ -58,6 +58,7 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	private Users actorUsers;
 	private AuditTrail auditTrail;
 	private LeaveApplicationService leaveApplicationService;
+	private LeaveTypeService leaveTypeService;
 	private LeaveTransactionService leaveTransactionService;
 	private LeaveApprovalDataModel LeaveApprovalDataModel;
 	private LeaveTransaction selectedLeaveRequest;
@@ -207,6 +208,14 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	public void setLeaveFlowService(LeaveApplicationFlowService leaveFlowService) {
 		this.leaveFlowService = leaveFlowService;
 	}
+	
+	public LeaveTypeService getLeaveTypeService() {
+		return leaveTypeService;
+	}
+
+	public void setLeaveTypeService(LeaveTypeService leaveTypeService) {
+		this.leaveTypeService = leaveTypeService;
+	}
 
 	public List<LeaveTransaction> getLeaveRequestApprovalList() {
 		if(pendingLeaveRequestList==null || insertDeleted==true){
@@ -291,7 +300,22 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 				// saving the decisions taken by the approvers on a list
 				LeaveFlowDecisionsTaken leaveFlowDecisions = leaveTransactionService.saveLeaveApprovalDecisions(selectedLeaveRequest.getDecisionsBean());
 				selectedLeaveRequest.setDecisionsBean(leaveFlowDecisions);
-				// Saving the current state of the Leave Transaction and then sending an email
+				selectedLeaveRequest.setLastModifiedBy(getActorUsers().getUsername());
+				// Getting the latest yearly balance and do the operations on it.
+				YearlyEntitlement entitlementBean = null;
+				try {
+					if(Leave.TIMEINLIEU.equalsName(selectedLeaveRequest.getLeaveType().getName())){
+						LeaveType leaveType = getLeaveTypeService().findByEmployeeNameAndTypeId(Leave.ANNUAL.toString(), selectedLeaveRequest.getEmployee().getEmployeeType().getId());
+						entitlementBean =	yearlyEntitlementService.findByEmployeeAndLeaveType(selectedLeaveRequest.getEmployee().getId(), leaveType.getId());
+					}else
+						entitlementBean =	yearlyEntitlementService.findByEmployeeAndLeaveType(selectedLeaveRequest.getEmployee().getId(), selectedLeaveRequest.getLeaveType().getId());
+					
+					if(entitlementBean!=null)
+						selectedLeaveRequest.setYearlyLeaveBalance(entitlementBean.getYearlyLeaveBalance());
+				} catch (YearlyEntitlementNotFound e) {
+					e.printStackTrace();
+				}
+				// Saving the current state of the Leave Transaction 
 				leaveTransactionPersist =	leaveTransactionService.processAppliedLeaveOfEmployee(selectedLeaveRequest);
 				// Updating the leave balances once approved at final stage
 				getLeaveFlowService().updateLeaveBalancesOnceApproved(leaveTransactionPersist, Boolean.TRUE);
@@ -325,6 +349,7 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 				// saving the decisions taken by the approvers on a list
 				LeaveFlowDecisionsTaken leaveFlowDecisions = leaveTransactionService.saveLeaveApprovalDecisions(selectedLeaveRequest.getDecisionsBean());
 				selectedLeaveRequest.setDecisionsBean(leaveFlowDecisions);
+				selectedLeaveRequest.setLastModifiedBy(getActorUsers().getUsername());
 				// Saving the current state of the Leave Transaction 
 				leaveTransactionPersist =	leaveTransactionService.processAppliedLeaveOfEmployee(selectedLeaveRequest);
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info : Leave is approved and case is moved to next level approval","Leave Approved"));
@@ -412,6 +437,7 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 			// saving the decisions taken by the approvers on a list
 			LeaveFlowDecisionsTaken leaveFlowDecisions = leaveTransactionService.saveLeaveApprovalDecisions(selectedLeaveRequest.getDecisionsBean());
 			selectedLeaveRequest.setDecisionsBean(leaveFlowDecisions);
+			selectedLeaveRequest.setLastModifiedBy(getActorUsers().getUsername());
 			// Saving the current state of the Leave Transaction 
 			leaveTransactionPersist =	leaveTransactionService.processAppliedLeaveOfEmployee(selectedLeaveRequest);
 			// Updating the Status in the Transaction table
@@ -436,10 +462,14 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 	public void doCancelLeaveTransaction(){
 		// Write code to update yearly balance,current balance and status and send mail to HR and Leave Applicant.
 		try{
+		
+		YearlyEntitlement entitlementBean =	yearlyEntitlementService.findByEmployeeAndLeaveType(selectedLeaveRequest.getEmployee().getId(), selectedLeaveRequest.getLeaveType().getId());
+		if(entitlementBean!=null){
+			
 		selectedLeaveRequest.setStatus("Cancelled");
 		selectedLeaveRequest.setLastModifiedBy(actorUsers.getUsername());
 		selectedLeaveRequest.setLastModifiedTime(new Date());
-		selectedLeaveRequest.setYearlyLeaveBalance(selectedLeaveRequest.getYearlyLeaveBalance()+selectedLeaveRequest.getNumberOfDays());
+		selectedLeaveRequest.setYearlyLeaveBalance(entitlementBean.getYearlyLeaveBalance()+selectedLeaveRequest.getNumberOfDays());
 		LeaveTransaction leaveTransactionPersist = leaveTransactionService.updateLeaveApplicationStatus(selectedLeaveRequest);
 		
 		// write code for adding this cancelled leave number of days to yearly ettilement table as well annual leave report table
@@ -453,12 +483,15 @@ public class LeaveApprovalMgmtBean extends BaseMgmtBean implements Serializable{
 		auditTrail.log(SystemAuditTrailActivity.REJECTED, SystemAuditTrailLevel.INFO, getActorUsers().getId(), getActorUsers().getUsername(), getActorUsers().getUsername() + " has cancelled a leave request of " + selectedLeaveRequest.getEmployee().getName() + " due to " + selectedLeaveRequest.getReason());
 		setInsertDeleted(true);
 	    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Info : "+getExcptnMesProperty("info.leave.cancel"),"Leave Cancelled"));
+		}
 		}catch(BSLException e){
 			FacesMessage msg = new FacesMessage("Error : "+getExcptnMesProperty(e.getMessage()),"Leave Cancel Error");  
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 	        FacesContext.getCurrentInstance().addMessage(null, msg); 
 		}catch(Exception e) {
 			log.error("Error while cancelling leave by "+getActorUsers().getUsername(), e);
+		} catch (YearlyEntitlementNotFound e) {
+			e.printStackTrace();
 		}
 	}
 	

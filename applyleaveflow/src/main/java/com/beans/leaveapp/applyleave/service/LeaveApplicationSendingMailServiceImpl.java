@@ -337,7 +337,7 @@ public void sendEmailNotificationForCancelLeave(LeaveTransaction leaveTransactio
 	}
 	
 	// Get all users with role ROLE_TEAMLEAD
-	List<Employee> hrEmpolyeeList = getEmployeeService().findAllEmployeesByRole("ROLE_HR");
+	List<Employee> hrEmpolyeeList = getEmployeeService().findAllEmployeesByRole("ROLE_HR_MANAGER");
 	
 	List<String> emailList = new ArrayList<String>();
 	// add reciepiant email address

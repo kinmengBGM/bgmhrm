@@ -70,7 +70,7 @@ public class UsersServiceImpl implements UsersService {
 		Set<Role> roleSet = new HashSet<Role>();
 		roleSet.addAll(users.getUserRoles());
 		usersToBeUpdated.setUserRoles(roleSet);
-		usersRepository.save(usersToBeUpdated);		
+		usersRepository.saveAndFlush(usersToBeUpdated);		
 		return usersToBeUpdated;
 	}
 

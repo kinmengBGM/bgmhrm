@@ -17,8 +17,8 @@ public class YearlyRefreshedLeavesJob extends QuartzJobBean {
 		YearlyRefreshedLeaves yearlyRefreshedLeaves = new YearlyRefreshedLeaves();
 		
 		try {
-			LeaveReportWorker.doInsertEmployeeYearlyData();
 			yearlyRefreshedLeaves.YearlyrefreshedLeaves();			
+			LeaveReportWorker.doInsertEmployeeYearlyData();
 		} catch (LeaveTypeNotFound e) {
 			e.printStackTrace();
 		} catch (Exception e) {

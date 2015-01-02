@@ -18,6 +18,7 @@ import com.beans.leaveapp.leavetype.repository.LeaveTypeRepository;
 import com.beans.leaveapp.yearlyentitlement.model.YearlyEntitlement;
 import com.beans.leaveapp.yearlyentitlement.repository.YearlyEntitlementRepository;
 import com.beans.util.enums.Leave;
+import com.beans.util.log.ApplLogger;
 
 public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 
@@ -381,7 +382,7 @@ public class YearlyEntitlementServiceImpl implements YearlyEntitlementService {
 	@Override
 	@Transactional
 	public void updateAnnualLeaveBalanceAfterApproval(int employeeId,int leaveTypeId,double numberOfDaysLeaveApproved) {
-		System.out.println("Input parameters values in updateLeaveBalanceAfterApproval() employeeId: "+employeeId+" leaveTypeId :"+leaveTypeId);
+		ApplLogger.getLogger().info("Input parameters values in updateLeaveBalanceAfterApproval() employeeId: "+employeeId+" leaveTypeId :"+leaveTypeId);
 		List<YearlyEntitlement> yearlyEntitlementList =	(List<YearlyEntitlement>) yearlyEntitleRepository.findByEmployeeIdAndEmployeeTypeAndLeaveTypeName(employeeId, Leave.ANNUAL.toString());
 		if(yearlyEntitlementList!=null && yearlyEntitlementList.size()>0){
 			yearlyEntitlement = yearlyEntitlementList.get(0);

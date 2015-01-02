@@ -17,6 +17,7 @@ import com.beans.leaveapp.monthlyreport.model.MonthlyLeaveReport;
 import com.beans.leaveapp.monthlyreport.repository.AnnualLeaveReportRepository;
 import com.beans.leaveapp.monthlyreport.repository.MonthlyLeaveReportRepository;
 import com.beans.util.enums.Leave;
+import com.beans.util.log.ApplLogger;
 @Service
 public class MonthlyLeaveReportPrePreparationImpl implements MonthlyLeaveReportPrePreparation {
 
@@ -130,6 +131,7 @@ public class MonthlyLeaveReportPrePreparationImpl implements MonthlyLeaveReportP
 		
 		// Saving all the 13 beans of specific Employee
 		annualLeaveReportRepository.save(annualLeaveReportList);
+		ApplLogger.getLogger().info("Inserted Annual Leave Type records for employee "+employee.getName()+" for Year : "+Calendar.getInstance().get(Calendar.YEAR));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -367,7 +369,7 @@ public class MonthlyLeaveReportPrePreparationImpl implements MonthlyLeaveReportP
 					monthlyLeaveReportRepository.save(yearlyLeaveReportList);
 				}	
 			}
-		
+			ApplLogger.getLogger().info("Inserted Non Annual Leave Types records for employee "+employee.getName()+" for Year : "+Calendar.getInstance().get(Calendar.YEAR));
 		}
 		}catch(Exception e){
 			e.printStackTrace();

@@ -33,6 +33,7 @@ import com.beans.leaveapp.yearlyentitlement.repository.YearlyEntitlementReposito
 import com.beans.util.email.EmailSender;
 import com.beans.util.enums.EmployeeTypes;
 import com.beans.util.enums.Leave;
+import com.beans.util.log.ApplLogger;
 @Service
 public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReportService{
 
@@ -919,13 +920,15 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 				sortingMonthList.add(currentMonth.get(Calendar.MONTH));
 				sortingMonthList.add(currentMonth.get(Calendar.MONTH)+1);	
 				if(currentMonth.get(Calendar.MONTH)==0){
-					AnnualLeaveReport decemberMonthRecord =	annualLeaveRepository.getCurrentMonthAnnualLeaveRecord(employee.getId(),12,currentMonth.get(Calendar.YEAR)-1);
+					List<YearlyEntitlement>	 entitlmentList =	entitlementRepository.findByEmployeeIdAndEmployeeTypeAndLeaveTypeName(employee.getId(), Leave.ANNUAL.toString());
+					if(entitlmentList!=null && entitlmentList.size()>0){
+					YearlyEntitlement newEntitlementBean =	entitlmentList.get(0);
 					List<AnnualLeaveReport> twoRecordList =	annualLeaveRepository.getEmployeeMonthlyLeaveReportData(employee.getId(), 1, currentMonth.get(Calendar.YEAR));
 					if(twoRecordList!=null && twoRecordList.size()==2){
 					List<AnnualLeaveReport> listToBeUpdated = new ArrayList<AnnualLeaveReport>();
 					AnnualLeaveReport januaryMonthRecord =	twoRecordList.get(0);
-					januaryMonthRecord.setCurrentLeaveBalance(decemberMonthRecord.getCurrentLeaveBalance());
-					januaryMonthRecord.setYearlyLeaveBalance(decemberMonthRecord.getYearlyLeaveBalance());
+					januaryMonthRecord.setCurrentLeaveBalance(newEntitlementBean.getCurrentLeaveBalance());
+					januaryMonthRecord.setYearlyLeaveBalance(newEntitlementBean.getYearlyLeaveBalance());
 					januaryMonthRecord.setBalanceBroughtForward(new Double(0));
 					januaryMonthRecord.setLeavesCredited(new Double(0));
 					januaryMonthRecord.setLeavesTaken(new Double(0));
@@ -939,6 +942,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 					listToBeUpdated.add(totalCountRecord);
 					
 					annualLeaveRepository.save(listToBeUpdated);
+					}
 					}
 				}
 				else {
@@ -983,7 +987,7 @@ public class SendMonthlyLeaveReportServiceImpl implements SendMonthlyLeaveReport
 						}
 				   }
 				}
-				
+				ApplLogger.getLogger().info("Initialized Employee monthly report row with previous month for Employee : "+employee.getName());
 			 }
 			}
 			}catch(Exception e){

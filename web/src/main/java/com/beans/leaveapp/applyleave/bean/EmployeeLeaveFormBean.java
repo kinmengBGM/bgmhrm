@@ -366,7 +366,7 @@ public class EmployeeLeaveFormBean extends BaseMgmtBean implements Serializable{
 		if(sickLeaveAttachment!=null){
 		String fileName = sickLeaveAttachment.getFileName();
 		String format = fileName.substring(fileName.length()-3);
-		if(sickLeaveAttachment!= null && (format.equals("jpg") || format.equals("png") || format.equals("gif") || format.equals("pdf")))
+		if(sickLeaveAttachment!= null && (format.equalsIgnoreCase("jpg") || format.equalsIgnoreCase("png") || format.equalsIgnoreCase("gif") || format.equalsIgnoreCase("pdf")))
 		{
 			byteData = IOUtils.toByteArray(sickLeaveAttachment.getInputstream());
 		}		

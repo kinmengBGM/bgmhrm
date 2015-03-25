@@ -8,10 +8,10 @@ import com.beans.leaveapp.batch.service.MonthlyAddedLeave;
 
 public class MonthlyAddedLeaveJob extends QuartzJobBean{	
 
-	MonthlyAddedLeave monthlyAddedLeave = new MonthlyAddedLeave();	
 	@Override
 	protected void executeInternal(JobExecutionContext arg0)
 			throws JobExecutionException{
+		MonthlyAddedLeave monthlyAddedLeave = new MonthlyAddedLeave();	
 			try {
 				monthlyAddedLeave.MonthlyAddedLeaves();
 			} catch (Exception e) {
@@ -19,11 +19,4 @@ public class MonthlyAddedLeaveJob extends QuartzJobBean{
 			}		
 	}	
 	
-	public MonthlyAddedLeave getMonthlyAddedLeave() {
-		return monthlyAddedLeave;
-	}
-
-	public void setMonthlyAddedLeave(MonthlyAddedLeave monthlyAddedLeave) {
-		this.monthlyAddedLeave = monthlyAddedLeave;
-	}
 }

@@ -1,22 +1,16 @@
 package com.beans.leaveapp.employee.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
-import org.kie.api.task.model.Task;
-import org.kie.api.task.model.TaskSummary;
 
 import com.beans.leaveapp.employee.model.RegisteredEmployee;
-import com.beans.leaveapp.jbpm6.util.JBPM6Runtime;
+
 
 public class EmployeeRegistrationServiceImpl implements
 		EmployeeRegistrationService {
 
+	/*private JBPM6Runtime employeeRegistrationRuntime;
 	private static final String PROCESS_NAME = "com.beans.leaveapp.bpmn.empreg";
-	private JBPM6Runtime employeeRegistrationRuntime;
 	
 	@Override
 	public void submitRegistration(HashMap<String, Object> parameterMap) {		
@@ -127,4 +121,30 @@ public class EmployeeRegistrationServiceImpl implements
 			JBPM6Runtime employeeRegistrationRuntime) {
 		this.employeeRegistrationRuntime = employeeRegistrationRuntime;
 	}
-}
+*/
+
+	@Override
+	public void submitRegistration(HashMap<String, Object> parameterMap) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<RegisteredEmployee> getPendingRegisteredEmployee(String username) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void approveRegistration(RegisteredEmployee registeredEmployee,
+			String actorId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void rejectRegistration(RegisteredEmployee registeredEmployee,
+			String actorId) {
+		// TODO Auto-generated method stub
+		
+	}}

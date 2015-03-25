@@ -32,7 +32,7 @@ public class EmployeeRegistrationBean implements Serializable{
 		parameterMap.put("passportNumber", passportNumber);
 		parameterMap.put("maritalStatus", maritalStatus);
 		
-		employeeRegistrationService.submitRegistration(parameterMap);
+		//employeeRegistrationService.submitRegistration(parameterMap);
 		return "/thankyou.xhtml";
 	}
 	

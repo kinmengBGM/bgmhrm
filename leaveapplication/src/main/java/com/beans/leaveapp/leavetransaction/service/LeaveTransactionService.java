@@ -15,43 +15,27 @@ public interface LeaveTransactionService {
 	 List<LeaveTransaction> findAll();
 	
 	 List<String> findEmployeeNames();
-	
 	 List<String> findLeaveTypes(String name);
-	
 	 int create(LeaveTransaction adminLeaveTransaction);
-	
 	 void update(LeaveTransaction adminLeaveTransaction);
-	
 	 void delete(int id);
 	
 	 Employee findByEmployee(String name);
-	
 	 LeaveType findByLeaveType(String name, int id);
-
 	 List<LeaveTransaction> findByEmployeeORfindByLeaveTypeORLeaveDatesORStatusORAll(String employeename, String leaveType,Date startDate,String status);
-
 	 List<LeaveTransaction> findByEmployeeORfindByLeaveType(String employeeName, String leaveType);
-	
 	 LeaveTransaction insertFromWorkflow(LeaveTransaction leaveTransaction);
 	
      List<LeaveTransaction> findByStatus(String status);
-    
     LeaveTransaction updateLeaveApplicationStatus(LeaveTransaction leaveTransaction);
-
     LeaveTransaction findById(int id);
-
     List<LeaveTransaction> getAllFutureLeavesAppliedByEmployee(int employeeId,java.sql.Date todayDate);
-   
     List<LeaveTransaction> getAllApprovedLeavesAppliedByEmployee();
     
     List<LeaveTransaction> getAllLeavesAppliedByEmployee(int employeeId);
-    
-    List<LeaveTransaction> getAllLeavesAppliedByEmployee();
-    
-    LeaveRuleBean getLeaveRuleByRoleAndLeaveType(String leaevType, List<String> roleType);
-    
-    LeaveFlowDecisionsTaken saveLeaveApprovalDecisions(LeaveFlowDecisionsTaken leaveFlowDecisions);
-    
+    List<LeaveTransaction> getAllLeavesAppliedByEmployee();    
+    LeaveRuleBean getLeaveRuleByRoleAndLeaveType(String leaevType, List<String> roleType);    
+    LeaveFlowDecisionsTaken saveLeaveApprovalDecisions(LeaveFlowDecisionsTaken leaveFlowDecisions);    
 	LeaveTransaction processAppliedLeaveOfEmployee(LeaveTransaction leaveTransaction);
     
 }

@@ -27,7 +27,6 @@
 		<spring.security.version>3.2.0.RELEASE</spring.security.version>
 		<hibernate.version>4.2.7.SP1</hibernate.version>
 		<project.groupid>com.beans</project.groupid>
-		<jbpm.version>6.0.1.Final</jbpm.version>
 		<hostname>localhost</hostname>  <!-- Where to deploy. -->
 		<port>9999</port>
 
@@ -202,60 +201,13 @@
 		</dependency>
 
 
-		<!-- jBPM6 dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.kie</groupId>
-			<artifactId>kie-spring</artifactId>
-			<version>${jbpm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.kie</groupId>
-			<artifactId>kie-api</artifactId>
-			<version>${jbpm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jbpm</groupId>
-			<artifactId>jbpm-audit</artifactId>
-			<version>${jbpm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jbpm</groupId>
-			<artifactId>jbpm-bpmn2</artifactId>
-			<version>${jbpm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.beans</groupId>
-			<artifactId>jbpm-human-task-core</artifactId>
-			<version>${jbpm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jbpm</groupId>
-			<artifactId>jbpm-human-task-audit</artifactId>
-			<version>${jbpm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jbpm</groupId>
-			<artifactId>jbpm-shared-services</artifactId>
-			<version>${jbpm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jbpm</groupId>
-			<artifactId>jbpm-persistence-jpa</artifactId>
-			<version>${jbpm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jbpm</groupId>
-			<artifactId>jbpm-runtime-manager</artifactId>
-			<version>${jbpm.version}</version>
-		</dependency>
-
-		<!-- Common Collection Jar -->
+			<!-- Common Collection Jar -->
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>

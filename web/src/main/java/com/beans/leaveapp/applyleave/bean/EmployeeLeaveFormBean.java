@@ -11,8 +11,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.util.IOUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.UploadedFile;
 

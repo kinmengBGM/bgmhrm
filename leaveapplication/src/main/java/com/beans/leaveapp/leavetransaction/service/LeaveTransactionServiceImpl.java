@@ -269,6 +269,7 @@ public class LeaveTransactionServiceImpl implements LeaveTransactionService {
 		defaultRoleList.add("ROLE_EMPLOYEE");
 		
 		int count = leaveRuleBeanRepository.findApplicantInApproverList(leaveType, roleType);
+
 		if(count==0){
 			// Applicant is not an approver any more, now check the exact path based on special roles by him
 			if(roleType.removeAll(defaultRoleList) && roleType.size()==0){
@@ -325,7 +326,7 @@ public class LeaveTransactionServiceImpl implements LeaveTransactionService {
 			ApplLogger.getLogger().info("Leave rule found and approval path is : "+leaveRuleBean.getRoleType()+"==>"+leaveRuleBean.getApproverNameLevel1()+"==>"+leaveRuleBean.getApproverNameLevel2()+"==>"+leaveRuleBean.getApproverNameLevel3()+"==>"+leaveRuleBean.getApproverNameLevel4()+"==>"+leaveRuleBean.getApproverNameLevel5());
 			return leaveRuleBean;
 		}
-			
+
 		return null;
 	}
 	

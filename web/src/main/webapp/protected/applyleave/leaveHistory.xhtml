@@ -51,6 +51,7 @@
 			 <h2>History of Leave(s)</h2>
 				<h:form id="employeeLeaveHistoryForm">
 			    <p:dataTable id="employeeLeaveHistoryTable" widgetVar="employeeLeaveHistoryTableVar" var="employeeLeaveHistory" value="#{leaveApprovalBean.leaveApprovalDataModelAllLeaves}" rowKey="#{employeeLeaveHistory.taskId}"
+			    			  sortBy="startDateTime" sortOrder="DESCENDING"
 			    			  rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15" >
 			    		<f:facet name="header"><p:outputPanel style="text-align:right;"> <h:outputText value="Search all fields:" /> <p:inputText id="globalFilter" onkeyup="PF('employeeLeaveHistoryTableVar').filter()"  style="width:150px" placeholder="Enter keyword"/> </p:outputPanel></f:facet>
 						<p:column id="leaveTypeHEader" filterBy="#{employeeLeaveHistory.leaveType.name}" filterMatchMode="contains"><f:facet name="header"> Leave Type </f:facet><h:outputText value="#{employeeLeaveHistory.leaveType.name}" /></p:column>

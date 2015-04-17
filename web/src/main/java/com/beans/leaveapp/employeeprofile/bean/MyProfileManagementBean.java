@@ -217,7 +217,7 @@ public class MyProfileManagementBean implements Serializable{
 	}
 	
 	public String doReturn(){
-		return "/protected/index.xhtml?faces-redirect=true";
+		return "/protected/index.jsf?faces-redirect=true";
 	}
 	
 }

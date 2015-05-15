@@ -43,7 +43,7 @@
 	
 		<bean id="cronTriggerYearlyRefreshedLeavesJob" class="org.springframework.scheduling.quartz.CronTriggerBean">
 			<property name="jobDetail" ref="YearlyRefreshedLeavesJob"></property>
-			<property name="cronExpression" value="0 0 1 1 0 ?"></property>
+			<property name="cronExpression" value="0 0 1 1 1 ?"></property>
 	</bean> 
 	
 	<bean id="cronTriggerInitializeCurrentMonthJob" class="org.springframework.scheduling.quartz.CronTriggerBean">

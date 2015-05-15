@@ -15,12 +15,12 @@
 	<authentication-manager>
 		<authentication-provider>
 			<jdbc-user-service data-source-ref="dataSource"
-				users-by-username-query="select username, password, true from users where username=?"
-				authorities-by-username-query="SELECT users.username, role.role FROM users 
-						LEFT JOIN usertorole
-						INNER JOIN role 
-							ON usertorole.userRoleId = role.id
-						ON usertorole.userId = users.id
+				users-by-username-query="select username, password, true from Users where username=?"
+				authorities-by-username-query="SELECT Users.username, Role.role FROM Users 
+						LEFT JOIN UserToRole
+						INNER JOIN Role 
+							ON UserToRole.userRoleId = Role.id
+						ON UserToRole.userId = Users.id
 						WHERE username = ?" />
 			<password-encoder ref="passwordEncoder" />
 		</authentication-provider>

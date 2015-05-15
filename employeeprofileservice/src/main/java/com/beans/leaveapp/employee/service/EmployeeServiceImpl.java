@@ -122,6 +122,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 		
 		return employee;
 	}
+	
+	@Override
+	public Employee findByUserId(int userId) throws EmployeeNotFound {
+		Employee employee = employeeRepository.findByUserId(userId);
+		
+		if(employee == null)
+			throw new EmployeeNotFound();
+		
+		return employee;
+	}
 
 	@Override
 	@Transactional(rollbackFor={EmployeeGradeNotFound.class, DepartmentNotFound.class, EmployeeTypeNotFound.class})
@@ -197,6 +207,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			
 			Employee newEmployee = update(employee);
 			
+			//if there are new addresses
 			if(newAddressMap.size() > 0) {
 				Iterator<Address> addressIterator = newAddressMap.values().iterator();
 				while(addressIterator.hasNext()) {

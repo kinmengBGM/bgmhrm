@@ -12,6 +12,7 @@
   	<module>applyleaveflow</module>
   	<module>leaveapplication</module>
   	<module>web</module>
+  	<module>restWS</module>
   	
   </modules>
   <properties>

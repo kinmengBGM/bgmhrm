@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<import resource="spring-jpa.xml" />
+
+
+	<bean id="employeeRepositoryImpl" class="com.beans.leaveapp.employee.service.EmployeeRepositoryImpl">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<bean id="usersService" class="com.beans.common.security.users.service.UsersServiceImpl">
+		<property name="userToAccessRightsService">
+			<ref bean="userToAccessRightsService" />
+		</property>		
+		<property name="roleService">
+			<ref bean="roleService" />
+		</property>
+	</bean>
+	
+	<bean id="systemAuditTrailRecordService" class="com.beans.common.audit.service.SystemAuditTrailRecordServiceImpl" />
+	
+	<bean id="auditTrail" class="com.beans.common.audit.service.AuditTrail">
+		<property name="systemAuditTrailRecordService" >
+			<ref bean="systemAuditTrailRecordService"/>
+		</property>
+	</bean>
+
+	<bean id="leaveTypeService" class="com.beans.leaveapp.leavetype.service.LeaveTypeServiceImpl"/>
+	
+	<bean id="departmentService" class="com.beans.leaveapp.department.service.DepartmentServiceImpl"/>
+	
+<!-- 	<bean id="calendarEventService" class="com.beans.leaveapp.calendar.service.CalendarEventService"/>
+ -->		
+	<bean id="yearlyEntitlementService" class="com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementServiceImpl"/>
+		
+	<bean id="employeeGradeService" class="com.beans.leaveapp.employeegrade.service.EmployeeGradeServiceImpl"/>
+	
+	<bean id="employeeTypeService" class="com.beans.leaveapp.employeetype.service.EmployeeTypeServiceImpl" />
+	
+	<bean id="employeeService" class="com.beans.leaveapp.employee.service.EmployeeServiceImpl">
+
+		<property name="usersService" >
+			<ref bean="usersService"/>
+		</property>
+		<property name="addressService">
+			<ref bean="addressService" />
+		</property>
+		<property name="departmentService">
+			<ref bean="departmentService" />
+		</property>
+		<property name="employeeGradeService">
+			<ref bean="employeeGradeService" />
+		</property>
+		<property name="employeeTypeService">
+			<ref bean="employeeTypeService" />
+		</property>
+		<property name="auditTrail">
+			<ref bean="auditTrail" />
+		</property>
+
+	</bean>
+
+	<bean id="leaveTransactionService" class="com.beans.leaveapp.leavetransaction.service.LeaveTransactionServiceImpl"/>
+
+	<bean id="userAuthenticationService" class="com.beans.common.security.users.service.UserAuthenticationServiceImpl">
+		<property name="userService">
+			<ref bean="usersService" />
+		</property>
+	</bean>
+
+	<bean id="roleService" class="com.beans.common.security.role.service.RoleServiceImpl"/>
+	
+	<bean id="leaveFlowService" class="com.beans.leaveflow.dbservice.LeaveApplicationFlowServiceImpl"/>
+
+	<bean id="userToAccessRightsService" class="com.beans.common.security.usertoaccessrights.service.UserToAccessRightsServiceImpl" />
+
+	<bean id="addressService" class="com.beans.leaveapp.address.service.AddressServiceImpl" />
+
+	<!-- FOR APPROVE LEAVE TASK -->
+	<bean id="applicationContextProvider" class="com.beans.leaveapp.jbpm6.util.ApplicationContextProvider"></bean>
+	
+	<bean id="sendLeaveReportService" class="com.beans.leaveapp.monthlyreport.service.SendMonthlyLeaveReportServiceImpl"/>
+	
+	<bean id="annualLeaveReportService" class="com.beans.leaveapp.monthlyreport.service.AnnualLeaveReportServiceImpl"></bean>
+	
+	<bean id="monthlyLeaveReportService" class="com.beans.leaveapp.monthlyreport.service.MonthlyLeaveReportPrePreparationImpl"/>
+	
+</beans>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="restWS">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <dependent-module archiveName="common-0.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/common/common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="utilities-0.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/utilities/utilities">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="leaveapplication-0.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/leaveapplication/leaveapplication">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="masterdataservice-0.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/masterdataservice/masterdataservice">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="applyleaveflow-0.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/applyleaveflow/applyleaveflow">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="employeeprofileservice-0.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/employeeprofileservice/employeeprofileservice">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="restWS"/>
+        <property name="java-output-path" value="/restWS/build/classes"/>
+    </wb-module>
+</project-modules>

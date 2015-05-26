@@ -2,10 +2,17 @@ package com.beans.leaveapp.employeeregistration.bean;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+
+import com.beans.exceptions.BSLException;
 import com.beans.leaveapp.employee.service.EmployeeRegistrationService;
+import com.beans.leaveapp.web.bean.BaseMgmtBean;
 
-public class EmployeeRegistrationBean implements Serializable{
+public class EmployeeRegistrationBean extends BaseMgmtBean implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private String username;
@@ -21,19 +28,30 @@ public class EmployeeRegistrationBean implements Serializable{
 	private EmployeeRegistrationService employeeRegistrationService;
 	
 	public String doRegister() {
-		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
-		parameterMap.put("username", username);
-		parameterMap.put("password", password);
-		parameterMap.put("fullname", fullname);
-		parameterMap.put("personalEmailAddress", personalEmailAddress);
-		parameterMap.put("personalPhoneNumber", personalPhoneNumber);
-		parameterMap.put("gender", gender);
-		parameterMap.put("idNumber", idNumber);
-		parameterMap.put("passportNumber", passportNumber);
-		parameterMap.put("maritalStatus", maritalStatus);
-		
-		//employeeRegistrationService.submitRegistration(parameterMap);
-		return "/thankyou.xhtml";
+		try{
+			HashMap<String, Object> parameterMap = new HashMap<String, Object>();
+			parameterMap.put("username", username);
+			parameterMap.put("password", password);
+			parameterMap.put("fullname", fullname);
+			parameterMap.put("personalEmailAddress", personalEmailAddress);
+			parameterMap.put("personalPhoneNumber", personalPhoneNumber);
+			parameterMap.put("gender", gender);
+			parameterMap.put("idNumber", idNumber);
+			parameterMap.put("passportNumber", passportNumber);
+			parameterMap.put("maritalStatus", maritalStatus);
+
+			employeeRegistrationService.submitRegistration(parameterMap);
+			
+			return "/thankyou.xhtml";
+		}catch(BSLException e){
+			FacesMessage msg = new FacesMessage("Error : "+ getExcptnMesProperty("error.registration.submit"),"Registration Error");  
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+	        FacesContext.getCurrentInstance().addMessage(null, msg); 
+			return "";
+		}catch(Exception e){
+			e.printStackTrace();
+			return "";
+		}
 	}
 	
 	
@@ -101,4 +119,6 @@ public class EmployeeRegistrationBean implements Serializable{
 			EmployeeRegistrationService employeeRegistrationService) {
 		this.employeeRegistrationService = employeeRegistrationService;
 	}
+	
+	
 }

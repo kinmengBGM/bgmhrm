@@ -8,5 +8,6 @@ public interface RegisteredEmployeeEmailService {
 	
 	 void sendWelcomeEmail(RegisteredEmployee RegisteredEmployee);
 	 void sendRejectedEmail(RegisteredEmployee RegisteredEmployee);
+	 void sendRegistrationEmailToHR(RegisteredEmployee RegisteredEmployee);
 	
 }

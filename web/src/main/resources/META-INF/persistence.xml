@@ -28,7 +28,8 @@
 		<class>com.beans.leaveapp.monthlyreport.model.AnnualLeaveReport</class>
 		<class>com.beans.leaveapp.monthlyreport.model.MonthlyLeaveReport</class>
 		<class>com.beans.leaveapp.monthlyreport.model.LeaveDeductHistory</class>
-		
+
+		<class>com.beans.leaveapp.employee.model.RegisteredEmployee</class>		
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />

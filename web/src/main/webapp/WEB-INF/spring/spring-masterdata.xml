@@ -63,6 +63,8 @@
 	<bean id="leaveDeductHistory" class="com.beans.leaveapp.monthlyreport.model.LeaveDeductHistory"/>
 	
 	<bean id="leaveFlowService" class="com.beans.leaveflow.dbservice.LeaveApplicationFlowServiceImpl"/>
+			
+	<bean id="employeeRegistrationService" class="com.beans.leaveapp.employee.service.EmployeeRegistrationServiceImpl"/>
 	
 </beans>
 

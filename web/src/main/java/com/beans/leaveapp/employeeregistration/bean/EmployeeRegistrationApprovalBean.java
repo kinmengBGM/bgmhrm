@@ -2,6 +2,7 @@ package com.beans.leaveapp.employeeregistration.bean;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -13,12 +14,14 @@ import com.beans.common.audit.service.SystemAuditTrailActivity;
 import com.beans.common.audit.service.SystemAuditTrailLevel;
 import com.beans.common.security.users.model.Users;
 import com.beans.exceptions.BSLException;
+import com.beans.leaveapp.applyleave.model.LeaveApprovalDataModel;
 import com.beans.leaveapp.employee.model.Employee;
 import com.beans.leaveapp.employee.model.RegisteredEmployee;
 import com.beans.leaveapp.employee.service.EmployeeNotFound;
 import com.beans.leaveapp.employee.service.EmployeeRegistrationService;
 import com.beans.leaveapp.employee.service.EmployeeService;
 import com.beans.leaveapp.employeeregistration.model.RegisteredEmployeeDataModel;
+import com.beans.leaveapp.leavetransaction.model.LeaveTransaction;
 import com.beans.leaveapp.montlhyreport.LeaveReportWorker;
 import com.beans.leaveapp.web.bean.BaseMgmtBean;
 import com.beans.leaveapp.yearlyentitlement.service.YearlyEntitlementService;
@@ -91,7 +94,9 @@ private static final long serialVersionUID = 1L;
 		}
 		
 		return registeredEmployeeList;
-	}
+	}		
+	
+	
 	public void setRegisteredEmployeeDataModel(
 			RegisteredEmployeeDataModel registeredEmployeeDataModel) {
 		this.registeredEmployeeDataModel = registeredEmployeeDataModel;
@@ -129,10 +134,11 @@ private static final long serialVersionUID = 1L;
 			setSelectedEmployeeGrade(0);
 			setSelectedEmployeeType(0);
 		}catch(BSLException e){
-			FacesMessage msg = new FacesMessage("Error : "+getExcptnMesProperty(e.getMessage()),"Approve Error");  
+			FacesMessage msg = new FacesMessage("Error : "+getExcptnMesProperty("error.registration.approve"),"Approve Error");  
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 	        FacesContext.getCurrentInstance().addMessage(null, msg); 
-			
+			FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+
 		} catch(Exception e) {
 			e.printStackTrace(); 
 		}
@@ -154,7 +160,13 @@ private static final long serialVersionUID = 1L;
 				setSelectedEmployeeGrade(0);
 				setSelectedEmployeeType(0);
 			}
-			
+
+		}catch(BSLException e){
+			FacesMessage msg = new FacesMessage("Error : "+ getExcptnMesProperty("error.registration.reject"),"Reject Error");  
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+	        FacesContext.getCurrentInstance().addMessage(null, msg); 
+			FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
